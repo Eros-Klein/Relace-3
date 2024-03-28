@@ -3,8 +3,8 @@ import HomeView from "@/components/HomeView.vue";
 import MessangerView from "@/components/MessangerView.vue";
 import ProfileSetting from "@/components/ProfileSetting.vue";
 import SettingView from "@/components/SettingView.vue";
-
-import { createWebHistory, createRouter } from "vue-router";
+import { createRouter } from "vue-router";
+import { createWebHistory } from "vue-router";
 
 const routes = [
     {
@@ -38,8 +38,8 @@ const routes = [
 ];
 
 const router = createRouter({
-    routes,
     history: createWebHistory(),
+    routes,
 });
 
 export default router;

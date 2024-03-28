@@ -13,6 +13,11 @@ export default {
             time: ""
         }
     },
+    beforeMount() {
+        
+        const nowTime = new Date();
+        this.time = nowTime.getHours().toString().padStart(2, "0") + ":" + nowTime.getMinutes().toString().padStart(2, "0");
+    },
     beforeUnmount() {
         clearInterval(this.timeActualicer);
     }

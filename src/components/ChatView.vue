@@ -1,13 +1,6 @@
 <script>
 export default {
-    name: 'ChatView',
-    beforeMount: function () {
-        document.getElementById("headline-container").style.display = "none";
-
-    },
-    beforeUnmount: function () {
-        document.getElementById("headline-container").style.display = "flex";
-    }
+    name: 'ChatView'
 }
 
 </script>
