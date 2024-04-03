@@ -14,6 +14,10 @@ export default {
         goToMessanger() {
             this.$router.push('/m');
             window.history.pushState(null, '', '/m');
+        },
+        goToNewsletter() {
+            this.$router.push('/newsletter');
+            window.history.pushState(null, '', '/newsletter');
         }
     },
     props: {
@@ -24,7 +28,7 @@ export default {
 <template>
     <div id="side-bar">
         <div class="side-bar-group">
-            <button class="side-bar-element">
+            <button @click="goToNewsletter()" class="side-bar-element">
                 <img src="../assets/images/logo.png" alt="logo">
             </button>
         </div>

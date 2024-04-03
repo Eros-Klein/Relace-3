@@ -8,6 +8,10 @@ import { createWebHistory } from "vue-router";
 
 const routes = [
     {
+        path: "/newsletter",
+        component: () => import("@/components/NewsletterView.vue"),
+    },
+    {
         path: "/home",
         component: HomeView,
     },
