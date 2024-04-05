@@ -9,13 +9,12 @@ export default {
                     'Content-Type': 'application/json'
                 }
             });
-            response.json().then(data => {
-                if (data.status === 'success') {
-                    alert('Subscribed!');
-                } else {
-                    alert('Failed to subscribe.');
-                }
-            });
+            const data = await response.json();
+            if (data.success) {
+                alert('You have successfully subscribed to our newsletter!');
+            } else {
+                alert('There was an error subscribing to our newsletter. Please try again later.');
+            }
         }
     },
     props: {
