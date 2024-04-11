@@ -1,4 +1,5 @@
 import ChatView from "@/components/ChatView.vue";
+import GitView from "@/components/GitView.vue";
 import HomeView from "@/components/HomeView.vue";
 import ManageConnections from "@/components/ManageConnections.vue";
 import MessangerView from "@/components/MessangerView.vue";
@@ -8,6 +9,10 @@ import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
 
 const routes = [
+    {
+        path: "/git",
+        component: GitView,
+    },
     {
         path: "/newsletter",
         component: () => import("@/components/NewsletterView.vue"),

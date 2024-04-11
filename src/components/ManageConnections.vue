@@ -3,15 +3,17 @@ export default {
     name: 'ManageConnections',
     methods: {
         loginGithub() {
-            
+            window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv1.000062edb18edd6d&redirect_uri=https://www.relacexyz.duckdns.org/git';
         },
     },
     mounted:
         function () {
-            if (localStorage.getItem('github') === 'true') {
-                document.getElementById('connected').innerHTML = 'Connected';
+            const connectedField = document.getElementById('connected');
+            if (localStorage.getItem('github') != "") {
+                connectedField.style.color = '#00ff00';
+                connectedField.innerHTML = 'Connected';
             } else {
-                document.getElementById('connected').innerHTML = 'Not Connected';
+                connectedField.style.color = '#ff0000';
             }
         }
 }
@@ -23,7 +25,7 @@ export default {
             <div class="connection">
                 <p id="name">Github</p>
                 <p id="connected"></p>
-                <button @click="loginGithub">Connect</button>
+                <button id="login" @click="loginGithub">Connect</button>
             </div>
         </div>
     </div>
@@ -33,9 +35,15 @@ export default {
 .connection {
     border-radius: 15px;
     background-color: rgba(180, 180, 180, 0.281);
-    width: 15%;
-    padding-top: 25px;
+    width: 200px;
     padding-bottom: 25px;
+}
+
+.connection #login {
+    border-radius: 15px;
+    background-color: #e45fff67;
+    height: 30px;
+    width: 100px;
 }
 
 .connection #name {
@@ -49,10 +57,14 @@ export default {
 
 #connection-container {
     align-items: center;
-    width: 77.5%;
     height: 100%;
     margin-left: 392.5px;
     background-color: rgba(150, 150, 150, 0.178);
     padding: 20px;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
 }
 </style>
