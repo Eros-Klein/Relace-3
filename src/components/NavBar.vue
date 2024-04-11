@@ -27,7 +27,7 @@ export default {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                token: localStorage.getItem('token')
+                jwt: localStorage.getItem('token')
             })
         });
         const data = await response.json();

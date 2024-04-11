@@ -22,7 +22,7 @@ export default {
             console.log(data);
 
             if (data.success) {
-                this.login();
+                console.log('success');
             } else {
                 document.getElementById('error').innerText = data.message;
             }
@@ -50,6 +50,10 @@ export default {
                 document.getElementById('error').innerText = data.message;
             }
         }
+    },
+    beforeUnmount: async function () {
+        document.getElementById('side-bar').style.display = 'flex';
+        document.getElementById('headline-container').style.display = 'flex';
     }
 }
 </script>
@@ -58,13 +62,11 @@ export default {
     <div id="welcome-container">
         <div id="content">
             <h1>Relace - Signup</h1>
-            <form>
-                <input id="username" type="text" placeholder="Username">
-                <input id="password" type="password" placeholder="Password">
-                <input id="email" type="email" placeholder="Email">
-                <p id="error"></p>
-                <button @click="register">Register</button>
-            </form>
+            <input id="username" type="text" placeholder="Username">
+            <input id="password" type="password" placeholder="Password">
+            <input id="email" type="email" placeholder="Email">
+            <p id="error"></p>
+            <button @click="register">Register</button>
         </div>
     </div>
 </template>

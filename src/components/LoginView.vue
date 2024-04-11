@@ -1,4 +1,6 @@
 <script>
+
+
 export default {
     name: 'LoginView',
     methods: {
@@ -25,6 +27,10 @@ export default {
                 document.getElementById('error').innerText = data.message;
             }
         }
+    },
+    beforeUnmount: async function () {
+        document.getElementById('side-bar').style.display = 'flex';
+        document.getElementById('headline-container').style.display = 'flex';
     }
 }
 </script>
@@ -33,12 +39,10 @@ export default {
     <div id="welcome-container">
         <div id="content">
             <h1>Relace - Login</h1>
-            <form>
-                <input id="username" type="text" placeholder="Username">
-                <input id="password" type="password" placeholder="Password">
-                <p id="error"></p>
-                <button @click="login">Login</button>
-            </form>
+            <input id="username" type="text" placeholder="Username">
+            <input id="password" type="password" placeholder="Password">
+            <p id="error"></p>
+            <button @click="login">Login</button>
         </div>
     </div>
 </template>
