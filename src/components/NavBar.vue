@@ -21,13 +21,14 @@ export default {
         }
     },
     beforeMount: async function () {
+        const token = localStorage.getItem('token');
         const response = await fetch("https://relacexyz.duckdns.org/api/auth/testauth/", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                jwt: localStorage.getItem('token')
+                jwt: token
             })
         });
         const data = await response.json();

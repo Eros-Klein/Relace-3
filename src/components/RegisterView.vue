@@ -22,7 +22,7 @@ export default {
             console.log(data);
 
             if (data.success) {
-                console.log('success');
+                this.login();
             } else {
                 document.getElementById('error').innerText = data.message;
             }

@@ -20,6 +20,7 @@ export default {
             });
             const data = await response.json();
 
+            console.log(data);
             if (data.success) {
                 localStorage.setItem('token', data.token);
                 this.$router.push('/home');

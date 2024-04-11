@@ -26,7 +26,7 @@ export default {
 
 <template>
     <div id="connection-container">
-        <div id="content">
+        <div id="con-content">
             <div class="connection">
                 <p id="name">Github</p>
                 <p id="connected"></p>
@@ -73,7 +73,8 @@ export default {
     padding: 20px;
 }
 
-#content {
+#con-content {
+    margin-top: 50px;
     display: flex;
     justify-content: space-evenly;
 

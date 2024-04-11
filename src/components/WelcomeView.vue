@@ -31,6 +31,8 @@ export default {
 }
 
 #content {
+    width: 40%;
+    height: 45%;
     padding: 50px;
     border-radius: 25px;
     background-color: #6b6b6b25;
