@@ -14,6 +14,7 @@ export default {
                 connectedField.innerHTML = 'Connected';
             } else {
                 connectedField.style.color = '#ff0000';
+                connectedField.innerHTML = 'Not Connected';
             }
         }
 }
