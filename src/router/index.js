@@ -1,5 +1,6 @@
 import ChatView from "@/components/ChatView.vue";
 import HomeView from "@/components/HomeView.vue";
+import ManageConnections from "@/components/ManageConnections.vue";
 import MessangerView from "@/components/MessangerView.vue";
 import ProfileSetting from "@/components/ProfileSetting.vue";
 import SettingView from "@/components/SettingView.vue";
@@ -32,6 +33,10 @@ const routes = [
             {
                 path: "profile",
                 component: ProfileSetting,
+            },
+            {
+                path: "connections",
+                component: ManageConnections,
             },
         ],
     },

@@ -13,6 +13,10 @@ export default {
                 }
             }
         },
+        selectConnectionSetting() {
+            this.$router.push('/setting/connections');
+            window.history.pushState(null, '', '/setting/connections');
+        }
     },
     beforeMount: function () {
         document.getElementById("headline-container").style.display = "none";
@@ -35,6 +39,9 @@ export default {
             </div>
             <div class="setting-categorie-hidden">
                 <p>Manage Visibility</p>
+            </div>
+            <div class="setting-categorie-hidden" @click="selectConnectionSetting">
+                <p>Manage Connections</p>
             </div>
         </div>
         <div id="account" class="setting-categorie">

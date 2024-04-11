@@ -3,6 +3,7 @@ export default {
     name: 'NewsletterView',
     methods: {
         async subscribe() {
+            console.log(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${document.getElementById('email-input').value}`);
             const response = await fetch(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${document.getElementById('email-input').value}`, {
                 method: 'POST',
                 headers: {
@@ -10,7 +11,7 @@ export default {
                 }
             });
             response.json().then(data => {
-                if (data.status === 'success') {
+                if (data) {
                     alert('Subscribed!');
                 } else {
                     alert('Failed to subscribe.');

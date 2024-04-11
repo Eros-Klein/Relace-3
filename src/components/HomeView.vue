@@ -5,6 +5,18 @@ export default {
         goToAssignment(code) {
             this.$router.push('/assignment/' + code);
         }
+    },
+    mounted: async function () {
+        let response = await fetch("https://api.github.com/user/repos", {
+            headers: {
+                Accept: "application/vnd.github+json",
+                Authorization: "Bearer ghu_xNGBvi44ry8N7rE9QfNlufAjkwVseX4Rfr5x",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+        const data = await response.json();
+        console.log(data);
+        console.log(response);
     }
 }
 </script>
