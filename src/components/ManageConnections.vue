@@ -8,13 +8,17 @@ export default {
     },
     mounted:
         function () {
-            const connectedField = document.getElementById('connected');
-            if (localStorage.getItem('github') != null) {
-                connectedField.style.color = '#00ff00';
-                connectedField.innerHTML = 'Connected';
-            } else {
-                connectedField.style.color = '#ff0000';
-                connectedField.innerHTML = 'Not Connected';
+            const connections = document.getElementsByClassName('connection');
+            for (let i = 0; i < connections.length; i++) {
+                const connectedField = connections[i].children[1];
+
+                if (localStorage.getItem(connections[i].children[0].innerHTML.toLowerCase()) != null) {
+                    connectedField.style.color = '#00ff00';
+                    connectedField.innerHTML = 'Connected';
+                } else {
+                    connectedField.style.color = '#ff0000';
+                    connectedField.innerHTML = 'Not Connected';
+                }
             }
         }
 }
@@ -27,6 +31,11 @@ export default {
                 <p id="name">Github</p>
                 <p id="connected"></p>
                 <button id="login" @click="loginGithub">Connect</button>
+            </div>
+            <div class="connection">
+                <p id="name">Moodle</p>
+                <p id="connected"></p>
+                <button id="login">Connect</button>
             </div>
         </div>
     </div>
@@ -66,6 +75,7 @@ export default {
 
 #content {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+
 }
 </style>
