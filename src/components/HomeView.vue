@@ -7,6 +7,24 @@ export default {
     methods: {
         goToAssignment(code) {
             this.$router.push('/assignment/' + code);
+        },
+        addAssignment(headline, body, id) {
+            const assignmentContainer = document.getElementById("assigment-container");
+            const assignment = document.createElement("div");
+            assignment.classList.add("assignment");
+            assignment.addEventListener("click", () => {
+                this.goToAssignment(id);
+            });
+            assignment.innerHTML = `
+                <div class="assignment_head">
+                    <h2>${headline}</h2>
+                </div>
+                <div class="line"></div>
+                <div class="assignment_body">
+                    <p>${body}</p>
+                </div>
+            `;
+            assignmentContainer.appendChild(assignment);
         }
     },
     mounted: function () {
@@ -18,36 +36,23 @@ export default {
         } else {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
+
+        this.addAssignment("Project", "Finish the Vue.js project by the end of the week.", 1);
+        this.addAssignment("Learn Vue", "Learn it.", 2);
+
     },
 }
 </script>
 
 <template>
     <div id="container">
-        <div class="content">
-            <div @click="goToAssignment(1)" class="assignment">
-                <div class="assignment_head">
-                    <h2>Project</h2>
-                </div>
-                <div class="line"></div>
-                <div class="assignment_body">
-                    <p>Finish the Vue.js project by the end of the week.</p>
-                </div>
-            </div>
-            <div @click="goToAssignment(1)" class="assignment">
-                <div class="assignment_head">
-                    <h2>Learn Vue</h2>
-                </div>
-                <div class="line"></div>
-                <div class="assignment_body">
-                    <p>Learn it.</p>
-                </div>
-            </div>
-        </div>
-        <div class="content">
+        <div class="home-content" id="assigment-container">
 
         </div>
-        <div class="content">
+        <div class="home-content">
+
+        </div>
+        <div class="home-content">
 
         </div>
     </div>
@@ -93,7 +98,7 @@ export default {
 
 }
 
-.content {
+.home-content {
     display: flex;
     flex-direction: row;
     align-items: left;
