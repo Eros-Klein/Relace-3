@@ -1,4 +1,7 @@
 <script>
+import HeaderLine from './HeaderLine.vue';
+
+
 export default {
     name: 'HomeView',
     methods: {
@@ -6,18 +9,16 @@ export default {
             this.$router.push('/assignment/' + code);
         }
     },
-    mounted: async function () {
-        let response = await fetch("https://api.github.com/user/repos", {
-            headers: {
-                Accept: "application/vnd.github+json",
-                Authorization: "Bearer ghu_xNGBvi44ry8N7rE9QfNlufAjkwVseX4Rfr5x",
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        });
-        const data = await response.json();
-        console.log(data);
-        console.log(response);
-    }
+    mounted: function () {
+        const nowTime = new Date();
+        if (nowTime.getHours() < 12) {
+            HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
+        } else if (nowTime.getHours() < 18) {
+            HeaderLine.methods.setHeadline("Good Afternoon, " + localStorage.getItem('username') + "!");
+        } else {
+            HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
+        }
+    },
 }
 </script>
 

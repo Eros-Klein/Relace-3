@@ -45,6 +45,7 @@ export default {
 
             if (data.success) {
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('username', username);
                 this.$router.push('/home');
             } else {
                 document.getElementById('error').innerText = data.message;

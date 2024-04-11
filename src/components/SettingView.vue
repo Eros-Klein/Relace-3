@@ -16,6 +16,11 @@ export default {
         selectConnectionSetting() {
             this.$router.push('/setting/connections');
             window.history.pushState(null, '', '/setting/connections');
+        },
+        logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            this.$router.push('/welcome');
         }
     },
     beforeMount: function () {
@@ -57,6 +62,9 @@ export default {
             <div class="setting-categorie-hidden">
                 <p>Security</p>
             </div>
+            <div @click="logout" class="setting-categorie-hidden" id="logout">
+                <p>Logout</p>
+            </div>
         </div>
         <div id="design" class="setting-categorie">
             <div class="setting-categorie-trigger" @click="extendCategorie('design')">
@@ -74,6 +82,10 @@ export default {
 </template>
 
 <style>
+#logout {
+    background-color: #83000098;
+}
+
 .setting-categorie-hidden {
     width: 80%;
     height: 35px;

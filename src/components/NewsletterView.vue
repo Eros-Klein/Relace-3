@@ -1,4 +1,6 @@
 <script>
+import HeaderLine from './HeaderLine.vue';
+
 export default {
     name: 'NewsletterView',
     methods: {
@@ -11,7 +13,7 @@ export default {
                 }
             });
             const data = await response.json();
-            
+
             if (data.success) {
                 alert('You have successfully subscribed to our newsletter!');
             } else {
@@ -19,15 +21,15 @@ export default {
             }
         }
     },
-    props: {
-        selected: String
+    mounted: function () {
+        HeaderLine.methods.setHeadline('Newsletter');
     }
 }
 </script>
 
 <template>
     <div id="container">
-        <div id="content">
+        <div id="news-content">
             <p>Want to always stay caught up?</p>
             <input id="email-input" placeholder="Your Email...">
             <button @click="subscribe" id="subscribe-button">Subscribe</button>
