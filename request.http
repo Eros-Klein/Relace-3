@@ -12,3 +12,11 @@ curl --request GET --url "https://api.github.com/octocat" --header "Authorizatio
 
 ###
 POST https://github.com/login/oauth/authorize?client_id=Iv1.000062edb18edd6d&redirect_uri=https://www.relacexyz.duckdns.org/git
+
+###
+POST https://relacexyz.duckdns.org/api/auth/testauth/
+
+Content-Type: application/json
+{
+    "token": "eyJhb"
+}

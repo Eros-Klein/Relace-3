@@ -20,6 +20,24 @@ export default {
             window.history.pushState(null, '', '/newsletter');
         }
     },
+    beforeMount: async function () {
+        const response = await fetch("https://relacexyz.duckdns.org/api/auth/testauth/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                token: localStorage.getItem('token')
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+
+        if (!data.success) {
+            this.$router.push('/welcome');
+            window.history.pushState(null, '', '/welcome');
+        }
+    },
     props: {
         selected: String
     }

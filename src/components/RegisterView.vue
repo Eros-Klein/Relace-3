@@ -1,7 +1,32 @@
 <script>
 export default {
-    name: 'LoginView',
+    name: 'RegisterView',
     methods: {
+        async register() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+
+            const response = await fetch('https://relacexyz.duckdns.org/api/auth/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "username": username,
+                    "password": password,
+                    "email": email
+                })
+            });
+            const data = await response.json();
+            console.log(data);
+
+            if (data.success) {
+                this.login();
+            } else {
+                document.getElementById('error').innerText = data.message;
+            }
+        },
         async login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -32,12 +57,13 @@ export default {
 <template>
     <div id="welcome-container">
         <div id="content">
-            <h1>Relace - Login</h1>
+            <h1>Relace - Signup</h1>
             <form>
                 <input id="username" type="text" placeholder="Username">
                 <input id="password" type="password" placeholder="Password">
+                <input id="email" type="email" placeholder="Email">
                 <p id="error"></p>
-                <button @click="login">Login</button>
+                <button @click="register">Register</button>
             </form>
         </div>
     </div>
@@ -54,7 +80,7 @@ export default {
     border-style: solid;
     color: rgba(240, 248, 255, 0.753);
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     border-color: #46004075;
     padding-left: 15px;
     padding-right: 15px;
