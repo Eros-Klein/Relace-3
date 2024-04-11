@@ -9,7 +9,7 @@ export default {
     mounted:
         function () {
             const connectedField = document.getElementById('connected');
-            if (localStorage.getItem('github') != "") {
+            if (localStorage.getItem('github') != null) {
                 connectedField.style.color = '#00ff00';
                 connectedField.innerHTML = 'Connected';
             } else {
