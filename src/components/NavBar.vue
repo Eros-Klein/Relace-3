@@ -18,6 +18,10 @@ export default {
         goToNewsletter() {
             this.$router.push('/newsletter');
             window.history.pushState(null, '', '/newsletter');
+        },
+        goToDashboard() {
+            this.$router.push('/dashboard');
+            window.history.pushState(null, '', '/dashboard');
         }
     },
     beforeMount: async function () {
@@ -58,7 +62,7 @@ export default {
             <button class="side-bar-element">
                 <img src="../assets/images/calendar.png" alt="calendar">
             </button>
-            <button class="side-bar-element">
+            <button class="side-bar-element" @click="goToDashboard">
                 <img src="../assets/images/to-do-list.png" alt="todolist">
             </button>
         </div>

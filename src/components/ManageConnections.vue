@@ -20,7 +20,8 @@ export default {
             }
             const response = await fetch(organization + "login/token.php?username=" + username + "&password=" + password + "&service=moodle_mobile_app");
             const data = await response.json();
-
+            console.log(data);
+            console.log(data.token);
             if (data.token) {
                 const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/settoken', {
                     method: 'POST',
@@ -28,13 +29,13 @@ export default {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        jwt: localStorage.getItem('token'),
                         api: 'moodle',
-                        token: data.token
+                        token: data.token,
+                        jwt: localStorage.getItem('token')
                     })
                 })
-                const data = await response.json();
-                if (data.success) {
+                const data1 = await response.json();
+                if (data1.success) {
                     document.getElementById('info').style.display = 'none';
                 } else {
                     document.getElementById('error').innerText = 'An error occurred while connecting to Moodle: ' + data.message;
@@ -60,7 +61,7 @@ export default {
                     })
                 })
                 const data = await response.json();
-
+                console.log(name);
                 console.log(data);
 
                 if (data.success) {

@@ -1,4 +1,6 @@
+import AssignmentView from "@/components/AssignmentView.vue";
 import ChatView from "@/components/ChatView.vue";
+import DashboardView from "@/components/DashboardView.vue";
 import GitView from "@/components/GitView.vue";
 import HomeView from "@/components/HomeView.vue";
 import LoginView from "@/components/LoginView.vue";
@@ -12,6 +14,14 @@ import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
 
 const routes = [
+    {
+        path: "/a/:id",
+        component: AssignmentView,
+    },
+    {
+        path: "/dashboard",
+        component: DashboardView,
+    },
     {
         path: "/welcome",
         component: WelcomeView,

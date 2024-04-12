@@ -6,7 +6,7 @@ export default {
     name: 'HomeView',
     methods: {
         goToAssignment(code) {
-            this.$router.push('/assignment/' + code);
+            this.$router.push('/a/' + code);
         },
         addAssignment(headline, body, id) {
             const assignmentContainer = document.getElementById("assigment-container");
@@ -25,9 +25,23 @@ export default {
                 </div>
             `;
             assignmentContainer.appendChild(assignment);
+        },
+        async loadAssignments() {
+            const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("token")
+                }),
+            });
+            const data = await response.json();
+
+            console.log(data);
         }
     },
-    mounted: function () {
+    mounted: async function () {
         const nowTime = new Date();
         if (nowTime.getHours() < 12) {
             HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
@@ -37,9 +51,35 @@ export default {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
-        this.addAssignment("Project", "Finish the Vue.js project by the end of the week.", 1);
-        this.addAssignment("Learn Vue", "Learn it.", 2);
+        const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                jwt: localStorage.getItem("token"),
+                count: 30
+            }),
+        });
+        const data = await response.json();
 
+        console.log(data);
+        if (data.success) {
+            for (let i = 0; i < data.assignments.length; i++) {
+                let title = data.assignments[i].title;
+                if (title.length > 35) {
+                    title = title.slice(0, 35) + "...";
+                }
+
+                if (data.assignments[i].description.length > 48) {
+                    this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
+                } else {
+                    this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
+                }
+            }
+        } else {
+            console.log(data.message);
+        }
     },
 }
 </script>
@@ -50,7 +90,7 @@ export default {
 
         </div>
         <div class="home-content">
-
+            <button id="fetch" @click="loadAssignments">Fetch</button>
         </div>
         <div class="home-content">
 
@@ -59,6 +99,24 @@ export default {
 </template>
 
 <style>
+#fetch {
+    width: 100%;
+    height: 100%;
+    background-color: #0000004f;
+    border-color: #46004075;
+    border-style: solid;
+    border-radius: 25px;
+    color: #d4d4d4;
+    font-size: 20px;
+    transition: all 0.25s ease-in-out;
+    cursor: pointer;
+}
+
+#fetch:hover {
+    background-color: #a500a517;
+    color: #88888880;
+}
+
 .assignment h2 {
     color: #d4d4d4;
     font-size: 20px;
@@ -89,6 +147,7 @@ export default {
     border-radius: 25px;
     margin-right: 20px;
     transition: all 0.25s ease-in-out;
+    flex: 0 0 auto;
 }
 
 .assignment:hover {
@@ -107,7 +166,21 @@ export default {
     padding: 20px;
     border-radius: 25px;
     height: 20vh;
+    flex-wrap: nowrap;
     margin-bottom: 3%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.home-content::-webkit-scrollbar {
+    display: inline;
+    background-color: #6b6b6b25;
+    border-radius: 25px;
+    height: 15px;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 #container {
