@@ -5,6 +5,7 @@ import ProfileSetting from "@/components/ProfileSetting.vue";
 import SettingView from "@/components/SettingView.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
+import MicAPI from "@/components/MicAPI.vue";
 
 const routes = [
     {
@@ -38,6 +39,10 @@ const routes = [
     {
         path: "/",
         component: HomeView,
+    },
+    {
+        path: "/micapi",
+        component: MicAPI,
     },
 ];
 
