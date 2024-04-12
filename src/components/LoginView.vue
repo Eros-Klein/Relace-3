@@ -41,8 +41,8 @@ export default {
     <div id="welcome-container">
         <div id="content">
             <h1>Relace - Login</h1>
-            <input id="username" type="text" placeholder="Username">
-            <input id="password" type="password" placeholder="Password">
+            <input @keydown.enter="login" id="username" type="text" placeholder="Username">
+            <input @keydown.enter="login" id="password" type="password" placeholder="Password">
             <p id="error"></p>
             <button @click="login">Login</button>
         </div>

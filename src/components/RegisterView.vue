@@ -63,9 +63,9 @@ export default {
     <div id="welcome-container">
         <div id="content">
             <h1>Relace - Signup</h1>
-            <input id="username" type="text" placeholder="Username">
-            <input id="password" type="password" placeholder="Password">
-            <input id="email" type="email" placeholder="Email">
+            <input @keydown.enter="register" id="username" type="text" placeholder="Username">
+            <input @keydown.enter="register" id="password" type="password" placeholder="Password">
+            <input @keydown.enter="register" id="email" type="email" placeholder="Email">
             <p id="error"></p>
             <button @click="register">Register</button>
         </div>

@@ -37,14 +37,14 @@ export default {
                 const data1 = await response.json();
                 if (data1.success) {
                     document.getElementById('info').style.display = 'none';
+                    this.checkForConnections();
+
                 } else {
                     document.getElementById('error').innerText = 'An error occurred while connecting to Moodle: ' + data.message;
                 }
             }
-        }
-    },
-    mounted:
-        async function () {
+        },
+        async checkForConnections() {
             const token = localStorage.getItem('token');
             const connections = document.getElementsByClassName('connection');
             for (let i = 0; i < connections.length; i++) {
@@ -72,6 +72,11 @@ export default {
                     connectedField.innerHTML = 'Not Connected';
                 }
             }
+        }
+    },
+    mounted:
+        function () {
+            this.checkForConnections();
         }
 }
 </script>
