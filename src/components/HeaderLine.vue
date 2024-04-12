@@ -1,8 +1,11 @@
 <script>
 export default {
     name: 'HeaderLine',
-    props: {
-        headline: String
+    methods:
+    {
+        setHeadline(headline) {
+            document.getElementById('headline').innerText = headline;
+        }
     },
     data() {
         return {
@@ -10,11 +13,11 @@ export default {
                 const nowTime = new Date();
                 this.time = nowTime.getHours().toString().padStart(2, "0") + ":" + nowTime.getMinutes().toString().padStart(2, "0");
             }, 1000),
-            time: ""
+            time: "",
+            headline: "",
         }
     },
     beforeMount() {
-        
         const nowTime = new Date();
         this.time = nowTime.getHours().toString().padStart(2, "0") + ":" + nowTime.getMinutes().toString().padStart(2, "0");
     },
@@ -27,7 +30,7 @@ export default {
 <template>
     <div id="container">
         <div id="headline-container">
-            <h2>{{ headline }}</h2>
+            <h2 id="headline">{{ headline }}</h2>
             <p>{{ time }}</p>
         </div>
     </div>

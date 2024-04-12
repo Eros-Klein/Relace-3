@@ -13,6 +13,15 @@ export default {
                 }
             }
         },
+        selectConnectionSetting() {
+            this.$router.push('/setting/connections');
+            window.history.pushState(null, '', '/setting/connections');
+        },
+        logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            this.$router.push('/welcome');
+        }
     },
     beforeMount: function () {
         document.getElementById("headline-container").style.display = "none";
@@ -36,6 +45,9 @@ export default {
             <div class="setting-categorie-hidden">
                 <p>Manage Visibility</p>
             </div>
+            <div class="setting-categorie-hidden" @click="selectConnectionSetting">
+                <p>Manage Connections</p>
+            </div>
         </div>
         <div id="account" class="setting-categorie">
             <div class="setting-categorie-trigger" @click="extendCategorie('account')">
@@ -49,6 +61,9 @@ export default {
             </div>
             <div class="setting-categorie-hidden">
                 <p>Security</p>
+            </div>
+            <div @click="logout" class="setting-categorie-hidden" id="logout">
+                <p>Logout</p>
             </div>
         </div>
         <div id="design" class="setting-categorie">
@@ -67,6 +82,10 @@ export default {
 </template>
 
 <style>
+#logout {
+    background-color: #83000098;
+}
+
 .setting-categorie-hidden {
     width: 80%;
     height: 35px;

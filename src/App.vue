@@ -1,6 +1,6 @@
 <template>
   <div id="page-container">
-    <HeaderLine headline="Good Morning, " />
+    <HeaderLine />
     <RouterView />
     <NavBar selected="Home" />
   </div>

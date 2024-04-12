@@ -18,6 +18,29 @@ export default {
         goToNewsletter() {
             this.$router.push('/newsletter');
             window.history.pushState(null, '', '/newsletter');
+        },
+        goToDashboard() {
+            this.$router.push('/dashboard');
+            window.history.pushState(null, '', '/dashboard');
+        }
+    },
+    beforeMount: async function () {
+        const token = localStorage.getItem('token');
+        const response = await fetch("https://relacexyz.duckdns.org/api/auth/testauth/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: token
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+
+        if (!data.success) {
+            this.$router.push('/welcome');
+            window.history.pushState(null, '', '/welcome');
         }
     },
     props: {
@@ -39,7 +62,7 @@ export default {
             <button class="side-bar-element">
                 <img src="../assets/images/calendar.png" alt="calendar">
             </button>
-            <button class="side-bar-element">
+            <button class="side-bar-element" @click="goToDashboard">
                 <img src="../assets/images/to-do-list.png" alt="todolist">
             </button>
         </div>
