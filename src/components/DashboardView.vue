@@ -125,25 +125,11 @@ export default {
 </template>
 
 <style>
-#fetch {
-    width: 100%;
-    height: 100%;
-    background-color: #0000004f;
-    border-color: #46004075;
-    border-style: solid;
-    border-radius: 25px;
-    color: #d4d4d4;
-    font-size: 20px;
-    transition: all 0.25s ease-in-out;
-    cursor: pointer;
-}
 
 #current-assignment-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 85%;
-    height: 75vh;
     background-color: #6b6b6b34;
     border-radius: 25px;
 }
@@ -216,7 +202,7 @@ export default {
     background-color: #6b6b6b25;
     padding: 20px;
     border-radius: 25px;
-    height: 50vh;
+    height: 40vh;
     flex-wrap: nowrap;
     margin-bottom: 3%;
     overflow-x: auto;
