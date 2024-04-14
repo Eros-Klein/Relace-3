@@ -5,7 +5,7 @@ import HeaderLine from './HeaderLine.vue';
 export default {
     name: 'HomeView',
     methods: {
-        async goToAssignment(code) {
+        async goToAssignment(id) {
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
             method: "POST",
             headers: {
@@ -13,7 +13,7 @@ export default {
             },
             body: JSON.stringify({
                 jwt: localStorage.getItem("token"),
-                id: this.$route.params.id
+                id: id
             }),
             });
             const data = await response.json();
