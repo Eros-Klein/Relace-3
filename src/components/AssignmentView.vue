@@ -4,8 +4,18 @@ import HeaderLine from './HeaderLine.vue';
 export default {
     name: 'AssignmentView',
     mounted: async function () {
-        const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/" + this.$route.params.id);
+        const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                jwt: localStorage.getItem("token"),
+                id: this.$route.params.id
+            }),
+        });
         const data = await response.json();
+
         console.log(data);
         if (data.success) {
             HeaderLine.methods.setHeadline(data.assignment.course);
