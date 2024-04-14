@@ -3,95 +3,216 @@ import HeaderLine from './HeaderLine.vue';
 
 
 export default {
-    name: 'DashboardView',
+    name: 'HomeView',
     methods: {
-        goToAssignment(code) {
-            console.log("Going to assignment with code " + code + "...  Not really.");
+        async goToAssignment(code) {
+            const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                jwt: localStorage.getItem("token"),
+                id: this.$route.params.id
+            }),
+            });
+            const data = await response.json();
+
+        console.log(data);
+        if (data.success) {
+            document.getElementById('title').innerText = data.assignment.title;
+
+            document.getElementById('description').innerText = data.assignment.description;
+
+            document.getElementById('course').innerText = (data.assignment.course);
+
+            const date = new Date(data.assignment.deadline * 1000);
+            document.getElementById('deadline').innerText = 'Deadline: ' + date.getDate().toString().padStart(2, "0") + '.' + (date.getMonth() + 1).toString().padStart(2, "0") + '.' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, "0") + ':' + date.getMinutes().toString().padStart(2, "0") + ':' + date.getSeconds().toString().padStart(2, "0");
+        } else {
+            alert('An error occurred while loading the assignment: ' + data.message);
+        }
         },
         addAssignment(headline, body, id) {
-            console.log("Adding assignment " + headline + " with id " + id + " and body " + body);
+            const assignmentContainer = document.getElementById("assigment-container");
+            const assignment = document.createElement("div");
+            assignment.classList.add("assignment");
+            assignment.addEventListener("click", () => {
+                this.goToAssignment(id);
+            });
+            assignment.innerHTML = `
+                <div class="assignment_head">
+                    <h2>${headline}</h2>
+                </div>
+                <div class="line"></div>
+                <div class="assignment_body">
+                    <p>${body}</p>
+                </div>
+            `;
+            assignmentContainer.appendChild(assignment);
+        },
+        async loadAssignments() {
+            const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("token")
+                }),
+            });
+            const data = await response.json();
+
+            console.log(data);
         }
     },
-    mounted: function () {
-        HeaderLine.methods.setHeadline("Assignments");
+    mounted: async function () {
+        const nowTime = new Date();
+        if (nowTime.getHours() < 12) {
+            HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
+        } else if (nowTime.getHours() < 18) {
+            HeaderLine.methods.setHeadline("Good Afternoon, " + localStorage.getItem('username') + "!");
+        } else {
+            HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
+        }
 
-        this.addAssignment("Project", "Finish the Vue.js project by the end of the week.", 1);
-        this.addAssignment("Learn Vue", "Learn it.", 2);
+        const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                jwt: localStorage.getItem("token"),
+                count: 30
+            }),
+        });
+        const data = await response.json();
 
+        console.log(data);
+        if (data.success) {
+            for (let i = 0; i < data.assignments.length; i++) {
+                let title = data.assignments[i].title;
+                if (title.length > 35) {
+                    title = title.slice(0, 35) + "...";
+                }
+
+                if (data.assignments[i].description.length > 48) {
+                    this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
+                } else {
+                    this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
+                }
+            }
+        } else {
+            console.log(data.message);
+        }
     },
 }
 </script>
 
 <template>
     <div id="container">
-        <div class="assignment-content">
-            <div id="assignment-container">
-                <div class="assignment-info">
-                    <div class="assignment-head">
-                        <p id="name">Project: Relace</p>
-                        <p id="deadline">19.4.2024</p>
-                        <p id="course">RELACE_3AHIF_23/24</p>
-                    </div>
-                    <div class="assignment-body">
-                        <p id="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima nam ducimus
-                            explicabo alias sequi, repellat commodi. Dignissimos, nesciunt asperiores! Iste illo ullam,
-                            natus eveniet quae sed beatae qui id non.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="home-content" id="assigment-container">
+
+        </div>
+        <div class="home-content" id="current-assignment-container">
+            
+            <h2 id="title"></h2>
+            <p id="description"></p>
+            <p id="course"></p>
+            <p id="deadline"></p>
+
         </div>
     </div>
 </template>
 
 <style>
-.assignment-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 85%;
-    height: 75vh;
-    background-color: #6b6b6b25;
-    border-radius: 25px;
-}
-
-#assignment-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+#fetch {
     width: 100%;
     height: 100%;
-    padding: 20px;
-}
-
-.assignment-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    height: 10%;
-    padding: 20px;
     background-color: #0000004f;
     border-color: #46004075;
     border-style: solid;
     border-radius: 25px;
-    padding-left: 20px;
-    padding-right: 20px;
+    color: #d4d4d4;
+    font-size: 20px;
+    transition: all 0.25s ease-in-out;
+    cursor: pointer;
 }
 
-.assignment-head {
+#fetch:hover {
+    background-color: #a500a517;
+    color: #88888880;
+}
+
+.assignment h2 {
+    color: #d4d4d4;
+    font-size: 20px;
+
+}
+
+.assignment p {
+    color: #d4d4d4;
+    font-size: 15px;
+}
+
+.line {
+    background-color: #46004075;
+    height: 2px;
+    width: 100%;
+}
+
+.assignment {
+    padding: 20px;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 15%;
+    background-color: #0000004f;
+    border-color: #46004075;
+    border-style: solid;
+    border-radius: 25px;
+    margin-right: 20px;
+    transition: all 0.25s ease-in-out;
+    flex: 0 0 auto;
+}
+
+.assignment:hover {
+    background-color: #a500a517;
+    color: #88888880;
+    cursor: pointer;
+
+}
+
+.home-content {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    width: 80%;
+    align-items: left;
+    width: 85%;
+    background-color: #6b6b6b25;
     padding: 20px;
+    border-radius: 25px;
+    height: 20vh;
+    flex-wrap: nowrap;
+    margin-bottom: 3%;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
-.assignment-body {
+.home-content::-webkit-scrollbar {
+    display: inline;
+    background-color: #6b6b6b25;
+    border-radius: 25px;
+    height: 15px;
+}
+
+::-webkit-scrollbar {
     display: none;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    padding: 20px;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 </style>
