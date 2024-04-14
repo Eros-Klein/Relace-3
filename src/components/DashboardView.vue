@@ -113,7 +113,7 @@ export default {
         <div class="home-content" id="assigment-container">
 
         </div>
-        <div class="home-content" id="current-assignment-container">
+        <div class="currentassignment-content" id="current-assignment-container">
             
             <h2 id="title"></h2>
             <p id="description"></p>
@@ -136,6 +136,16 @@ export default {
     font-size: 20px;
     transition: all 0.25s ease-in-out;
     cursor: pointer;
+}
+
+#current-assignment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    height: 75vh;
+    background-color: #6b6b6b34;
+    border-radius: 25px;
 }
 
 #fetch:hover {
@@ -192,6 +202,21 @@ export default {
     padding: 20px;
     border-radius: 25px;
     height: 20vh;
+    flex-wrap: nowrap;
+    margin-bottom: 3%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.currentassignment-content {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    width: 85%;
+    background-color: #6b6b6b25;
+    padding: 20px;
+    border-radius: 25px;
+    height: 50vh;
     flex-wrap: nowrap;
     margin-bottom: 3%;
     overflow-x: auto;
