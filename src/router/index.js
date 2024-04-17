@@ -13,6 +13,7 @@ import WelcomeView from "@/components/WelcomeView.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
 import MicAPI from "@/components/MicAPI.vue";
+import DashboardAssignmentView from "@/components/DashboardAssignmentView.vue";
 
 const routes = [
     {
@@ -22,6 +23,12 @@ const routes = [
     {
         path: "/dashboard",
         component: DashboardView,
+        children: [
+            {
+                path: "a/:id",
+                component: DashboardAssignmentView,
+            },
+        ],
     },
     {
         path: "/welcome",

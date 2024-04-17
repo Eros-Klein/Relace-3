@@ -8,8 +8,50 @@ export default {
         goToAssignment(code) {
             this.$router.push('/a/' + code);
         },
+        startLoad() {
+            const reloadPic = document.getElementById("reload-pic");
+            reloadPic.style.animation = "rotation 1.5s infinite linear";
+        },
+        endLoad() {
+            const reloadPic = document.getElementById("reload-pic");
+            reloadPic.style.animation = "";
+        },
+        async getAssignments() {
+            this.startLoad();
+            const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("token"),
+                    count: 30
+                }),
+            });
+            const data = await response.json();
+
+            console.log(data);
+            this.endLoad();
+            if (data.success) {
+
+                for (let i = 0; i < data.assignments.length; i++) {
+                    let title = data.assignments[i].title;
+                    if (title.length > 35) {
+                        title = title.slice(0, 35) + "...";
+                    }
+
+                    if (data.assignments[i].description.length > 48) {
+                        this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
+                    } else {
+                        this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
+                    }
+                }
+            } else {
+                console.log(data.message);
+            }
+        },
         addAssignment(headline, body, id) {
-            const assignmentContainer = document.getElementById("assigment-container");
+            const assignmentContainer = document.getElementById("assignment-container");
             const assignment = document.createElement("div");
             assignment.classList.add("assignment");
             assignment.addEventListener("click", () => {
@@ -27,6 +69,7 @@ export default {
             assignmentContainer.appendChild(assignment);
         },
         async loadAssignments() {
+            this.startLoad();
             const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
                 method: "POST",
                 headers: {
@@ -37,7 +80,13 @@ export default {
                 }),
             });
             const data = await response.json();
-
+            this.endLoad();
+            if (data.success) {
+                this.getAssignments();
+            }
+            else {
+                alert('An error occurred while loading the assignments: ' + data.message);
+            }
             console.log(data);
         }
     },
@@ -51,46 +100,22 @@ export default {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
-        const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                jwt: localStorage.getItem("token"),
-                count: 30
-            }),
-        });
-        const data = await response.json();
-
-        console.log(data);
-        if (data.success) {
-            for (let i = 0; i < data.assignments.length; i++) {
-                let title = data.assignments[i].title;
-                if (title.length > 35) {
-                    title = title.slice(0, 35) + "...";
-                }
-
-                if (data.assignments[i].description.length > 48) {
-                    this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
-                } else {
-                    this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
-                }
-            }
-        } else {
-            console.log(data.message);
-        }
+        this.getAssignments();
     },
 }
 </script>
 
 <template>
     <div id="container">
-        <div class="home-content" id="assigment-container">
+        <div class="home-content">
+            <div id="assignment-container">
 
+            </div>
+            <div id="reload">
+                <img src="../assets/images/load.png" id="reload-pic" @click="loadAssignments">
+            </div>
         </div>
         <div class="home-content">
-            <button id="fetch" @click="loadAssignments">Fetch</button>
         </div>
         <div class="home-content">
 
@@ -99,6 +124,29 @@ export default {
 </template>
 
 <style>
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+#reload-pic {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+#reload {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
 #fetch {
     width: 100%;
     height: 100%;
@@ -146,6 +194,7 @@ export default {
     border-style: solid;
     border-radius: 25px;
     margin-right: 20px;
+    margin-left: 20px;
     transition: all 0.25s ease-in-out;
     flex: 0 0 auto;
 }
@@ -188,5 +237,12 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+#assignment-container {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    width: 90%;
 }
 </style>

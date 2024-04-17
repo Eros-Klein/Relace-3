@@ -4,6 +4,7 @@ import HeaderLine from './HeaderLine.vue';
 export default {
     name: 'AssignmentView',
     mounted: async function () {
+        console.log(this.$route.params.id);
         const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
             method: "POST",
             headers: {
@@ -35,14 +36,11 @@ export default {
 </script>
 
 <template>
-    <div id="container">
-        <div id="single-assignment-container">
-            <h2 id="title"></h2>
-            <p id="description"></p>
-            <p id="deadline"></p>
-        </div>
+    <div id="single-assignment-container">
+        <h2 id="title"></h2>
+        <p id="description"></p>
+        <p id="deadline"></p>
     </div>
-
 </template>
 
 <style>

@@ -1,36 +1,14 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
+import DashBoardAssignmentView from './DashboardAssignmentView.vue';
 
 
 export default {
     name: 'HomeView',
     methods: {
-        async goToAssignment(id) {
-            const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                jwt: localStorage.getItem("token"),
-                id: id
-            }),
-            });
-            const data = await response.json();
-
-        console.log(data);
-        if (data.success) {
-            document.getElementById('title').innerText = data.assignment.title;
-
-            document.getElementById('description').innerText = data.assignment.description;
-
-            document.getElementById('course').innerText = (data.assignment.course);
-
-            const date = new Date(data.assignment.deadline * 1000);
-            document.getElementById('deadline').innerText = 'Deadline: ' + date.getDate().toString().padStart(2, "0") + '.' + (date.getMonth() + 1).toString().padStart(2, "0") + '.' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, "0") + ':' + date.getMinutes().toString().padStart(2, "0") + ':' + date.getSeconds().toString().padStart(2, "0");
-        } else {
-            alert('An error occurred while loading the assignment: ' + data.message);
-        }
+        async goToAssignment(code) {
+            await this.$router.push('/dashboard/a/' + code);
+            await DashBoardAssignmentView.methods.reloadAssignment(this.$route.params.id);
         },
         addAssignment(headline, body, id) {
             const assignmentContainer = document.getElementById("assigment-container");
@@ -111,21 +89,15 @@ export default {
 <template>
     <div id="container">
         <div class="home-content" id="assigment-container">
-
+            <div id="reload">
+                <img src="../assets/images/load.png" id="reload-pic" @click="loadAssignments">
+            </div>
         </div>
-        <div class="currentassignment-content" id="current-assignment-container">
-            
-            <h2 id="title"></h2>
-            <p id="description"></p>
-            <p id="course"></p>
-            <p id="deadline"></p>
-
-        </div>
+        <RouterView />
     </div>
 </template>
 
 <style>
-
 #current-assignment-container {
     display: flex;
     flex-direction: column;
