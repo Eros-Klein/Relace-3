@@ -1,8 +1,6 @@
 <script>
 //import axios from 'axios';
 
-import axios from "axios";
-
 export default {
   name: 'MicAPI',
   data() {
@@ -12,8 +10,9 @@ export default {
     };
   },
   async created() {
-    //this.token = await this.getToken();
-    //console.log('Token:', this.token);
+    const code = this.getCodeFromUrl();
+    this.token = await this.getToken(code);
+    console.log('Token:', this.token);
     //await this.sendTokenToBackend();
     //this.assignments = await this.getAssignmentsFromBackend();
   },
@@ -21,35 +20,53 @@ export default {
   methods: {
     async authorize() {
       const clientId = process.env.VUE_APP_CLIENT_ID;
-      const redirectUri = encodeURIComponent(process.env.VUE_APP_REDIRECT_URI);
-      const scope = encodeURIComponent(process.env.VUE_APP_SCOPE);
-      const tenantId = process.env.VUE_APP_TENANT_ID;
+      const redirectUri = process.env.VUE_APP_REDIRECT_URI;
 
-      const authUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${scope}`;
+      console.log(redirectUri)
 
-      try {
-        const response = await axios.get(authUrl);
-        return response.data;
-      } catch (error) {
-        console.error('Error during authorization:', error);
+      const authority =`https://login.microsoftonline.com/91fc072c-edef-4f97-bdc5-cfb67718ae3a`;
+      const authorizationUrl = `${authority}/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=https://graph.microsoft.com/.default&state=12345`;
+
+      window.location.href = authorizationUrl;
+
+      let code = null;
+      while (!code) {
+        code = this.getCodeFromUrl();
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Warten Sie 1 Sekunde, bevor Sie erneut überprüfen
       }
+
+      console.log(code);
+      this.token = await this.getToken(code);
+      console.log('Token:', this.token);
+
     },
-    /*async getToken() {
+    getCodeFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('code');
+    },
+    async getToken(code) {
+      const axios = require('axios');
+      const params = new URLSearchParams();
+      params.append('client_id', process.env.VUE_APP_CLIENT_ID);
+      params.append('client_secret', process.env.VUE_APP_CLIENT_SECRET);
+      params.append('redirect_uri', process.env.VUE_APP_REDIRECT_URI);
+      params.append('grant_type', process.env.VUE_APP_GRANT_TYPE);
+      params.append('code', code);
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+
       try {
-        const response = await axios.post(`https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`, {
-          client_id: process.env.CLIENT_ID,
-          client_secret: process.env.CLIENT_SECRET,
-          redirect_uri: process.env.REDIRECT_URI,
-          grant_type: process.env.GRANT_TYPE,
-        });
-
-        console.log(response.data);
-
+        const response = await axios.post(`${process.env.VUE_APP_AUTHORITY}/oauth2/v2.0/token`, params, config);
         return response.data.access_token;
       } catch (error) {
         console.error('Fehler beim Abrufen des Tokens:', error);
       }
     },
+    /*
     async sendTokenToBackend() {
       try {
         const response = await axios.get(process.env.VUE_APP_BACKEND_API_URL, {
