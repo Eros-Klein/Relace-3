@@ -36,11 +36,14 @@ export default {
 </script>
 
 <template>
-    <div id="single-assignment-container">
-        <h2 id="title"></h2>
-        <p id="description"></p>
-        <p id="deadline"></p>
-    </div>
+    <center>
+        <div id="single-assignment-container">
+            <h2 id="title"></h2>
+            <p id="description"></p>
+            <p id="deadline"></p>
+        </div>
+    </center>
+
 </template>
 
 <style>

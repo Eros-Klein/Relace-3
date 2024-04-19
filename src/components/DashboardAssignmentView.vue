@@ -58,5 +58,7 @@ export default {
     height: 45vh;
     background-color: #6b6b6b25;
     border-radius: 25px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 </style>
