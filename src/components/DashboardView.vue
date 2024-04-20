@@ -7,7 +7,8 @@ export default {
     name: 'HomeView',
     data: function () {
         return {
-            count: Number
+            count: Number,
+            offset: Number
         }
     },
     methods: {
@@ -26,7 +27,6 @@ export default {
                 <div class="assignment_head">
                     <h2>${headline}</h2>
                 </div>
-                <div class="line"></div>
                 <div class="assignment_body">
                     <p>${body}</p>
                 </div>
@@ -47,7 +47,7 @@ export default {
 
             console.log(data);
         },
-        async insertAssignments(xy) {
+        async insertAssignments() {
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
                 method: "POST",
                 headers: {
@@ -55,24 +55,24 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("token"),
-                    count: xy
+                    count: this.count,
+                    offset: this.offset,
+                    compact: true
                 }),
             });
             const data = await response.json();
 
             console.log(data);
+
             if (data.success) {
                 for (let i = 0; i < data.assignments.length; i++) {
                     let title = data.assignments[i].title;
                     if (title.length > 35) {
                         title = title.slice(0, 35) + "...";
                     }
+                    const date = new Date(data.assignments[i].deadline * 1000);
 
-                    if (data.assignments[i].description.length > 48) {
-                        this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
-                    } else {
-                        this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
-                    }
+                    this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
                 console.log(data.message);
@@ -90,15 +90,17 @@ export default {
         }
 
         this.count = 30;
-        await this.insertAssignments(this.count);
+        this.offset = 0;
+        await this.insertAssignments();
 
         const element = document.getElementById('assignment-container');
         element.addEventListener('scroll', () => {
             console.log(element.scrollLeft, element.scrollWidth);
             console.log(element.scrollLeft + element.clientWidth);
-            if (element.scrollLeft + element.clientWidth >= element.scrollWidth) {
-                this.count += 30;
-                this.insertAssignments(this.count);
+            if (element.scrollLeft + element.clientWidth >= element.scrollWidth - 5) {
+                this.offset += 30;
+                console.log(this.offset);
+                this.insertAssignments();
             }
         })
     },
@@ -130,17 +132,6 @@ export default {
     color: #88888880;
 }
 
-.assignment h2 {
-    color: #d4d4d4;
-    font-size: 20px;
-
-}
-
-.assignment p {
-    color: #d4d4d4;
-    font-size: 15px;
-}
-
 .line {
     background-color: #46004075;
     height: 2px;
@@ -151,8 +142,8 @@ export default {
     padding: 20px;
     user-select: none;
     display: flex;
-    flex-direction: column;
-    align-items: left;
+    flex-direction: columns;
+    justify-content: space-around;
     width: 15%;
     background-color: #0000004f;
     border-color: #46004075;

@@ -167,13 +167,13 @@ export default {
 
 .assignment h2 {
     color: #d4d4d4;
-    font-size: 20px;
+    font-size: 2vh;
 
 }
 
 .assignment p {
     color: #d4d4d4;
-    font-size: 15px;
+    font-size: 1.6vh;
 }
 
 .line {
