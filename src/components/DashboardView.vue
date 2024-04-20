@@ -5,13 +5,18 @@ import DashBoardAssignmentView from './DashboardAssignmentView.vue';
 
 export default {
     name: 'HomeView',
+    data: function () {
+        return {
+            count: Number
+        }
+    },
     methods: {
         async goToAssignment(code) {
             await this.$router.push('/dashboard/a/' + code);
             await DashBoardAssignmentView.methods.reloadAssignment(this.$route.params.id);
         },
         addAssignment(headline, body, id) {
-            const assignmentContainer = document.getElementById("assigment-container");
+            const assignmentContainer = document.getElementById("assignment-container");
             const assignment = document.createElement("div");
             assignment.classList.add("assignment");
             assignment.addEventListener("click", () => {
@@ -41,6 +46,37 @@ export default {
             const data = await response.json();
 
             console.log(data);
+        },
+        async insertAssignments(xy) {
+            const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("token"),
+                    count: xy
+                }),
+            });
+            const data = await response.json();
+
+            console.log(data);
+            if (data.success) {
+                for (let i = 0; i < data.assignments.length; i++) {
+                    let title = data.assignments[i].title;
+                    if (title.length > 35) {
+                        title = title.slice(0, 35) + "...";
+                    }
+
+                    if (data.assignments[i].description.length > 48) {
+                        this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
+                    } else {
+                        this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
+                    }
+                }
+            } else {
+                console.log(data.message);
+            }
         }
     },
     mounted: async function () {
@@ -53,42 +89,25 @@ export default {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
-        const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                jwt: localStorage.getItem("token"),
-                count: 30
-            }),
-        });
-        const data = await response.json();
+        this.count = 30;
+        await this.insertAssignments(this.count);
 
-        console.log(data);
-        if (data.success) {
-            for (let i = 0; i < data.assignments.length; i++) {
-                let title = data.assignments[i].title;
-                if (title.length > 35) {
-                    title = title.slice(0, 35) + "...";
-                }
-
-                if (data.assignments[i].description.length > 48) {
-                    this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
-                } else {
-                    this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
-                }
+        const element = document.getElementById('assignment-container');
+        element.addEventListener('scroll', () => {
+            console.log(element.scrollLeft, element.scrollWidth);
+            console.log(element.scrollLeft + element.clientWidth);
+            if (element.scrollLeft + element.clientWidth >= element.scrollWidth) {
+                this.count += 30;
+                this.insertAssignments(this.count);
             }
-        } else {
-            console.log(data.message);
-        }
+        })
     },
 }
 </script>
 
 <template>
     <div id="container">
-        <div class="home-content" id="assigment-container">
+        <div class="home-content" id="assignment-container">
             <div id="reload">
                 <img src="../assets/images/load.png" id="reload-pic" @click="loadAssignments">
             </div>
