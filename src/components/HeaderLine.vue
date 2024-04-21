@@ -5,7 +5,27 @@ export default {
     {
         setHeadline(headline) {
             document.getElementById('headline').innerText = headline;
-        }
+        },
+        loadStatus(percentage) {
+            document.getElementById('line').style.display = "block";
+            document.getElementById('line').style.width = percentage.toString() + "%";
+        },
+        addLoadStatus(percentage) {
+            if (document.getElementById('line').style.width.split('%')[0] + percentage >= 100) {
+                this.loadStatusSucceed();
+            }
+            else document.getElementById('line').style.width = (parseInt(document.getElementById('line').style.width) + percentage).toString() + "%";
+        },
+        loadStatusSucceed() {
+            document.getElementById('line').style.width = "100%";
+            setTimeout(() => {
+                document.getElementById('line').style.display = "none";
+                document.getElementById('line').style.width = "0%";
+                setTimeout(() => {
+                    document.getElementById('line').style.display = "block";
+                }, 500);
+            }, 500);
+        },
     },
     data() {
         return {
@@ -28,6 +48,7 @@ export default {
 </script>
 
 <template>
+    <div id="line"></div>
     <div id="container">
         <div id="headline-container">
             <h2 id="headline">{{ headline }}</h2>
@@ -46,5 +67,14 @@ export default {
     padding: 20px;
     animation: colorChange 90s infinite;
     font-size: 20px;
+}
+
+#line {
+    background-color: rgba(153, 0, 173, 0.637);
+    height: 2px;
+    width: 0%;
+    position: fixed;
+    left: 0;
+    transition: all 0.5s;
 }
 </style>

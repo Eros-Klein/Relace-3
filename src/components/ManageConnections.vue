@@ -1,4 +1,6 @@
 <script>
+import HeaderLine from './HeaderLine.vue';
+
 export default {
     name: 'ManageConnections',
     methods: {
@@ -7,9 +9,17 @@ export default {
         },
         loginMoodleTrigger() {
             document.getElementById('info').style.display = 'flex';
+            const connections = document.getElementsByClassName('connection');
+            for (let i = 0; i < connections.length; i++) {
+                connections[i].style.pointerEvents = 'none';
+            }
         },
         loginMoodleClose() {
             document.getElementById('info').style.display = 'none';
+            const connections = document.getElementsByClassName('connection');
+            for (let i = 0; i < connections.length; i++) {
+                connections[i].style.pointerEvents = 'all';
+            }
         },
         async loginMoodle() {
             let organization = document.getElementById('organization').value;
@@ -66,16 +76,18 @@ export default {
 
                 if (data.success) {
                     connectedField.style.color = '#00ff00';
-                    connectedField.innerHTML = 'Connected';
+                    connectedField.innerHTML = '✔️';
                 } else {
                     connectedField.style.color = '#ff0000';
-                    connectedField.innerHTML = 'Not Connected';
+                    connectedField.innerHTML = '❌';
                 }
             }
+            HeaderLine.methods.loadStatusSucceed();
         }
     },
     mounted:
         function () {
+            HeaderLine.methods.loadStatus(5);
             this.checkForConnections();
         }
 }
@@ -84,27 +96,26 @@ export default {
 <template>
     <div id="connection-container">
         <div id="con-content">
-            <div class="connection">
+            <div class="connection" @click="loginGithub">
                 <p id="name">Github</p>
-                <p id="connected"></p>
-                <button id="login" @click="loginGithub">Connect</button>
+                <p id="connected">-</p>
             </div>
-            <div class="connection">
+            <div class="connection" @click="loginMoodleTrigger">
                 <p id="name">Moodle</p>
-                <p id="connected"></p>
-                <button id="login" @click="loginMoodleTrigger">Connect</button>
+                <p id="connected">-</p>
             </div>
         </div>
-        <div id="info">
-            <p id="close" @click="loginMoodleClose">X</p>
-            <h1>Moodle - Login</h1>
-            <input id="organization" type="text"
-                placeholder="Organization (e.g: https://edufs.edu.htl-leonding.ac.at/moodle/)">
-            <input id="username" type="text" placeholder="Username">
-            <input id="password" type="password" placeholder="Password">
-            <p id="error"></p>
-            <button @click="loginMoodle">Login</button>
-        </div>
+
+    </div>
+    <div id="info">
+        <p id="close" @click="loginMoodleClose">✕</p>
+        <h1>Moodle - Login</h1>
+        <input id="organization" type="text"
+            placeholder="Organization (e.g: https://edufs.edu.htl-leonding.ac.at/moodle/)">
+        <input id="username" type="text" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+        <p id="error"></p>
+        <button @click="loginMoodle">Login</button>
     </div>
 </template>
 
@@ -120,9 +131,12 @@ export default {
 }
 
 #info {
-    position: fixed;
+    position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50px);
+    transform: translate(-50%, -50%);
+    margin: auto;
+
     box-shadow: 0 0 0 999999px rgba(0, 0, 0, .5);
     border-radius: 25px;
 
@@ -131,7 +145,9 @@ export default {
     height: 45%;
     padding: 50px;
     border-radius: 25px;
-    background-color: #5c067edc;
+    border-style: solid;
+    border-color: #46004075;
+    background-color: #5c067ef5;
     display: none;
     flex-direction: column;
     text-align: center;
@@ -162,6 +178,8 @@ export default {
     cursor: pointer;
     width: 25%;
     transition: background-color 0.3s;
+    border-color: #46004075;
+    border-style: solid;
 }
 
 #info input {
@@ -178,6 +196,15 @@ export default {
     border-color: #46004075;
     padding-left: 15px;
     padding-right: 15px;
+
+    transition: all 0.25s ease-in-out;
+}
+
+#info input:focus {
+    outline: none;
+    border-color: #46004075;
+    border-style: solid;
+    border-radius: 7.5px;
 }
 
 #info button:hover {
@@ -185,17 +212,24 @@ export default {
 }
 
 .connection {
+    user-select: none;
+    margin-top: 2.5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
     border-radius: 15px;
-    background-color: rgba(180, 180, 180, 0.281);
-    width: 200px;
-    padding-bottom: 25px;
+    background-color: rgba(139, 139, 139, 0.281);
+    width: 80%;
+    height: 100px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    border-style: solid;
+    border-color: #46004075;
 }
 
-.connection #login {
-    border-radius: 15px;
-    background-color: #e45fff67;
-    height: 30px;
-    width: 100px;
+.connection:hover {
+    background-color: rgba(180, 180, 180, 0.5);
 }
 
 .connection #name {
@@ -204,7 +238,7 @@ export default {
 
 .connection #connected {
     color: #d4d4d4;
-    font-size: 15px;
+    font-size: 50px;
 }
 
 #connection-container {
@@ -218,7 +252,8 @@ export default {
 #con-content {
     margin-top: 50px;
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
-
+    align-items: center;
 }
 </style>

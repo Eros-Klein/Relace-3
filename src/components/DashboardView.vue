@@ -77,9 +77,11 @@ export default {
             } else {
                 console.log(data.message);
             }
+            HeaderLine.methods.addLoadStatus(95);
         }
     },
     mounted: async function () {
+        HeaderLine.methods.loadStatus(0);
         const nowTime = new Date();
         if (nowTime.getHours() < 12) {
             HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
@@ -89,9 +91,10 @@ export default {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
+        HeaderLine.methods.addLoadStatus(5);
         this.count = 30;
         this.offset = 0;
-        await this.insertAssignments();
+        this.insertAssignments();
 
         const element = document.getElementById('assignment-container');
         element.addEventListener('scroll', () => {
@@ -196,10 +199,6 @@ export default {
     background-color: #6b6b6b25;
     border-radius: 25px;
     height: 15px;
-}
-
-::-webkit-scrollbar {
-    display: none;
 }
 
 #container {

@@ -29,7 +29,6 @@ export default {
                 }),
             });
             const data = await response.json();
-
             console.log(data);
             this.endLoad();
             if (data.success) {
@@ -49,6 +48,9 @@ export default {
             } else {
                 console.log(data.message);
             }
+
+            HeaderLine.methods.loadStatus(100);
+            HeaderLine.methods.loadStatusSucceed();
         },
         addAssignment(headline, body, id) {
             const assignmentContainer = document.getElementById("assignment-container");
@@ -90,7 +92,11 @@ export default {
             console.log(data);
         }
     },
+    beforeMount: function () {
+        HeaderLine.methods.loadStatus(20);
+    },
     mounted: async function () {
+        HeaderLine.methods.loadStatus(0);
         const nowTime = new Date();
         if (nowTime.getHours() < 12) {
             HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
@@ -100,8 +106,9 @@ export default {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
+        HeaderLine.methods.loadStatus(5);
         this.getAssignments();
-    },
+    }
 }
 </script>
 
@@ -207,6 +214,7 @@ export default {
 }
 
 .home-content {
+    scrollbar-color: #46004075 #6b6b6b25;
     display: flex;
     flex-direction: row;
     align-items: left;
@@ -226,10 +234,6 @@ export default {
     background-color: #6b6b6b25;
     border-radius: 25px;
     height: 15px;
-}
-
-::-webkit-scrollbar {
-    display: none;
 }
 
 #container {

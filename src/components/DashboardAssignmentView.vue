@@ -1,8 +1,11 @@
 <script>
+import HeaderLine from './HeaderLine.vue';
+
 export default {
     name: 'DashboardAssignmentView',
     methods: {
         async reloadAssignment(code) {
+            HeaderLine.methods.loadStatus(0);
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
                 method: "POST",
                 headers: {
@@ -26,17 +29,18 @@ export default {
             } else {
                 alert('An error occurred while loading the assignment: ' + data.message);
             }
+            HeaderLine.methods.addLoadStatus(100);
         }
     },
     mounted: async function () {
-        await this.reloadAssignment(this.$route.params.id);
+        this.reloadAssignment(this.$route.params.id);
     }
 }
 
 </script>
 
 <template>
-    <div id="single-assignment-container">
+    <div id="single-assignment-container-dashboard">
         <h2 id="title"></h2>
         <p id="description"></p>
         <p id="deadline"></p>
@@ -50,7 +54,7 @@ export default {
     color: #ff00ffd7;
 }
 
-#single-assignment-container {
+#single-assignment-container-dashboard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,5 +64,9 @@ export default {
     border-radius: 25px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+#single-assignment-container::-webkit-scrollbar {
+    display: none;
 }
 </style>

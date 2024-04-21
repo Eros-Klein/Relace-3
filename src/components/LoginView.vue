@@ -64,5 +64,21 @@ export default {
     border-color: #46004075;
     padding-left: 15px;
     padding-right: 15px;
+    transition: all 0.25s ease-in-out;
+}
+
+#content input:focus {
+    outline: none;
+    border-color: #46004075;
+    border-style: solid;
+    border-radius: 7.5px;
+}
+
+#content input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(92, 71, 126) inset !important;
+    -webkit-text-fill-color: white !important;
 }
 </style>

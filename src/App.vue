@@ -65,7 +65,6 @@ p {
 }
 
 body {
-  scrollbar-color: #46004075 #6b6b6b25;
   background: linear-gradient(90deg,
       #030b28 0%,
       #1d0a45 33%,
@@ -73,6 +72,10 @@ body {
       #1f0751 80%,
       #390452 100%);
   font-family: "Arial";
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 #page-container {

@@ -1,4 +1,7 @@
 <script>
+import HeaderLine from './HeaderLine.vue';
+
+
 export default {
     name: 'SettingView',
     methods: {
@@ -25,6 +28,9 @@ export default {
     },
     beforeMount: function () {
         document.getElementById("headline-container").style.display = "none";
+    },
+    mounted: function () {
+        HeaderLine.methods.loadStatusSucceed();
     },
     beforeUnmount: function () {
         document.getElementById("headline-container").style.display = "flex";

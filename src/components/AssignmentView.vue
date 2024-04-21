@@ -4,6 +4,7 @@ import HeaderLine from './HeaderLine.vue';
 export default {
     name: 'AssignmentView',
     mounted: async function () {
+        HeaderLine.methods.loadStatus(0);
         console.log(this.$route.params.id);
         const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
             method: "POST",
@@ -15,6 +16,7 @@ export default {
                 id: this.$route.params.id
             }),
         });
+        HeaderLine.methods.loadStatus(30);
         const data = await response.json();
 
         console.log(data);
@@ -30,6 +32,7 @@ export default {
         } else {
             alert('An error occurred while loading the assignment: ' + data.message);
         }
+        HeaderLine.methods.loadStatusSucceed();
     }
 }
 
@@ -41,6 +44,7 @@ export default {
             <h2 id="title"></h2>
             <p id="description"></p>
             <p id="deadline"></p>
+            <p id="done"></p>
         </div>
     </center>
 
