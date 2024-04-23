@@ -4,9 +4,11 @@ export default {
   mounted: async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    console.log(code);
 
     if (code) {
       let token = await this.getToken(code);
+      console.log(token);
       // Send the token to your API
       const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/settoken', {
         method: 'POST',
