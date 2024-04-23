@@ -1,12 +1,13 @@
-<script setup>
+<script>
+
 export default {
   name: 'MicrosoftView',
   mounted: async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    console.log(code);
 
     if (code) {
+      console.log(code);
       let token = await this.getToken(code);
       console.log(token);
       // Send the token to your API
