@@ -12,7 +12,6 @@ import SettingView from "@/components/SettingView.vue";
 import WelcomeView from "@/components/WelcomeView.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
-import MicAPI from "@/components/MicAPI.vue";
 import DashboardAssignmentView from "@/components/DashboardAssignmentView.vue";
 
 const routes = [
