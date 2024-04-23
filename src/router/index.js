@@ -82,10 +82,6 @@ const routes = [
         path: "/",
         component: HomeView,
     },
-    {
-        path: "/micapi",
-        component: MicAPI,
-    },
 ];
 
 const router = createRouter({
