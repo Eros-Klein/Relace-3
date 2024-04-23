@@ -13,6 +13,7 @@ import WelcomeView from "@/components/WelcomeView.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
 import DashboardAssignmentView from "@/components/DashboardAssignmentView.vue";
+import MicrosoftView from "@/components/MicrosoftView.vue";
 
 const routes = [
     {
@@ -80,6 +81,10 @@ const routes = [
     {
         path: "/",
         component: HomeView,
+    },
+    {
+        path: "/mic",
+        component: MicrosoftView,
     },
 ];
 
