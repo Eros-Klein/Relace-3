@@ -1,4 +1,6 @@
 <script>
+import SettingView from './SettingView.vue';
+
 
 export default {
     name: 'NavBar',
@@ -40,8 +42,7 @@ export default {
 
 
         if (!data.success) {
-            this.$router.push('/welcome');
-            window.history.pushState(null, '', '/welcome');
+            SettingView.methods.refresh();
         }
     },
     props: {

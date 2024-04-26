@@ -23,6 +23,7 @@ export default {
             console.log(data);
             if (data.success) {
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('refresh', data.refreshToken);
                 localStorage.setItem('username', username);
                 this.$router.push('/home');
             } else {

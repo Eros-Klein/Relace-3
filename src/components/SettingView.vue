@@ -20,10 +20,43 @@ export default {
             this.$router.push('/setting/connections');
             window.history.pushState(null, '', '/setting/connections');
         },
-        logout() {
+        async logout() {
+            await fetch("https://relacexyz.duckdns.org/api/auth/logout/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("refresh")
+                }),
+            });
+
             localStorage.removeItem('token');
             localStorage.removeItem('username');
+            localStorage.removeItem('refresh');
             this.$router.push('/welcome');
+        },
+        async refresh() {
+            const response = await fetch("https://relacexyz.duckdns.org/api/auth/refresh/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    jwt: localStorage.getItem("refresh")
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('refresh', data.refreshToken);
+            } else {
+                localStorage.removeItem('token');
+                localStorage.removeItem('username');
+                localStorage.removeItem('refresh');
+                this.$router.push('/welcome');
+            }
         }
     },
     beforeMount: function () {
@@ -70,6 +103,9 @@ export default {
             </div>
             <div @click="logout" class="setting-categorie-hidden" id="logout">
                 <p>Logout</p>
+            </div>
+            <div @click="refresh" class="setting-categorie-hidden">
+                <p>Refresh</p>
             </div>
         </div>
         <div id="design" class="setting-categorie">
