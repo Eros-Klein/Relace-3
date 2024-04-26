@@ -3,28 +3,48 @@ export default {
     name: 'RegisterView',
     methods: {
         async register() {
+            const errorField = document.getElementById('error');
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const email = document.getElementById('email').value;
 
-            const response = await fetch('https://relacexyz.duckdns.org/api/auth/register/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "username": username,
-                    "password": password,
-                    "email": email
-                })
-            });
-            const data = await response.json();
-            console.log(data);
+            if (username === '' || password === '' || email === '') {
+                return errorField.innerText = 'Please fill out all fields';
+            }
+            else if (password.length < 8) {
+                return errorField.innerText = 'Password must be at least 8 characters long';
+            }
+            // eslint-disable-next-line
+            else if (email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g) === null) {
+                return errorField.innerText = 'Please enter a valid email address';
+            }
+            else if (username.length < 2) {
+                return errorField.innerText = 'Username must be at least 2 characters long';
+            }
+            else if (username.length > 30) {
+                return errorField.innerText = 'Username must be at most 30 characters long';
+            }
+            else {
+                const response = await fetch('https://relacexyz.duckdns.org/api/auth/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "username": username,
+                        "password": password,
+                        "email": email
+                    })
+                });
+                const data = await response.json();
+                console.log(data);
 
-            if (data.success) {
-                this.login();
-            } else {
-                document.getElementById('error').innerText = data.message;
+                if (data.success) {
+                    this.login();
+                } else {
+                    document.getElementById('error').innerText = data.message;
+                }
             }
         },
         async login() {

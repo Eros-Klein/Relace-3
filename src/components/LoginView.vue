@@ -5,29 +5,45 @@ export default {
     name: 'LoginView',
     methods: {
         async login() {
+            const errorField = document.getElementById('error');
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            const response = await fetch('https://relacexyz.duckdns.org/api/auth/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "username": username,
-                    "password": password
-                })
-            });
-            const data = await response.json();
+            if (username === '' || password === '') {
+                return errorField.innerText = 'Please fill out all fields';
+            }
+            else if (password.length < 8) {
+                return errorField.innerText = 'Password must be at least 8 characters long';
+            }
+            else if (username.length < 2) {
+                return errorField.innerText = 'Username must be at least 2 characters long';
+            }
+            else if (username.length > 30) {
+                return errorField.innerText = 'Username must be at most 30 characters long';
+            }
+            else {
+                const response = await fetch('https://relacexyz.duckdns.org/api/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "username": username,
+                        "password": password
+                    })
+                });
+                const data = await response.json();
 
-            console.log(data);
-            if (data.success) {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('refresh', data.refreshToken);
-                localStorage.setItem('username', username);
-                this.$router.push('/home');
-            } else {
-                document.getElementById('error').innerText = data.message;
+                console.log(data);
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('refresh', data.refreshToken);
+                    localStorage.setItem('username', username);
+                    this.$router.push('/home');
+                } else {
+                    errorField.innerText = "Wrong credentials";
+                }
             }
         }
     },
