@@ -26,6 +26,27 @@ export default {
 
                 this.deadline = new Date(data.assignment.deadline * 1000);
 
+                this.timeTillDeadlineActualizer = setInterval(() => {
+                    const now = new Date();
+                    const diff = this.deadline - now;
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    this.timeTillDeadline = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                }, 1000);
+
+                const now = new Date();
+                const diff = this.deadline - now;
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                this.timeTillDeadline = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+                console.log(this.timeTillDeadlineActualizer);
             } else {
                 alert('An error occurred while loading the assignment: ' + data.message);
             }
@@ -35,15 +56,20 @@ export default {
     data: function () {
         return {
             deadline: '',
-            timeTillDeadlineActualizer: setInterval(() => {
-                this.timeTillDeadline = new Date(this.deadline * 1000) - new Date();
-                console.log(this.timeTillDeadline);
-            }, 1000),
+            timeTillDeadlineActualizer: 0,
             timeTillDeadline: '',
         }
     },
     mounted: async function () {
-        this.reloadAssignment(this.$route.params.id);
+        HeaderLine.methods.loadStatus(0);
+        await this.reloadAssignment(this.$route.params.id);
+    },
+    async beforeRouteUpdate() {
+        let value = this.timeTillDeadlineActualizer;
+        clearInterval(parseInt(value));
+        console.log('cleared: ' + value);
+
+        await this.reloadAssignment(this.$route.params.id);
     }
 }
 

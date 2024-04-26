@@ -1,6 +1,5 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import DashBoardAssignmentView from './DashboardAssignmentView.vue';
 
 
 export default {
@@ -14,7 +13,6 @@ export default {
     methods: {
         async goToAssignment(code) {
             await this.$router.push('/dashboard/a/' + code);
-            await DashBoardAssignmentView.methods.reloadAssignment(this.$route.params.id);
         },
         addAssignment(headline, body, id) {
             const assignmentContainer = document.getElementById("assignment-container");
@@ -98,11 +96,8 @@ export default {
 
         const element = document.getElementById('assignment-container');
         element.addEventListener('scroll', () => {
-            console.log(element.scrollLeft, element.scrollWidth);
-            console.log(element.scrollLeft + element.clientWidth);
             if (element.scrollLeft + element.clientWidth >= element.scrollWidth - 5) {
                 this.offset += 30;
-                console.log(this.offset);
                 this.insertAssignments();
             }
         })
