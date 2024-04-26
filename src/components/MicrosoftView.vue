@@ -55,6 +55,7 @@ export default {
           const userToken = data.access_token;
           // Use the user token here
           console.log(userToken);
+          return userToken;
         });
   },
 }
