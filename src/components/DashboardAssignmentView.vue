@@ -22,29 +22,43 @@ export default {
             if (data.success) {
                 document.getElementById('title').innerText = data.assignment.title;
 
-                document.getElementById('description').innerText = data.assignment.description;
+                document.getElementById('description').innerHTML = data.assignment.description;
 
                 this.deadline = new Date(data.assignment.deadline * 1000);
 
                 this.timeTillDeadlineActualizer = setInterval(() => {
                     const now = new Date();
                     const diff = this.deadline - now;
+                    if (diff < 0) {
+                        this.timeTillDeadline = 'Deadline passed';
+                        clearInterval(this.timeTillDeadlineActualizer);
+                    }
+                    else {
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+                        const milliseconds = Math.floor(diff % 1000);
 
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                    this.timeTillDeadline = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-                }, 1000);
+                        this.timeTillDeadline = days.toString().padStart(2, "0") + "d " + hours.toString().padStart(2, "0") + "h " + minutes.toString().padStart(2, "0") + "m " + seconds.toString().padStart(2, "0") + "s " + milliseconds.toString().padStart(3, "0") + "ms";
+                    }
+                }, 1);
 
                 const now = new Date();
                 const diff = this.deadline - now;
+                if (diff < 0) {
+                    this.timeTillDeadline = 'Deadline passed';
+                    clearInterval(this.timeTillDeadlineActualizer);
+                }
+                else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+                    const milliseconds = Math.floor(diff % 1000);
 
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                this.timeTillDeadline = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                    this.timeTillDeadline = days.toString().padStart(2, "0") + "d " + hours.toString().padStart(2, "0") + "h " + minutes.toString().padStart(2, "0") + "m " + seconds.toString().padStart(2, "0") + "s " + milliseconds.toString().padStart(3, "0") + "ms";
+                }
 
                 console.log(this.timeTillDeadlineActualizer);
             } else {
@@ -55,6 +69,7 @@ export default {
     },
     data: function () {
         return {
+            changed: false,
             deadline: '',
             timeTillDeadlineActualizer: 0,
             timeTillDeadline: '',
@@ -64,12 +79,18 @@ export default {
         HeaderLine.methods.loadStatus(0);
         await this.reloadAssignment(this.$route.params.id);
     },
-    async beforeRouteUpdate() {
-        let value = this.timeTillDeadlineActualizer;
-        clearInterval(parseInt(value));
-        console.log('cleared: ' + value);
-
-        await this.reloadAssignment(this.$route.params.id);
+    beforeUpdate: async function () {
+        if (this.changed) {
+            this.changed = false;
+            let value = this.timeTillDeadlineActualizer;
+            clearInterval(parseInt(value));
+            console.log('cleared: ' + value);
+            await this.reloadAssignment(this.$route.params.id);
+        }
+    },
+    beforeRouteUpdate: async function (to, from, next) {
+        this.changed = true;
+        next();
     }
 }
 
