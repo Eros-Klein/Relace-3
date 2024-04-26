@@ -51,11 +51,16 @@ export default {
             if (data.success) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refresh', data.refreshToken);
+                return true;
             } else {
                 localStorage.removeItem('token');
                 localStorage.removeItem('username');
                 localStorage.removeItem('refresh');
-                this.$router.push('/welcome');
+
+                if (this.$route) {
+                    this.$router.push('/welcome');
+                }
+                else return false;
             }
         }
     },

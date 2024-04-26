@@ -24,13 +24,13 @@ export default {
         },
         body: params
       })
-          .then(response => response.json())
-          .then(data => {
-            const userToken = data.access_token;
-            // Use the user token here
-            console.log(userToken);
-            return userToken;
-          });
+        .then(response => response.json())
+        .then(data => {
+          const userToken = data.access_token;
+          // Use the user token here
+          console.log(userToken);
+          return userToken;
+        });
     },
   },
   mounted: async function () {

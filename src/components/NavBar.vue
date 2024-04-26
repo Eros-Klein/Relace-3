@@ -42,7 +42,11 @@ export default {
 
 
         if (!data.success) {
-            SettingView.methods.refresh();
+            if (!await SettingView.methods.refresh()) {
+                console.log('refresh failed');
+                this.$router.push('/welcome');
+            }
+            console.log('refreshed');
         }
     },
     props: {

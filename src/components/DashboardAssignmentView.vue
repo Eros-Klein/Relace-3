@@ -24,12 +24,22 @@ export default {
 
                 document.getElementById('description').innerText = data.assignment.description;
 
-                const date = new Date(data.assignment.deadline * 1000);
-                document.getElementById('deadline').innerText = 'Deadline: ' + date.getDate().toString().padStart(2, "0") + '.' + (date.getMonth() + 1).toString().padStart(2, "0") + '.' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, "0") + ':' + date.getMinutes().toString().padStart(2, "0") + ':' + date.getSeconds().toString().padStart(2, "0");
+                this.deadline = new Date(data.assignment.deadline * 1000);
+
             } else {
                 alert('An error occurred while loading the assignment: ' + data.message);
             }
             HeaderLine.methods.addLoadStatus(100);
+        }
+    },
+    data: function () {
+        return {
+            deadline: '',
+            timeTillDeadlineActualizer: setInterval(() => {
+                this.timeTillDeadline = new Date(this.deadline * 1000) - new Date();
+                console.log(this.timeTillDeadline);
+            }, 1000),
+            timeTillDeadline: '',
         }
     },
     mounted: async function () {
@@ -43,7 +53,7 @@ export default {
     <div id="single-assignment-container-dashboard">
         <h2 id="title"></h2>
         <p id="description"></p>
-        <p id="deadline"></p>
+        <p id="deadline">{{ timeTillDeadline }}</p>
     </div>
 </template>
 
