@@ -70,7 +70,7 @@ export default {
     data: function () {
         return {
             changed: false,
-            deadline: '',
+            deadline: new Date(Date.now()),
             timeTillDeadlineActualizer: 0,
             timeTillDeadline: '',
         }
@@ -100,11 +100,41 @@ export default {
     <div id="single-assignment-container-dashboard">
         <h2 id="title"></h2>
         <p id="description"></p>
-        <p id="deadline">{{ timeTillDeadline }}</p>
+        <div id="time-container">
+            <p id="timecounter">{{ timeTillDeadline }}</p>
+            <p id="deadline">{{ deadline.getDate().toString().padStart(2, "0") + "." +
+                (deadline.getMonth() + 1).toString().padStart(2, "0") + "." +
+                deadline.getFullYear() }}</p>
+        </div>
     </div>
 </template>
 
 <style>
+#timecounter {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 20%;
+    color: #ff00ffd7;
+}
+
+#deadline {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 20%;
+    color: #ff00ffd7;
+}
+
+#time-container {
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    background-color: #0000003d;
+    border-radius: 25px;
+    bottom: 0;
+    top: auto;
+}
+
 #title {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -112,6 +142,7 @@ export default {
 }
 
 #single-assignment-container-dashboard {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -121,6 +152,19 @@ export default {
     border-radius: 25px;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-color: #46004075 #6b6b6b25;
+}
+
+#description {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #ff00ffd7;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+#description a {
+    color: #ff00ffd7;
 }
 
 #single-assignment-container::-webkit-scrollbar {

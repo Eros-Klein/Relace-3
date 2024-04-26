@@ -98,14 +98,13 @@ export default {
     mounted: async function () {
         HeaderLine.methods.loadStatus(0);
         const nowTime = new Date();
-        if (nowTime.getHours() < 12) {
+        if (nowTime.getHours() < 12 && nowTime.getHours() >= 4) {
             HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
         } else if (nowTime.getHours() < 18) {
             HeaderLine.methods.setHeadline("Good Afternoon, " + localStorage.getItem('username') + "!");
         } else {
             HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
-
         HeaderLine.methods.loadStatus(5);
         this.getAssignments();
     }
