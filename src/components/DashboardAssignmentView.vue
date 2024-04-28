@@ -1,5 +1,6 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
+import SettingView from './SettingView.vue';
 
 export default {
     name: 'DashboardAssignmentView',
@@ -62,7 +63,10 @@ export default {
 
                 console.log(this.timeTillDeadlineActualizer);
             } else {
-                alert('An error occurred while loading the assignment: ' + data.message);
+                if (data.message.contains('jwt') || data.message.contains('token') || data.message.contains('expired')) {
+                    SettingView.methods.refresh();
+                }
+                else alert('An error occurred while loading the assignment: ' + data.message);
             }
             HeaderLine.methods.addLoadStatus(70);
         }
@@ -130,7 +134,8 @@ export default {
     justify-content: space-evenly;
     width: 100%;
     background-color: #0000003d;
-    border-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
     bottom: 0;
     top: auto;
 }

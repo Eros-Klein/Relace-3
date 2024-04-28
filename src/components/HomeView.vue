@@ -1,5 +1,6 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
+import SettingView from './SettingView.vue';
 
 
 export default {
@@ -25,7 +26,8 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("token"),
-                    count: 30
+                    count: 30,
+                    compact: true
                 }),
             });
             const data = await response.json();
@@ -38,12 +40,9 @@ export default {
                     if (title.length > 35) {
                         title = title.slice(0, 35) + "...";
                     }
+                    const date = new Date(data.assignments[i].deadline * 1000);
 
-                    if (data.assignments[i].description.length > 48) {
-                        this.addAssignment(title, data.assignments[i].description.slice(0, 48) + "...", data.assignments[i].id);
-                    } else {
-                        this.addAssignment(title, data.assignments[i].description, data.assignments[i].id);
-                    }
+                    this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
                 console.log(data.message);
@@ -63,7 +62,6 @@ export default {
                 <div class="assignment_head">
                     <h2>${headline}</h2>
                 </div>
-                <div class="line"></div>
                 <div class="assignment_body">
                     <p>${body}</p>
                 </div>
@@ -87,7 +85,10 @@ export default {
                 this.getAssignments();
             }
             else {
-                alert('An error occurred while loading the assignments: ' + data.message);
+                if (data.message.contains('jwt') || data.message.contains('token') || data.message.contains('expired')) {
+                    SettingView.methods.refresh();
+                }
+                else alert('An error occurred while loading the assignments: ' + data.message);
             }
             console.log(data);
         }
