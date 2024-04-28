@@ -45,7 +45,11 @@ export default {
                     this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
-                console.log(data.message);
+                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+                    SettingView.methods.refresh();
+                    window.location.reload();
+                }
+                else alert('An error occurred while loading the assignments: ' + data.message);
             }
 
             HeaderLine.methods.loadStatus(100);
@@ -85,7 +89,7 @@ export default {
                 this.getAssignments();
             }
             else {
-                if (data.message.contains('jwt') || data.message.contains('token') || data.message.contains('expired')) {
+                if (data.message.includes('jwt') || data.message.includes('token') || data.message.includes('expired')) {
                     SettingView.methods.refresh();
                 }
                 else alert('An error occurred while loading the assignments: ' + data.message);

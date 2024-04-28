@@ -63,8 +63,9 @@ export default {
 
                 console.log(this.timeTillDeadlineActualizer);
             } else {
-                if (data.message.contains('jwt') || data.message.contains('token') || data.message.contains('expired')) {
+                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
                     SettingView.methods.refresh();
+                    window.location.reload();
                 }
                 else alert('An error occurred while loading the assignment: ' + data.message);
             }

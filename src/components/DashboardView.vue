@@ -1,5 +1,7 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
+import SettingView from './SettingView.vue';
+import HomeView from './HomeView.vue';
 
 
 export default {
@@ -32,6 +34,7 @@ export default {
             assignmentContainer.appendChild(assignment);
         },
         async loadAssignments() {
+            HomeView.methods.startLoad();
             const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
                 method: "POST",
                 headers: {
@@ -43,7 +46,8 @@ export default {
             });
             const data = await response.json();
 
-            console.log(data);
+            console.log(data.success);
+            HomeView.methods.endLoad();
         },
         async insertAssignments() {
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
@@ -73,7 +77,11 @@ export default {
                     this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
-                console.log(data.message);
+                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+                    SettingView.methods.refresh();
+                    window.location.reload();
+                }
+                else alert('An error occurred while loading the assignments: ' + data.message);
             }
             HeaderLine.methods.addLoadStatus(95);
         }
