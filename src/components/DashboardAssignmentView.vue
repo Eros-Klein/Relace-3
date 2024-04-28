@@ -25,6 +25,13 @@ export default {
 
                 document.getElementById('description').innerHTML = data.assignment.description;
 
+                const link = document.getElementById('assignment-link');
+
+                console.log(data.assignment.linkToProvider);
+                link.addEventListener('click', () => {
+                    window.open(data.assignment.linkToProvider, '_blank');
+                });
+
                 this.deadline = new Date(data.assignment.deadline * 1000);
 
                 this.timeTillDeadlineActualizer = setInterval(() => {
@@ -105,6 +112,7 @@ export default {
         <div id="assignment-content-dashboard">
             <h2 id="title"></h2>
             <p id="description"></p>
+            <button id="assignment-link"> Go To Assignment</button>
         </div>
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
@@ -141,10 +149,11 @@ export default {
 #time-container {
     position: absolute;
     display: flex;
-    justify-content: space-evenly;
+    align-items: center;
+    justify-content: space-around;
     height: 15%;
     width: 100%;
-    background-color: #460040ea;
+    background-color: #270046ea;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     bottom: 0;

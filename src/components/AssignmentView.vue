@@ -133,16 +133,4 @@ export default {
     width: 20%;
     color: #ff00ffd7;
 }
-
-#time-container {
-    position: absolute;
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    background-color: #0000003d;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    bottom: 0;
-    top: auto;
-}
 </style>
