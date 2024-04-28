@@ -5,7 +5,7 @@ export default {
     name: 'DashboardAssignmentView',
     methods: {
         async reloadAssignment(code) {
-            HeaderLine.methods.loadStatus(0);
+            HeaderLine.methods.loadStatus(30);
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
                 method: "POST",
                 headers: {
@@ -64,7 +64,7 @@ export default {
             } else {
                 alert('An error occurred while loading the assignment: ' + data.message);
             }
-            HeaderLine.methods.addLoadStatus(100);
+            HeaderLine.methods.addLoadStatus(70);
         }
     },
     data: function () {

@@ -48,7 +48,8 @@ export default {
 </script>
 
 <template>
-    <div id="line"></div>
+    <div id="line">
+    </div>
     <div id="container">
         <div id="headline-container">
             <h2 id="headline">{{ headline }}</h2>
@@ -70,11 +71,13 @@ export default {
 }
 
 #line {
-    background-color: rgba(153, 0, 173, 0.637);
+    background-color: rgb(153, 0, 173);
     height: 2px;
     width: 0%;
     position: fixed;
+    top: 0;
     left: 0;
+    z-index: 2;
     transition: all 0.5s;
 }
 </style>
