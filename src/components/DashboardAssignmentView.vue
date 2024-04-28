@@ -25,10 +25,11 @@ export default {
 
                 document.getElementById('description').innerHTML = data.assignment.description;
 
-                const link = document.getElementById('assignment-link');
+                let link = document.getElementById('assignment-link');
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
 
-                console.log(data.assignment.linkToProvider);
-                link.addEventListener('click', () => {
+                newLink.addEventListener('click', () => {
                     window.open(data.assignment.linkToProvider, '_blank');
                 });
 
@@ -124,6 +125,20 @@ export default {
 </template>
 
 <style>
+#assignment-link {
+    background-color: #46004075;
+    width: 20%;
+    border-radius: 25px;
+    color: #ff00ffd7;
+    padding: 10px;
+    border-style: solid;
+    border-color: #ff00ffd7;
+    font-size: 2vh;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
 #assignment-content-dashboard {
     padding-bottom: 5%;
     width: 100%;
@@ -153,7 +168,7 @@ export default {
     justify-content: space-around;
     height: 15%;
     width: 100%;
-    background-color: #270046ea;
+    background-color: #270046f6;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     bottom: 0;
