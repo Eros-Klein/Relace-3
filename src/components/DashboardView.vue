@@ -1,8 +1,7 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import SettingView from './SettingView.vue';
 import HomeView from './HomeView.vue';
-
+import NavBar from './NavBar.vue';
 
 export default {
     name: 'HomeView',
@@ -78,8 +77,7 @@ export default {
                 }
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
-                    SettingView.methods.refresh();
-                    window.location.reload();
+                    NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignments: ' + data.message);
             }

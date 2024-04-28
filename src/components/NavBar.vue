@@ -45,6 +45,7 @@ export default {
             if (!await SettingView.methods.refresh()) {
                 console.log('refresh failed');
                 this.$router.push('/welcome');
+                window.history.pushState(null, '', '/welcome');
             }
             else {
                 console.log('refreshed');

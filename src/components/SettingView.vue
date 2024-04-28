@@ -60,7 +60,7 @@ export default {
                 if (this.$route) {
                     this.$router.push('/welcome');
                 }
-                else return false;
+                return false;
             }
         }
     },
