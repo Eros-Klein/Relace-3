@@ -40,13 +40,16 @@ export default {
         const data = await response.json();
         console.log(data);
 
-
+        console.log(data.success);
         if (!data.success) {
             if (!await SettingView.methods.refresh()) {
                 console.log('refresh failed');
                 this.$router.push('/welcome');
             }
-            console.log('refreshed');
+            else {
+                console.log('refreshed');
+                window.location.reload();
+            }
         }
     },
     props: {
