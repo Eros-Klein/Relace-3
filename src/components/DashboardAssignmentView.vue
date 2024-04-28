@@ -102,8 +102,10 @@ export default {
 
 <template>
     <div id="single-assignment-container-dashboard">
-        <h2 id="title"></h2>
-        <p id="description"></p>
+        <div id="assignment-content-dashboard">
+            <h2 id="title"></h2>
+            <p id="description"></p>
+        </div>
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
             <p id="deadline">{{ deadline.getDate().toString().padStart(2, "0") + "." +
@@ -114,6 +116,14 @@ export default {
 </template>
 
 <style>
+#assignment-content-dashboard {
+    padding-bottom: 5%;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: #46004075 #6b6b6b25;
+}
+
 #timecounter {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -132,8 +142,9 @@ export default {
     position: absolute;
     display: flex;
     justify-content: space-evenly;
+    height: 15%;
     width: 100%;
-    background-color: #0000003d;
+    background-color: #460040ea;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     bottom: 0;
@@ -155,9 +166,6 @@ export default {
     height: 45vh;
     background-color: #6b6b6b25;
     border-radius: 25px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-color: #46004075 #6b6b6b25;
 }
 
 #description {
