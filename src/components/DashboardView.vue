@@ -54,13 +54,14 @@ export default {
             const dropdown = document.getElementById(dropdownId);
 
             console.log(dropdown.children);
-            if (dropdown.children[1].style.display === "block") {
+            console.log(dropdown.children[1].style.height);
+            if (dropdown.children[1].style.height == "250px") {
                 for (let i = 1; i < dropdown.children.length; i++) {
-                    dropdown.children[i].style.display = "none";
+                    dropdown.children[i].style.height = "0px";
                 }
             } else {
                 for (let i = 1; i < dropdown.children.length; i++) {
-                    dropdown.children[i].style.display = "block";
+                    dropdown.children[i].style.height = "250px";
                 }
             }
         },
@@ -249,9 +250,9 @@ export default {
         window.addEventListener("click", (event) => {
             const dropdown = document.getElementsByClassName("dropdown-menu");
             for (let i = 0; i < dropdown.length; i++) {
-                if (dropdown[i].children[1].style.display !== "none" && !dropdown[i].contains(event.target)) {
+                if (dropdown[i].children[1].style.height !== "0px" && !dropdown[i].contains(event.target)) {
                     console.log(dropdown[i].children[1]);
-                    dropdown[i].children[1].style.display = "none";
+                    dropdown[i].children[1].style.height = "0px";
                 }
             }
         });
@@ -306,10 +307,11 @@ export default {
 }
 
 .hidden-element-container {
+    transition: all 0.25s ease-in-out;
     z-index: 3;
-    display: none;
+    display: block;
     position: absolute;
-    height: 250px;
+    height: 0px;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
