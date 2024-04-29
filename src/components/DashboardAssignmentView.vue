@@ -113,8 +113,9 @@ export default {
         <div id="assignment-content-dashboard">
             <h2 id="title"></h2>
             <p id="description"></p>
-            <button id="assignment-link"> Go To Assignment</button>
         </div>
+        <button id="assignment-link">Go To Assignment</button>
+        <button id="attachment-download">Download Attachments</button>
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
             <p id="deadline">{{ deadline.getDate().toString().padStart(2, "0") + "." +
@@ -126,17 +127,45 @@ export default {
 
 <style>
 #assignment-link {
-    background-color: #46004075;
+    background-color: #460040f5;
     width: 20%;
     border-radius: 25px;
-    color: #ff00ffd7;
+    color: #ff00fff8;
     padding: 10px;
     border-style: solid;
     border-color: #ff00ffd7;
     font-size: 2vh;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    position: absolute;
     cursor: pointer;
+    bottom: 20%;
+    right: 2.5%;
+    transition: all 0.3s ease-in-out;
+}
+
+#attachment-download {
+    background-color: #460040f5;
+    width: 20%;
+    border-radius: 25px;
+    color: #ff00fff8;
+    padding: 10px;
+    border-style: solid;
+    border-color: #ff00ffd7;
+    font-size: 2vh;
+    position: absolute;
+    cursor: pointer;
+    bottom: 20%;
+    left: 2.5%;
+    transition: all 0.3s ease-in-out;
+}
+
+#attachment-download:hover {
+    background-color: #ff00ffd7;
+    color: #460040f5;
+}
+
+#assignment-link:hover {
+    background-color: #ff00ffd7;
+    color: #460040f5;
 }
 
 #assignment-content-dashboard {
@@ -144,6 +173,7 @@ export default {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
     scrollbar-color: #46004075 #6b6b6b25;
 }
 
