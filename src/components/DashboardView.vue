@@ -71,13 +71,13 @@ export default {
             console.log(dropdownMenu);
             if (searchBar.style.display !== "block") {
                 for (let i = 0; i < dropdownMenu.length; i++) {
-                    setTimeout(() => dropdownMenu[i].style.display = "block", 250);
+                    setTimeout(() => dropdownMenu[i].style.display = "block", 175);
                 }
                 searchBar.style.display = "block";
                 searchBarContainer.style.width = "50%";
             } else {
                 for (let i = 0; i < dropdownMenu.length; i++) {
-                    dropdownMenu[i].style.display = "none";
+                    setTimeout(() => dropdownMenu[i].style.display = "none", 150);
                 }
                 searchBarContainer.style.width = "5vh";
                 setTimeout(() => {
@@ -240,6 +240,16 @@ export default {
             this.offset = 0;
             this.insertAssignments();
         });
+
+        window.addEventListener("click", (event) => {
+            const dropdown = document.getElementsByClassName("dropdown-menu");
+            for (let i = 0; i < dropdown.length; i++) {
+                if (dropdown[i].children[1].style.display !== "none" && !dropdown[i].contains(event.target)) {
+                    console.log(dropdown[i].children[1]);
+                    dropdown[i].children[1].style.display = "none";
+                }
+            }
+        });
     },
 }
 </script>
@@ -276,7 +286,7 @@ export default {
     display: none;
     position: absolute;
     height: 250px;
-    width: 80%;
+    width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
     border-radius: 15px;
@@ -378,6 +388,7 @@ export default {
     cursor: pointer;
     width: 35px;
     height: 35px;
+    user-select: none;
 }
 
 #current-assignment-container {

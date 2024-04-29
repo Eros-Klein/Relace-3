@@ -148,6 +148,7 @@ export default {
     width: 50px;
     height: 50px;
     cursor: pointer;
+    user-select: none;
 }
 
 #reload {
