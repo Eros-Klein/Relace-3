@@ -123,7 +123,6 @@ export default {
         },
         async insertAssignments() {
             const element = document.getElementById('assignment-container');
-            element.innerHTML = "";
 
             const searchBar = document.getElementById("assignment-search-bar");
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
@@ -145,6 +144,7 @@ export default {
             console.log(data);
 
             if (data.success) {
+                element.innerHTML = "";
                 for (let i = 0; i < data.assignments.length; i++) {
                     let title = data.assignments[i].title;
                     if (title.length > 35) {
@@ -160,6 +160,11 @@ export default {
 
                 }
             } else {
+                element.innerHTML = `<div id="no_assignments_found">
+                        <p id="emoji">:-(</p>
+                        <p id="error-message-text">Oh No, Looks Like We Could Not Find What You Were Searching For</p>
+                        <p></p>
+                    </div>`;
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
                     NavBar.beforeMount();
                 }
@@ -281,6 +286,25 @@ export default {
 </template>
 
 <style>
+#emoji {
+    font-size: 5vh;
+}
+
+#error-message-text {
+    font-size: 2vh;
+}
+
+#no_assignments_found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    user-select: none;
+}
+
 .hidden-element-container {
     z-index: 3;
     display: none;
