@@ -150,9 +150,14 @@ export default {
                     if (title.length > 35) {
                         title = title.slice(0, 35) + "...";
                     }
-                    const date = new Date(data.assignments[i].deadline * 1000);
+                    if (data.assignments[i].deadline == 0) {
+                        this.addAssignment(title, "No Deadline", data.assignments[i].id);
+                    }
+                    else {
+                        const date = new Date(data.assignments[i].deadline * 1000);
+                        this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
+                    }
 
-                    this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {

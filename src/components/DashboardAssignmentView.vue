@@ -118,7 +118,10 @@ export default {
         <button id="attachment-download">Download Attachments</button>
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
-            <p id="deadline">{{ deadline.getDate().toString().padStart(2, "0") + "." +
+            <p id="deadline">{{ Math.floor(deadline.getTime() / 1000) == 0 ? "No Deadline" :
+                deadline.getDate().toString().padStart(2, "0")
+                +
+                "." +
                 (deadline.getMonth() + 1).toString().padStart(2, "0") + "." +
                 deadline.getFullYear() }}</p>
         </div>
