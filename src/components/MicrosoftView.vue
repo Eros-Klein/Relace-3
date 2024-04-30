@@ -32,6 +32,21 @@ export default {
           return userToken;
         });
     },
+    generateRandomString(length) {
+      let result = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const charactersLength = characters.length;
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    },
+    async sha256(message) {
+      const msgUint8 = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    },
   },
   mounted: async function () {
     const urlParams = new URLSearchParams(window.location.search);

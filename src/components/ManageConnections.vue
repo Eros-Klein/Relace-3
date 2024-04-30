@@ -1,5 +1,6 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
+import MicrosoftView from "@/components/MicrosoftView.vue";
 
 export default {
     name: 'ManageConnections',
@@ -89,11 +90,15 @@ export default {
         await this.authorize();
       },
       async authorize() {
+        const codeVerifier = MicrosoftView.methods.generateRandomString(128);
+        const codeChallenge = await MicrosoftView.methods.sha256(codeVerifier);
+
         const clientId = process.env.VUE_APP_CLIENT_ID;
         const redirectUri = process.env.VUE_APP_REDIRECT_URI;
         const scope = 'https://graph.microsoft.com/.default';
 
-        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}`;
+        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=12345&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}`;
       },
     },
     mounted:
