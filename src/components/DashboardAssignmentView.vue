@@ -1,10 +1,47 @@
 <script>
+import DashboardView from './DashboardView.vue';
 import HeaderLine from './HeaderLine.vue';
 import NavBar from './NavBar.vue';
 
 export default {
     name: 'DashboardAssignmentView',
     methods: {
+        async insertAttachments() {
+
+            console.log(this.attachments);
+            let size = 0;
+            const attachmentContainer = document.getElementById('hidden-link-container');
+            attachmentContainer.innerHTML = '';
+            for (let i = 0; i < this.attachments.length; i++) {
+                const attachment = document.createElement('div');
+                attachment.classList.add('hidden-element');
+                attachment.innerHTML = `
+                    <p>${this.attachments[i].name}</p>
+                `;
+                attachment.addEventListener('click', () => {
+                    window.open(this.attachments[i].link, '_blank');
+                });
+                attachmentContainer.appendChild(attachment);
+                size += 75;
+            }
+            if (size > 350) {
+                return "350px";
+            }
+            else {
+                return size.toString() + "px";
+            }
+        },
+        async toggleDropdown(attachment, pixelHeight) {
+            pixelHeight = await pixelHeight;
+            const attachmentElement = document.getElementById(attachment);
+            if (pixelHeight == '0px') {
+                attachmentElement.style.display = 'none';
+            }
+            else {
+                attachmentElement.style.height = 'flex';
+            }
+            DashboardView.methods.toggleDropdown(attachment, pixelHeight);
+        },
         async reloadAssignment(code) {
             HeaderLine.methods.loadStatus(30);
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
@@ -21,6 +58,10 @@ export default {
 
             console.log(data);
             if (data.success) {
+                this.attachments = data.assignment.attachments;
+
+                console.log(data.assignment.attachments);
+
                 document.getElementById('title').innerText = data.assignment.title;
 
                 document.getElementById('description').innerHTML = data.assignment.description;
@@ -85,11 +126,22 @@ export default {
             deadline: new Date(Date.now()),
             timeTillDeadlineActualizer: 0,
             timeTillDeadline: '',
+            attachments: []
         }
     },
     mounted: async function () {
         HeaderLine.methods.loadStatus(0);
         await this.reloadAssignment(this.$route.params.id);
+
+        window.addEventListener("click", (event) => {
+            const dropdown = document.getElementsByClassName("dropdown-menu");
+            for (let i = 0; i < dropdown.length; i++) {
+                if (dropdown[i].children[1].style.height !== "0px" && !dropdown[i].contains(event.target)) {
+                    console.log(dropdown[i].children[1]);
+                    dropdown[i].children[1].style.height = "0px";
+                }
+            }
+        });
     },
     beforeUpdate: async function () {
         if (this.changed) {
@@ -115,7 +167,15 @@ export default {
             <p id="description"></p>
         </div>
         <button id="assignment-link">Go To Assignment</button>
-        <button id="attachment-download">Download Attachments</button>
+        <div id="attachment-dropdown">
+            <div class="hidden-element-container" id="hidden-link-container">
+            </div>
+            <button id="attachment-download" class="trigger-dropdown-element"
+                @click="toggleDropdown('attachment-dropdown', insertAttachments())">Download Attachments : {{
+                    attachments.length }}</button>
+
+        </div>
+
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
             <p id="deadline">{{ Math.floor(deadline.getTime() / 1000) == 0 ? "No Deadline" :
@@ -129,6 +189,22 @@ export default {
 </template>
 
 <style>
+#hidden-link-container {
+    bottom: 120%;
+    background-color: #270046f6;
+}
+
+#attachment-dropdown {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+    bottom: 20%;
+    left: 2.5%;
+}
+
 #assignment-link {
     background-color: #460040f5;
     width: 20%;
@@ -147,17 +223,15 @@ export default {
 
 #attachment-download {
     background-color: #460040f5;
-    width: 20%;
+    width: 100%;
     border-radius: 25px;
     color: #ff00fff8;
     padding: 10px;
     border-style: solid;
     border-color: #ff00ffd7;
     font-size: 2vh;
-    position: absolute;
+    position: relative;
     cursor: pointer;
-    bottom: 20%;
-    left: 2.5%;
     transition: all 0.3s ease-in-out;
 }
 

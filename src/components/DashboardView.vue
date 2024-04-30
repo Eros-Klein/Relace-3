@@ -50,18 +50,27 @@ export default {
                 })
             }
         },
-        toggleDropdown(dropdownId) {
+        toggleDropdown(dropdownId, pixelHeight) {
             const dropdown = document.getElementById(dropdownId);
+            let firstHiddenChild;
+            for (let i = 0; i < dropdown.children.length; i++) {
+                if (dropdown.children[i].classList.contains("hidden-element-container")) {
+                    firstHiddenChild = dropdown.children[i];
+                    break;
+                }
+            }
 
-            console.log(dropdown.children);
-            console.log(dropdown.children[1].style.height);
-            if (dropdown.children[1].style.height == "250px") {
-                for (let i = 1; i < dropdown.children.length; i++) {
-                    dropdown.children[i].style.height = "0px";
+            if (firstHiddenChild.style.height == pixelHeight) {
+                for (let i = 0; i < dropdown.children.length; i++) {
+                    if (dropdown.children[i].classList.contains("hidden-element-container")) {
+                        dropdown.children[i].style.height = "0px";
+                    }
                 }
             } else {
-                for (let i = 1; i < dropdown.children.length; i++) {
-                    dropdown.children[i].style.height = "250px";
+                for (let i = 0; i < dropdown.children.length; i++) {
+                    if (dropdown.children[i].classList.contains("hidden-element-container")) {
+                        dropdown.children[i].style.height = pixelHeight;
+                    }
                 }
             }
         },
@@ -272,7 +281,7 @@ export default {
             <img src="../assets/images/search.png" id="search-pic" @click="turnSearchBar">
             <input type="text" id="assignment-search-bar" placeholder="Search...">
             <div class="dropdown-menu" id="course-filter">
-                <div class="trigger-dropdown-element" @click="toggleDropdown('course-filter')">
+                <div class="trigger-dropdown-element" @click="toggleDropdown('course-filter', '250px')">
                     <p>Select Course...</p>
                 </div>
                 <div class="hidden-element-container">
@@ -368,6 +377,9 @@ export default {
     font-size: 12px;
     transition: all 0.25s ease-in-out;
     margin-left: 10px;
+}
+
+#course-filter {
     display: none;
 }
 
