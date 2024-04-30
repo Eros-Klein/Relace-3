@@ -1,6 +1,5 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import { generateRandomString, sha256 } from './MicrosoftView.vue';
 import MicrosoftView from "@/components/MicrosoftView.vue";
 
 export default {
