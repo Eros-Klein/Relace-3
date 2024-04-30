@@ -38,7 +38,7 @@ export default {
                 attachmentElement.style.display = 'none';
             }
             else {
-                attachmentElement.style.height = 'flex';
+                attachmentElement.style.display = 'flex';
             }
             DashboardView.methods.toggleDropdown(attachment, pixelHeight);
         },
@@ -61,6 +61,9 @@ export default {
                 this.attachments = data.assignment.attachments;
 
                 console.log(data.assignment.attachments);
+
+                await this.toggleDropdown('attachment-dropdown', this.insertAttachments());
+                await this.toggleDropdown('attachment-dropdown', this.insertAttachments());
 
                 document.getElementById('title').innerText = data.assignment.title;
 
