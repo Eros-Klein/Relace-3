@@ -121,7 +121,7 @@ export default {
                 <p id="connected">-</p>
             </div>
             <div class="connection" @click="loginMicrosoft">
-                <p id="name">Microsoft</p>
+                <p id="name">Teams</p>
                 <p id="connected">-</p>
             </div>
         </div>
