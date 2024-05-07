@@ -56,7 +56,7 @@ export default {
                 this.intervallId = setInterval(this.timeTillDeadlineCalc, 1000);
                 this.timeTillDeadlineCalc();
             } else {
-                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('expired')) {
                     NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignment: ' + data.message);

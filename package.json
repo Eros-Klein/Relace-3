@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/mocha": "^10.0.6",
+    "@vue/compiler-sfc": "^3.2.29",
     "axios": "^1.6.8",
     "core-js": "^3.8.3",
     "dotenv": "^16.4.5",

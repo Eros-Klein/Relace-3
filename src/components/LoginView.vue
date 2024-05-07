@@ -1,6 +1,8 @@
 <script>
 
 
+import RegisterView from "@/components/RegisterView.vue";
+
 export default {
     name: 'LoginView',
     methods: {
@@ -37,9 +39,10 @@ export default {
 
                 console.log(data);
                 if (data.success) {
-                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('token', data.jwt);
                     localStorage.setItem('refresh', data.refreshToken);
                     localStorage.setItem('username', username);
+                    localStorage.setItem('key', RegisterView.methods.stringToHash(password.substring(0, 4)));
                     this.$router.push('/home');
                 } else {
                     errorField.innerText = "Wrong credentials";
@@ -94,8 +97,49 @@ export default {
 #content input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
+input:-webkit-autofill:active <template>
+    <div id="welcome-container">
+        <div id="content">
+            <h1>Relace - Login</h1>
+            <input @keydown.enter="login" id="username" type="text" placeholder="Username">
+            <input @keydown.enter="login" id="password" type="password" placeholder="Password">
+            <p id="error"></p>
+            <button @click="login">Login</button>
+        </div>
+    </div>
+</template>
+
+<style>
+#content input {
+    width: 90%;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(180, 180, 180, 0.281);
+    border-radius: 15px;
+    border-style: solid;
+    color: rgba(240, 248, 255, 0.753);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    border-color: #46004075;
+    padding-left: 15px;
+    padding-right: 15px;
+    transition: all 0.25s ease-in-out;
+}
+
+#content input:focus {
+    outline: none;
+    border-color: #46004075;
+    border-style: solid;
+    border-radius: 7.5px;
+}
+
+#content input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px rgb(92, 71, 126) inset !important;
     -webkit-text-fill-color: white !important;
 }
+
 </style>

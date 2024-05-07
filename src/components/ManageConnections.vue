@@ -42,7 +42,8 @@ export default {
                     body: JSON.stringify({
                         api: 'moodle',
                         token: data.token,
-                        jwt: localStorage.getItem('token')
+                        jwt: localStorage.getItem('token'),
+                        key: localStorage.getItem('key')
                     })
                 })
                 const data1 = await response.json();

@@ -45,7 +45,7 @@ export default {
                     this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
                 }
             } else {
-                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('expired')) {
                     NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignments: ' + data.message);
@@ -79,7 +79,8 @@ export default {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    jwt: localStorage.getItem("token")
+                    jwt: localStorage.getItem("token"),
+                    key: localStorage.getItem("key")
                 }),
             });
             const data = await response.json();

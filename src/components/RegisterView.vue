@@ -2,7 +2,21 @@
 export default {
     name: 'RegisterView',
     methods: {
-        async register() {
+      stringToHash(string1) {
+
+          let hash = 0;
+
+          if (string1.length === 0) return hash;
+
+          for (let i = 0; i < string1.length; i++) {
+              const char = string1.charCodeAt(i);
+              hash = ((hash << 5) - hash) + char;
+              hash = hash & hash;
+          }
+
+          return hash;
+      },
+      async register() {
             const errorField = document.getElementById('error');
 
             const username = document.getElementById('username').value;
@@ -64,8 +78,11 @@ export default {
             const data = await response.json();
 
             if (data.success) {
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('token', data.jwt);
                 localStorage.setItem('username', username);
+                localStorage.setItem('refresh', data.refeshToken);
+                localStorage.setItem('key', this.stringToHash(password.substring(0, 4)));
+                
                 this.$router.push('/home');
             } else {
                 document.getElementById('error').innerText = data.message;

@@ -123,7 +123,8 @@ export default {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    jwt: localStorage.getItem("token")
+                    jwt: localStorage.getItem("token"),
+                    key: localStorage.getItem('key')
                 }),
             });
             const data = await response.json();
