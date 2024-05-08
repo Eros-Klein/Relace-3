@@ -44,7 +44,7 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("refresh")
-                }),
+                })
             });
             const data = await response.json();
             console.log(data);
@@ -53,13 +53,7 @@ export default {
                 localStorage.setItem('refresh', data.refreshToken);
                 return true;
             } else {
-                localStorage.removeItem('token');
-                localStorage.removeItem('username');
-                localStorage.removeItem('refresh');
-
-                if (this.$route) {
-                    this.$router.push('/welcome');
-                }
+                this.logout();
                 return false;
             }
         }
