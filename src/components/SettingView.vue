@@ -49,7 +49,7 @@ export default {
             const data = await response.json();
             console.log(data);
             if (data.success) {
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('token', data.jwt);
                 localStorage.setItem('refresh', data.refreshToken);
                 return true;
             } else {
