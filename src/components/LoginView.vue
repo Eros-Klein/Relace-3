@@ -97,19 +97,7 @@ export default {
 #content input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active <template>
-    <div id="welcome-container">
-        <div id="content">
-            <h1>Relace - Login</h1>
-            <input @keydown.enter="login" id="username" type="text" placeholder="Username">
-            <input @keydown.enter="login" id="password" type="password" placeholder="Password">
-            <p id="error"></p>
-            <button @click="login">Login</button>
-        </div>
-    </div>
-</template>
-
-<style>
+input:-webkit-autofill:active,
 #content input {
     width: 90%;
     height: 30px;
@@ -141,5 +129,4 @@ input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px rgb(92, 71, 126) inset !important;
     -webkit-text-fill-color: white !important;
 }
-
 </style>
