@@ -131,6 +131,8 @@ export default {
 
             console.log(data.success);
             HomeView.methods.endLoad();
+
+            this.insertAssignments();
         },
         async insertAssignments() {
             const element = document.getElementById('assignment-container');
