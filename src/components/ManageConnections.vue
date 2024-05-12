@@ -1,6 +1,7 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import MicrosoftView from "@/components/MicrosoftView.vue";
+import CryptoJS from 'crypto-js';
+
 
 export default {
     name: 'ManageConnections',
@@ -91,22 +92,72 @@ export default {
         await this.authorize();
       },
       async authorize() {
-        const codeVerifier = MicrosoftView.methods.generateRandomString(128);
-        const codeChallenge = await MicrosoftView.methods.sha256(codeVerifier);
-
         const clientId = process.env.VUE_APP_CLIENT_ID;
         const redirectUri = process.env.VUE_APP_REDIRECT_URI;
         const scope = 'https://graph.microsoft.com/.default';
 
-        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=12345&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}`;
+        const { codeChallenge, codeVerifier } = generateCodeChallenge();
+        console.log('codeChallenge:', codeChallenge);
+        console.log('codeVerifier:', codeVerifier);
+        localStorage.setItem('codeVerifier', codeVerifier);
+
+        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+
+        //console.log(`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`);
+        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
       },
+
+
+      /*async loginMicrosoft(){
+        const msalConfig = {
+          auth: {
+            clientId: process.env.VUE_APP_CLIENT_ID,
+            authority: process.env.VUE_APP_AUTHORITY,
+            redirectUri: process.env.VUE_APP_REDIRECT_URI,
+          }, cache: {
+            cacheLocation: "localStorage",
+            storeAuthStateInCookie: false
+          }
+        };
+        const MSALObj = new Msal.UserAgentApplication(msalConfig);
+        const loginRequest = {
+          scopes: ["user.read"]
+        };
+
+        MSALObj.loginRedirect(loginRequest);
+
+        //handle promise
+        MSALObj.handleRedirectCallback((error, response) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(response);
+          }
+        });
+      }
     },
+
+       */
     mounted:
         function () {
             HeaderLine.methods.loadStatus(5);
             this.checkForConnections();
         }
+},
+}
+function generateCodeChallenge() {
+  const rand = new Uint8Array(32);
+  crypto.getRandomValues(rand);
+  const codeVerifier = base64URL(new CryptoJS.lib.WordArray.init(rand));
+  const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
+
+  return { codeChallenge, codeVerifier };
+}
+function base64URL(string) {
+  return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 </script>
 
