@@ -1,6 +1,6 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import CryptoJS from 'crypto-js';
+import MicrosoftView from "@/components/MicrosoftView.vue";
 
 
 export default {
@@ -96,7 +96,8 @@ export default {
         const redirectUri = process.env.VUE_APP_REDIRECT_URI;
         const scope = 'https://graph.microsoft.com/.default';
 
-        const { codeChallenge, codeVerifier } = generateCodeChallenge();
+        const codeChallenge = MicrosoftView.methods.getCodeChallenge();
+        const codeVerifier = MicrosoftView.methods.getCodeVerifier();
         console.log('codeChallenge:', codeChallenge);
         console.log('codeVerifier:', codeVerifier);
         localStorage.setItem('codeVerifier', codeVerifier);
@@ -147,17 +148,6 @@ export default {
             this.checkForConnections();
         }
 },
-}
-function generateCodeChallenge() {
-  const rand = new Uint8Array(32);
-  crypto.getRandomValues(rand);
-  const codeVerifier = base64URL(new CryptoJS.lib.WordArray.init(rand));
-  const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
-
-  return { codeChallenge, codeVerifier };
-}
-function base64URL(string) {
-  return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 </script>
 
