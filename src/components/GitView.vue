@@ -7,13 +7,12 @@ export default {
             const code = urlParams.get('code');
             console.log(code);
 
-            const result = await fetch("https://github.com/login/oauth/access_token?code=508390cbb89064396af2&client_id=a36482c8fbd0046dcc09&client_secret=3d65564dc7772002565a3227b68270a4283d3bc1", {
+            const result = await fetch("https://github.com/login/oauth/access_token?code=508390cbb89064396af2&client_id=a36482c8fbd0046dcc09&client_secret=3d65564dc7772002565a3227b68270a4283d3bc1&redirect_uri=https://www.relacexyz.duckdns.org/git", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Host': 'github.com',
-                    'Postman-Token': 'f1400f4b-5e18-48e3-9d2c-09dc4e12222e'
+                    'Host': 'github.com'
                 }
             });
             const data = await result.json();
