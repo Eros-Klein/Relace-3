@@ -82,10 +82,10 @@ export default {
                     window.open(data.assignment.linkToProvider, '_blank');
                 });
 
-                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
-                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
-
                 this.attachments = data.assignment.attachments;
+
+                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
+                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
 
                 HeaderLine.methods.setHeadline(data.assignment.course);
 
