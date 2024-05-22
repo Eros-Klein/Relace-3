@@ -137,12 +137,34 @@ export default {
                         attachments.length }}</button>
             </div>
             <button id="assignment-link">Go To Assignment</button>
+            <button id="return-button" @click="$router.push('/home')">
+                &lt;
+            </button>
         </div>
     </center>
 
 </template>
 
 <style>
+#return-button {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    background-color: #ff00ff3d;
+    border: none;
+    color: rgb(238, 132, 238);
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 25px;
+}
+
 #title {
     margin-top: 20px;
     margin-bottom: 20px;
