@@ -88,66 +88,66 @@ export default {
             HeaderLine.methods.loadStatusSucceed();
         },
         //Microsoft GraphAPI
-      async loginMicrosoft() {
-        await this.authorize();
+        async loginMicrosoft() {
+            await this.authorize();
+        },
+        async authorize() {
+            const clientId = process.env.VUE_APP_CLIENT_ID;
+            const redirectUri = process.env.VUE_APP_REDIRECT_URI;
+            const scope = 'https://graph.microsoft.com/.default';
+
+            const codeChallenge = MicrosoftView.methods.getCodeChallenge();
+            const codeVerifier = MicrosoftView.methods.getCodeVerifier();
+            console.log('codeChallenge:', codeChallenge);
+            console.log('codeVerifier:', codeVerifier);
+            localStorage.setItem('codeVerifier', codeVerifier);
+
+            window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+            //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+
+            //console.log(`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`);
+            //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+        },
+
+
+        /*async loginMicrosoft(){
+          const msalConfig = {
+            auth: {
+              clientId: process.env.VUE_APP_CLIENT_ID,
+              authority: process.env.VUE_APP_AUTHORITY,
+              redirectUri: process.env.VUE_APP_REDIRECT_URI,
+            }, cache: {
+              cacheLocation: "localStorage",
+              storeAuthStateInCookie: false
+            }
+          };
+          const MSALObj = new Msal.UserAgentApplication(msalConfig);
+          const loginRequest = {
+            scopes: ["user.read"]
+          };
+  
+          MSALObj.loginRedirect(loginRequest);
+  
+          //handle promise
+          MSALObj.handleRedirectCallback((error, response) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(response);
+            }
+          });
+        }
       },
-      async authorize() {
-        const clientId = process.env.VUE_APP_CLIENT_ID;
-        const redirectUri = process.env.VUE_APP_REDIRECT_URI;
-        const scope = 'https://graph.microsoft.com/.default';
-
-        const codeChallenge = MicrosoftView.methods.getCodeChallenge();
-        const codeVerifier = MicrosoftView.methods.getCodeVerifier();
-        console.log('codeChallenge:', codeChallenge);
-        console.log('codeVerifier:', codeVerifier);
-        localStorage.setItem('codeVerifier', codeVerifier);
-
-        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-
-        //console.log(`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`);
-        //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-      },
-
-
-      /*async loginMicrosoft(){
-        const msalConfig = {
-          auth: {
-            clientId: process.env.VUE_APP_CLIENT_ID,
-            authority: process.env.VUE_APP_AUTHORITY,
-            redirectUri: process.env.VUE_APP_REDIRECT_URI,
-          }, cache: {
-            cacheLocation: "localStorage",
-            storeAuthStateInCookie: false
-          }
-        };
-        const MSALObj = new Msal.UserAgentApplication(msalConfig);
-        const loginRequest = {
-          scopes: ["user.read"]
-        };
-
-        MSALObj.loginRedirect(loginRequest);
-
-        //handle promise
-        MSALObj.handleRedirectCallback((error, response) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(response);
-          }
-        });
-      }
+  
+         */
     },
-
-       */
     mounted:
         function () {
             HeaderLine.methods.loadStatus(5);
             this.checkForConnections();
         }
-},
 }
 </script>
 
