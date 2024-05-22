@@ -12,7 +12,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
+                    'Host': 'github.com'
                 }
             });
             const data = await result.json();
