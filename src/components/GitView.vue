@@ -12,7 +12,8 @@ export default {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Host': 'github.com'
+                    'Host': 'github.com',
+                    'Postman-Token': 'f1400f4b-5e18-48e3-9d2c-09dc4e12222e'
                 }
             });
             const data = await result.json();
