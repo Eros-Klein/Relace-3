@@ -45,7 +45,7 @@ export default {
                     localStorage.setItem('key', RegisterView.methods.stringToHash(password.substring(0, 4)));
                     this.$router.push('/home');
                 } else {
-                    errorField.innerText = "Wrong credentials";
+                    errorField.innerText = data.message;
                 }
             }
         }
