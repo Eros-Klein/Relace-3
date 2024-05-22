@@ -9,6 +9,20 @@ export default {
         loginGithub() {
             window.location.href = 'https://github.com/login/oauth/authorize?client_id=a36482c8fbd0046dcc09&redirect_uri=https://www.relacexyz.duckdns.org/git';
         },
+        loginGithubClose() {
+            document.getElementById('github-info').style.display = 'none';
+            const connections = document.getElementsByClassName('connection');
+            for (let i = 0; i < connections.length; i++) {
+                connections[i].style.pointerEvents = 'all';
+            }
+        },
+        loginGithubTrigger() {
+            document.getElementById('github-info').style.display = 'flex';
+            const connections = document.getElementsByClassName('connection');
+            for (let i = 0; i < connections.length; i++) {
+                connections[i].style.pointerEvents = 'none';
+            }
+        },
         loginMoodleTrigger() {
             document.getElementById('info').style.display = 'flex';
             const connections = document.getElementsByClassName('connection');
@@ -154,7 +168,7 @@ export default {
 <template>
     <div id="connection-container">
         <div id="con-content">
-            <div class="connection" @click="loginGithub">
+            <div class="connection" @click="loginGithubTrigger">
                 <p id="name">Github</p>
                 <p id="connected">-</p>
             </div>
@@ -179,6 +193,15 @@ export default {
         <p id="error"></p>
         <button @click="loginMoodle">Login</button>
     </div>
+
+    <div id="github-info">
+        <p id="close" @click="loginGithubClose">✕</p>
+        <h1>Github - Login</h1>
+        <p>Before you continue you have to disable your cors temporarily: <a
+                href="https://cors-anywhere.herokuapp.com/corsdemo">Here</a></p>
+        <button @click="loginGithub">I have done so!</button>
+    </div>
+
 </template>
 
 <style>
@@ -190,6 +213,66 @@ export default {
     color: white;
     cursor: pointer;
 
+}
+
+#github-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+
+    box-shadow: 0 0 0 999999px rgba(0, 0, 0, .5);
+    border-radius: 25px;
+
+    z-index: 2;
+    width: 40%;
+    height: 45%;
+    padding: 50px;
+    border-radius: 25px;
+    border-style: solid;
+    border-color: #46004075;
+    background-color: #5c067ef5;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#github-info h1 {
+    font-size: 2.5em;
+    color: rgb(189, 119, 255);
+}
+
+#github-info p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+#github-info a {
+    color: rgb(189, 119, 255);
+}
+
+#github-info button {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 20px;
+    background-color: rgb(189, 119, 255);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 25%;
+    transition: background-color 0.3s;
+    border-color: #46004075;
+    border-style: solid;
+}
+
+#github-info button:hover {
+    background-color: rgb(189, 119, 255, 0.8);
 }
 
 #info {
