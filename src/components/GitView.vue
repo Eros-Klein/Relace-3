@@ -25,7 +25,8 @@ export default {
                 body: JSON.stringify({
                     token: data.access_token,
                     api: 'github',
-                    jwt: localStorage.getItem('token')
+                    jwt: localStorage.getItem('token'),
+                    key: localStorage.getItem('key')
                 })
             });
 
