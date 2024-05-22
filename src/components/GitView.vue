@@ -7,7 +7,7 @@ export default {
             const code = urlParams.get('code');
             console.log(code);
 
-            const result = await fetch("https://github.com/login/oauth/access_token?code=508390cbb89064396af2&client_id=a36482c8fbd0046dcc09&client_secret=3d65564dc7772002565a3227b68270a4283d3bc1&redirect_uri=https://www.relacexyz.duckdns.org/git", {
+            const result = await fetch("https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token?code=508390cbb89064396af2&client_id=a36482c8fbd0046dcc09&client_secret=3d65564dc7772002565a3227b68270a4283d3bc1&redirect_uri=https://www.relacexyz.duckdns.org/git", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
