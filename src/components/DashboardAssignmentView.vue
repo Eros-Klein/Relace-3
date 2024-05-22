@@ -176,7 +176,6 @@ export default {
             <button id="attachment-download" class="trigger-dropdown-element"
                 @click="toggleDropdown('attachment-dropdown', insertAttachments())">Download Attachments : {{
                     attachments.length }}</button>
-
         </div>
 
         <div id="time-container">

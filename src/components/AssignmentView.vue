@@ -1,6 +1,7 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
 import NavBar from './NavBar.vue';
+import DashboardAssignmentView from './DashboardAssignmentView.vue';
 
 export default {
     name: 'AssignmentView',
@@ -8,10 +9,39 @@ export default {
         return {
             deadline: new Date(),
             timeTillDeadline: "",
-            intervallId: 0
+            intervallId: 0,
+            attachments: []
         }
     },
     methods: {
+        async loadAndShowAssignments() {
+            console.log('loadAndShowAssignments');
+            DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
+        },
+        async insertAttachments() {
+            console.log(this.attachments);
+            let size = 0;
+            const attachmentContainer = document.getElementById('hidden-link-container');
+            attachmentContainer.innerHTML = '';
+            for (let i = 0; i < this.attachments.length; i++) {
+                const attachment = document.createElement('div');
+                attachment.classList.add('hidden-element');
+                attachment.innerHTML = `
+        <p>${this.attachments[i].name}</p>
+    `;
+                attachment.addEventListener('click', () => {
+                    window.open(this.attachments[i].link, '_blank');
+                });
+                attachmentContainer.appendChild(attachment);
+                size += 75;
+            }
+            if (size > 350) {
+                return "350px";
+            }
+            else {
+                return size.toString() + "px";
+            }
+        },
         timeTillDeadlineCalc() {
             const now = new Date();
             const diff = this.deadline - now;
@@ -44,6 +74,16 @@ export default {
 
             console.log(data);
             if (data.success) {
+                let link = document.getElementById('assignment-link');
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+
+                newLink.addEventListener('click', () => {
+                    window.open(data.assignment.linkToProvider, '_blank');
+                });
+
+                this.attachments = data.assignment.attachments;
+
                 HeaderLine.methods.setHeadline(data.assignment.course);
 
                 document.getElementById('title').innerText = data.assignment.title;
@@ -85,6 +125,15 @@ export default {
                     (deadline.getMonth() + 1).toString().padStart(2, "0") + "." +
                     deadline.getFullYear() }}</p>
             </div>
+            <div id="attachment-dropdown">
+                <div class="hidden-element-container" id="hidden-link-container">
+                </div>
+                <button id="attachment-download" class="trigger-dropdown-element"
+                    @click="loadAndShowAssignments()">Download
+                    Attachments : {{
+                        attachments.length }}</button>
+            </div>
+            <button id="assignment-link">Go To Assignment</button>
         </div>
     </center>
 
