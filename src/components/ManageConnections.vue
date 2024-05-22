@@ -174,8 +174,8 @@ export default {
         <h1>Moodle - Login</h1>
         <input id="organization" type="text"
             placeholder="Organization (e.g: https://edufs.edu.htl-leonding.ac.at/moodle/)">
-        <input id="username" type="text" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
+        <input @keydown.enter="loginMoodle" id="username" type="text" placeholder="Username">
+        <input @keydown.enter="loginMoodle" id="password" type="password" placeholder="Password">
         <p id="error"></p>
         <button @click="loginMoodle">Login</button>
     </div>

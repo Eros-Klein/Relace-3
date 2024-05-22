@@ -19,6 +19,7 @@ export default {
         },
         async getAssignments() {
             this.startLoad();
+            document.getElementById("assignment-container").innerHTML = "";
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
                 method: "POST",
                 headers: {
@@ -47,6 +48,32 @@ export default {
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('expired')) {
                     NavBar.beforeMount();
+                }
+                else if (data.message.includes('found')) {
+                    const textElement = document.createElement("p");
+                    const textEmoji = document.createElement("p");
+                    const errorContainer = document.createElement("div");
+                    textEmoji.innerHTML = ":-(";
+                    textElement.innerHTML = "Looks like you don't have any assignments yet.";
+                    const assignmentContainer = document.getElementById("assignment-container");
+                    assignmentContainer.innerHTML = "";
+                    textElement.style.textAlign = "center";
+                    textEmoji.style.textAlign = "center";
+                    textElement.style.margin = "auto";
+                    textEmoji.style.margin = "auto";
+                    textElement.style.fontSize = "2vh";
+                    textEmoji.style.fontSize = "5vh";
+                    textElement.style.opacity = "0.5";
+                    textEmoji.style.opacity = "0.5";
+                    errorContainer.style.display = "flex";
+                    errorContainer.style.flexDirection = "column";
+                    errorContainer.style.alignItems = "center";
+                    errorContainer.style.justifyContent = "center";
+                    errorContainer.style.width = "100%";
+                    errorContainer.style.height = "100%";
+                    errorContainer.appendChild(textEmoji);
+                    errorContainer.appendChild(textElement);
+                    assignmentContainer.appendChild(errorContainer);
                 }
                 else alert('An error occurred while loading the assignments: ' + data.message);
             }

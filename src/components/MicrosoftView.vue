@@ -23,19 +23,19 @@ export default {
       const codeVerifier = this.base64URL(new CryptoJS.lib.WordArray.init(rand));
       const codeChallenge = this.base64URL(CryptoJS.SHA256(codeVerifier));
 
-      return {codeChallenge, codeVerifier};
+      return { codeChallenge, codeVerifier };
     },
     base64URL(string) {
       return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
     },
     getCodeChallenge() {
-      if ( !this.codeChallenge ) {
+      if (!this.codeChallenge) {
         this.codeChallenge = this.generateCodeChallenge().codeChallenge;
       }
       return this.codeChallenge;
     },
     getCodeVerifier() {
-      if ( !this.codeVerifier ) {
+      if (!this.codeVerifier) {
         this.codeVerifier = this.generateCodeChallenge().codeVerifier;
       }
       return this.codeVerifier;
@@ -63,13 +63,13 @@ export default {
         },
         body: params
       })
-          .then(response => response.json())
-          .then(data => {
-            const userToken = data.access_token;
-            // Use the user token here
-            console.log(userToken);
-            return userToken;
-          });
+        .then(response => response.json())
+        .then(data => {
+          const userToken = data.access_token;
+          // Use the user token here
+          console.log(userToken);
+          return userToken;
+        });
     },
   },
   mounted: async function () {
