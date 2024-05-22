@@ -7,7 +7,8 @@ export default {
     name: 'ManageConnections',
     methods: {
         loginGithub() {
-            window.location.href = 'https://github.com/login/oauth/authorize?client_id=a36482c8fbd0046dcc09&redirect_uri=https://www.relacexyz.duckdns.org/git';
+            window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv1.000062edb18edd6d&redirect_uri=https://www.relacexyz.duckdns.org/git';
+            //'https://github.com/login/oauth/authorize?client_id=a36482c8fbd0046dcc09&redirect_uri=https://www.relacexyz.duckdns.org/git';
         },
         loginGithubClose() {
             document.getElementById('github-info').style.display = 'none';
