@@ -24,7 +24,11 @@ export default {
         goToDashboard() {
             this.$router.push('/dashboard');
             window.history.pushState(null, '', '/dashboard');
-        }
+        },
+        goToCalendar() {
+            this.$router.push('/calendar');
+            window.history.pushState(null, '', '/calendar');
+        },
     },
     beforeMount: async function () {
         const token = localStorage.getItem('token');
@@ -69,14 +73,15 @@ export default {
             <button id="home" @click="goToHome()" class="side-bar-element">
                 <img src="../assets/images/home1.png" alt="home">
             </button>
-            <button class="side-bar-element">
+            <button id="calendar" @click="goToCalendar()" class="side-bar-element">
                 <img src="../assets/images/calendar.png" alt="calendar">
             </button>
-            <button class="side-bar-element" @click="goToDashboard">
+            <button class="side-bar-element" @click="goToDashboard()">
                 <img src="../assets/images/to-do-list.png" alt="todolist">
             </button>
         </div>
-        <div class="side-bar-group">
+        <!-- 
+            <div class="side-bar-group">
             <button class="side-bar-element">
                 <img src="../assets/images/group.png" alt="group">
             </button>
@@ -95,6 +100,7 @@ export default {
                 <img id="pfp" src="../assets/images/example-pfp.png" alt="pfp">
             </button>
         </div>
+        -->
     </div>
 </template>
 
