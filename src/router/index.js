@@ -55,6 +55,10 @@ const routes = [
         component: HomeView,
     },
     {
+        path: "/calendar",
+        component: () => import("@/components/CalenderView.vue"),
+    },
+    {
         path: "/m",
         component: MessangerView,
         children: [
