@@ -1,6 +1,8 @@
 <script>
 import HeaderLine from './HeaderLine.vue';
-import MicrosoftView from "@/components/MicrosoftView.vue";
+import CryptoJS from "crypto-js";
+import MicrosoftView from './MicrosoftView.vue';
+
 
 
 export default {
@@ -103,13 +105,14 @@ export default {
             HeaderLine.methods.loadStatusSucceed();
         },
         //Microsoft GraphAPI
-        async loginMicrosoft() {
-            await this.authorize();
-        },
-        async authorize() {
+      async loginMicrosoft() {
+        await this.authorize();
+      },
+      async authorize() {
             const clientId = process.env.VUE_APP_CLIENT_ID;
             const redirectUri = process.env.VUE_APP_REDIRECT_URI;
             const scope = 'https://graph.microsoft.com/.default';
+
 
             const codeChallenge = MicrosoftView.methods.getCodeChallenge();
             const codeVerifier = MicrosoftView.methods.getCodeVerifier();
@@ -118,51 +121,24 @@ export default {
             localStorage.setItem('codeVerifier', codeVerifier);
 
             window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-            //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-
-            //console.log(`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`);
-            //window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-        },
-
-
-        /*async loginMicrosoft(){
-          const msalConfig = {
-            auth: {
-              clientId: process.env.VUE_APP_CLIENT_ID,
-              authority: process.env.VUE_APP_AUTHORITY,
-              redirectUri: process.env.VUE_APP_REDIRECT_URI,
-            }, cache: {
-              cacheLocation: "localStorage",
-              storeAuthStateInCookie: false
-            }
-          };
-          const MSALObj = new Msal.UserAgentApplication(msalConfig);
-          const loginRequest = {
-            scopes: ["user.read"]
-          };
-  
-          MSALObj.loginRedirect(loginRequest);
-  
-          //handle promise
-          MSALObj.handleRedirectCallback((error, response) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(response);
-            }
-          });
-        }
       },
-  
-         */
-    },
+      generateCodeChallenge() {
+        const rand = new Uint8Array(32);
+        crypto.getRandomValues(rand);
+        const codeVerifier = this.base64URL(new CryptoJS.lib.WordArray.init(rand));
+        const codeChallenge = this.base64URL(CryptoJS.SHA256(codeVerifier));
+
+        return {codeChallenge, codeVerifier};
+      },
+      base64URL(string) {
+        return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      },
     mounted:
         function () {
             HeaderLine.methods.loadStatus(5);
             this.checkForConnections();
         }
+},
 }
 </script>
 
@@ -189,7 +165,7 @@ export default {
         <h1>Moodle - Login</h1>
         <input id="organization" type="text"
             placeholder="Organization (e.g: https://edufs.edu.htl-leonding.ac.at/moodle/)">
-        <input @keydown.enter="loginMoodle" id="username" type="text" placeholder="Username">
+            <input @keydown.enter="loginMoodle" id="username" type="text" placeholder="Username">
         <input @keydown.enter="loginMoodle" id="password" type="password" placeholder="Password">
         <p id="error"></p>
         <button @click="loginMoodle">Login</button>
