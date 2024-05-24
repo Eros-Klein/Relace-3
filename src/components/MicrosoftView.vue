@@ -6,8 +6,16 @@
 
 <script>
 
+import CryptoJS from "crypto-js";
+
 export default {
   name: 'MicrosoftView',
+  data() {
+    return {
+      codeChallenge: null,
+      codeVerifier: null,
+    }
+  },
   methods: {
     generateCodeChallenge() {
       const rand = new Uint8Array(32);
@@ -15,19 +23,19 @@ export default {
       const codeVerifier = this.base64URL(new CryptoJS.lib.WordArray.init(rand));
       const codeChallenge = this.base64URL(CryptoJS.SHA256(codeVerifier));
 
-      return {codeChallenge, codeVerifier};
+      return { codeChallenge, codeVerifier };
     },
     base64URL(string) {
       return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
     },
     getCodeChallenge() {
-      if ( !this.codeChallenge ) {
+      if (!this.codeChallenge) {
         this.codeChallenge = this.generateCodeChallenge().codeChallenge;
       }
       return this.codeChallenge;
     },
     getCodeVerifier() {
-      if ( !this.codeVerifier ) {
+      if (!this.codeVerifier) {
         this.codeVerifier = this.generateCodeChallenge().codeVerifier;
       }
       return this.codeVerifier;
@@ -41,29 +49,27 @@ export default {
       const codeVerifier = this.getCodeVerifier();
 
       const params = new URLSearchParams();
-      params.append('grant_type', 'authorization_code');
-      params.append('client_id', process.env.VUE_APP_CLIENT_ID);
-      params.append('redirect_uri', process.env.VUE_APP_REDIRECT_URI);
-      params.append('code', authorizationCode);
+      params.append('client_id', clientId);
+      params.append('scope', scope);
+      params.append('code', code);
+      params.append('redirect_uri', redirectUri);
+      params.append('grant_type', grantType);
       params.append('code_verifier', codeVerifier);
-      params.append('scope', 'https://graph.microsoft.com/.default');
 
-      const tokenEndpoint = `https://login.microsoftonline.com/${process.env.VUE_APP_TENANT_ID}/oauth2/v2.0/token`;
-
-      const response = await fetch(tokenEndpoint, {
+      fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: params
       })
-          .then(response => response.json())
-          .then(data => {
-            const userToken = data.access_token;
-            // Use the user token here
-            console.log(userToken);
-            return userToken;
-          });
+        .then(response => response.json())
+        .then(data => {
+          const userToken = data.access_token;
+          // Use the user token here
+          console.log(userToken);
+          return userToken;
+        });
     },
   },
   mounted: async function () {
@@ -82,17 +88,14 @@ export default {
         },
         body: JSON.stringify({
           api: 'microsoft',
-          token: accessToken,
+          token: token,
           jwt: localStorage.getItem('token')
         })
-      });
-    },
-  },
-  mounted: async function () {
-const urlParams = new URLSearchParams(window.location.search);
-    const authorizationCode = urlParams.get('code');
-    if (authorizationCode) {
-      await this.getToken(authorizationCode);
+      })
+      const data = await response.json();
+      if (!data.success) {
+        alert('An error occurred while connecting to Microsoft: ' + data.message);
+      }
       //window.location.href = 'https://www.relacexyz.duckdns.org/setting/connections';
     }
   },
