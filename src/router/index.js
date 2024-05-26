@@ -56,7 +56,7 @@ const routes = [
     },
     {
         path: "/calendar",
-        component: () => import("@/components/CalenderView.vue"),
+        component: () => import("@/components/CalendarView.vue"),
     },
     {
         path: "/m",

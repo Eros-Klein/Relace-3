@@ -2,7 +2,6 @@
   <div id="page-container">
     <HeaderLine />
     <RouterView />
-    <Calender />
     <NavBar selected="Home" />
   </div>
 </template>
@@ -10,14 +9,12 @@
 <script>
 import NavBar from './components/NavBar.vue';
 import HeaderLine from './components/HeaderLine.vue';
-import Calender from './components/CalenderView.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
     HeaderLine,
-    Calender
   },
 }
 </script>
