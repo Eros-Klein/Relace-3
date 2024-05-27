@@ -38,7 +38,13 @@ export default {
             }
         },
         closeEditor() {
-            document.getElementById('editor').style.display = 'none';
+            const editor = document.getElementById('editor')
+            editor.style.display = 'none';
+          for (let child of editor.children) {
+             if (child instanceof HTMLInputElement){
+                child.value = '';
+             }
+          }
         },
         async submitAssignment() {
             const title = document.getElementById('a-title').value;
@@ -67,6 +73,7 @@ export default {
 
             if (data.success) {
                 this.closeEditor();
+                window.location.reload();
             }
             else {
                 document.getElementById('error-text').innerText = data.message;

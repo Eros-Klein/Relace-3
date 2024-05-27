@@ -14,7 +14,7 @@
     </div>
 
     <CalendarWeekdays/>
-
+    
     <ol class="days-grid">
       <CalendarMonthDayItem
         v-for="day in days"
