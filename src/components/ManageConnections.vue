@@ -8,119 +8,119 @@ import MicrosoftView from './MicrosoftView.vue';
 export default {
     name: 'ManageConnections',
     methods: {
-        loginGithub() {
-            window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv1.000062edb18edd6d&redirect_uri=https://www.relacexyz.duckdns.org/git';
-            //'https://github.com/login/oauth/authorize?client_id=a36482c8fbd0046dcc09&redirect_uri=https://www.relacexyz.duckdns.org/git';
-        },
-        loginGithubClose() {
-            document.getElementById('github-info').style.display = 'none';
-            const connections = document.getElementsByClassName('connection');
-            for (let i = 0; i < connections.length; i++) {
-                connections[i].style.pointerEvents = 'all';
-            }
-        },
-        loginGithubTrigger() {
-            document.getElementById('github-info').style.display = 'flex';
-            const connections = document.getElementsByClassName('connection');
-            for (let i = 0; i < connections.length; i++) {
-                connections[i].style.pointerEvents = 'none';
-            }
-        },
-        loginMoodleTrigger() {
-            document.getElementById('info').style.display = 'flex';
-            const connections = document.getElementsByClassName('connection');
-            for (let i = 0; i < connections.length; i++) {
-                connections[i].style.pointerEvents = 'none';
-            }
-        },
-        loginMoodleClose() {
+      loginGithub() {
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv1.000062edb18edd6d&redirect_uri=https://www.relacexyz.duckdns.org/git';
+        //'https://github.com/login/oauth/authorize?client_id=a36482c8fbd0046dcc09&redirect_uri=https://www.relacexyz.duckdns.org/git';
+      },
+      loginGithubClose() {
+        document.getElementById('github-info').style.display = 'none';
+        const connections = document.getElementsByClassName('connection');
+        for (let i = 0; i < connections.length; i++) {
+          connections[i].style.pointerEvents = 'all';
+        }
+      },
+      loginGithubTrigger() {
+        document.getElementById('github-info').style.display = 'flex';
+        const connections = document.getElementsByClassName('connection');
+        for (let i = 0; i < connections.length; i++) {
+          connections[i].style.pointerEvents = 'none';
+        }
+      },
+      loginMoodleTrigger() {
+        document.getElementById('info').style.display = 'flex';
+        const connections = document.getElementsByClassName('connection');
+        for (let i = 0; i < connections.length; i++) {
+          connections[i].style.pointerEvents = 'none';
+        }
+      },
+      loginMoodleClose() {
+        document.getElementById('info').style.display = 'none';
+        const connections = document.getElementsByClassName('connection');
+        for (let i = 0; i < connections.length; i++) {
+          connections[i].style.pointerEvents = 'all';
+        }
+      },
+      async loginMoodle() {
+        let organization = document.getElementById('organization').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        if (!organization.endsWith("/")) {
+          organization += "/";
+        }
+        const response = await fetch(organization + "login/token.php?username=" + username + "&password=" + password + "&service=moodle_mobile_app");
+        const data = await response.json();
+        console.log(data);
+        console.log(data.token);
+        if (data.token) {
+          const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/settoken', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              api: 'moodle',
+              token: data.token,
+              jwt: localStorage.getItem('token'),
+              key: localStorage.getItem('key')
+            })
+          })
+          const data1 = await response.json();
+          if (data1.success) {
             document.getElementById('info').style.display = 'none';
-            const connections = document.getElementsByClassName('connection');
-            for (let i = 0; i < connections.length; i++) {
-                connections[i].style.pointerEvents = 'all';
-            }
-        },
-        async loginMoodle() {
-            let organization = document.getElementById('organization').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if (!organization.endsWith("/")) {
-                organization += "/";
-            }
-            const response = await fetch(organization + "login/token.php?username=" + username + "&password=" + password + "&service=moodle_mobile_app");
-            const data = await response.json();
-            console.log(data);
-            console.log(data.token);
-            if (data.token) {
-                const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/settoken', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        api: 'moodle',
-                        token: data.token,
-                        jwt: localStorage.getItem('token'),
-                        key: localStorage.getItem('key')
-                    })
-                })
-                const data1 = await response.json();
-                if (data1.success) {
-                    document.getElementById('info').style.display = 'none';
-                    this.checkForConnections();
+            this.checkForConnections();
 
-                } else {
-                    document.getElementById('error').innerText = 'An error occurred while connecting to Moodle: ' + data.message;
-                }
-            }
-        },
-        async checkForConnections() {
-            const token = localStorage.getItem('token');
-            const connections = document.getElementsByClassName('connection');
-            for (let i = 0; i < connections.length; i++) {
-                const connectedField = connections[i].children[1];
-                const name = connections[i].children[0].innerHTML.toLowerCase();
-                const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/hastoken', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        jwt: token,
-                        api: name
-                    })
-                })
-                const data = await response.json();
-                console.log(name);
-                console.log(data);
+          } else {
+            document.getElementById('error').innerText = 'An error occurred while connecting to Moodle: ' + data.message;
+          }
+        }
+      },
+      async checkForConnections() {
+        const token = localStorage.getItem('token');
+        const connections = document.getElementsByClassName('connection');
+        for (let i = 0; i < connections.length; i++) {
+          const connectedField = connections[i].children[1];
+          const name = connections[i].children[0].innerHTML.toLowerCase();
+          const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/hastoken', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              jwt: token,
+              api: name
+            })
+          })
+          const data = await response.json();
+          console.log(name);
+          console.log(data);
 
-                if (data.success) {
-                    connectedField.style.color = '#00ff00';
-                    connectedField.innerHTML = '✔️';
-                } else {
-                    connectedField.style.color = '#ff0000';
-                    connectedField.innerHTML = '❌';
-                }
-            }
-            HeaderLine.methods.loadStatusSucceed();
-        },
-        //Microsoft GraphAPI
+          if (data.success) {
+            connectedField.style.color = '#00ff00';
+            connectedField.innerHTML = '✔️';
+          } else {
+            connectedField.style.color = '#ff0000';
+            connectedField.innerHTML = '❌';
+          }
+        }
+        HeaderLine.methods.loadStatusSucceed();
+      },
+      //Microsoft GraphAPI
       async loginMicrosoft() {
         await this.authorize();
       },
       async authorize() {
-            const clientId = process.env.VUE_APP_CLIENT_ID;
-            const redirectUri = process.env.VUE_APP_REDIRECT_URI;
-            const scope = 'https://graph.microsoft.com/.default';
+        const clientId = process.env.VUE_APP_CLIENT_ID;
+        const redirectUri = process.env.VUE_APP_REDIRECT_URI;
+        const scope = 'https://graph.microsoft.com/.default';
 
 
-            const codeChallenge = MicrosoftView.methods.getCodeChallenge();
-            const codeVerifier = MicrosoftView.methods.getCodeVerifier();
-            console.log('codeChallenge:', codeChallenge);
-            console.log('codeVerifier:', codeVerifier);
-            localStorage.setItem('codeVerifier', codeVerifier);
+        const codeChallenge = MicrosoftView.methods.getCodeChallenge();
+        const codeVerifier = MicrosoftView.methods.getCodeVerifier();
+        console.log('codeChallenge:', codeChallenge);
+        console.log('codeVerifier:', codeVerifier);
+        localStorage.setItem('codeVerifier', codeVerifier);
 
-            window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+        window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
       },
       generateCodeChallenge() {
         const rand = new Uint8Array(32);
@@ -133,12 +133,14 @@ export default {
       base64URL(string) {
         return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
       },
+    },
     mounted:
         function () {
+            console.log("Hello")
             HeaderLine.methods.loadStatus(5);
             this.checkForConnections();
+            console.log("Hello");
         }
-},
 }
 </script>
 

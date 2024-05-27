@@ -113,10 +113,6 @@ export default {
     },
     mounted: function () {
         document.addEventListener('keydown', (e) => {
-            console.log(e);
-            console.log(e.ctrlKey);
-            console.log(e.altKey);
-            console.log(e.key);
             if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'a')) {
                 console.log('add');
                 this.toggleEditor();
