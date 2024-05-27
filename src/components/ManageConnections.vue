@@ -68,7 +68,6 @@ export default {
           if (data1.success) {
             document.getElementById('info').style.display = 'none';
             this.checkForConnections();
-
           } else {
             document.getElementById('error').innerText = 'An error occurred while connecting to Moodle: ' + data.message;
           }

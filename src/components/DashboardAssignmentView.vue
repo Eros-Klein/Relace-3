@@ -170,6 +170,8 @@ export default {
             <p id="description"></p>
         </div>
         <button id="assignment-link">Go To Assignment</button>
+        <button id="assignment-delete"><img src="../assets/images/recycle-bin.png" alt="🗑️">️</button>
+        <button id="assignment-change-done"><p>✔️</p></button>
         <div id="attachment-dropdown">
             <div class="hidden-element-container" id="hidden-link-container">
             </div>
@@ -177,7 +179,6 @@ export default {
                 @click="toggleDropdown('attachment-dropdown', insertAttachments())">Download Attachments : {{
                     attachments.length }}</button>
         </div>
-
         <div id="time-container">
             <p id="timecounter">{{ timeTillDeadline }}</p>
             <p id="deadline">{{ Math.floor(deadline.getTime() / 1000) == 0 ? "No Deadline" :
@@ -191,6 +192,47 @@ export default {
 </template>
 
 <style>
+#assignment-change-done{
+  position: absolute;
+  left: 2.5%;
+  top: 10%;
+  height: 5vh;
+  width: 5vh;
+  border-color: #ff00ffd7;
+  border-style: solid;
+  background-color: #460040f5;
+  border-radius: 25px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#assignment-change-done:hover{
+  background-color: #ff00ffd7;
+}
+
+#assignment-delete{
+  position: absolute;
+  right: 2.5%;
+  top: 10%;
+  height: 5vh;
+  width: 5vh;
+  border-color: #ff00ffd7;
+  border-style: solid;
+  background-color: #460040f5;
+  border-radius: 25px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease-in-out;
+}
+
+#assignment-delete:hover{
+  background-color: #ff00ffd7;
+}
+
 #hidden-link-container {
     bottom: 120%;
     background-color: #270046f6;
@@ -208,6 +250,7 @@ export default {
 }
 
 #assignment-link {
+    user-select: none;
     background-color: #460040f5;
     width: 20%;
     border-radius: 25px;

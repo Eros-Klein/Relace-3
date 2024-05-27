@@ -109,15 +109,16 @@ export default {
                 <div class="assignment_head">
                     <h2>${headline}</h2>
                 </div>
-                <div class="submission-status ${done?'done':'not-done'}"></div>
                 <div class="assignment_body">
                     <p>${body}</p>
                 </div>
             `;
+            assignment.classList.add(done?'done':'not-done')
             assignmentContainer.appendChild(assignment);
         },
         async loadAssignments() {
             HomeView.methods.startLoad();
+            console.log(localStorage.getItem('key'));
             const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
                 method: "POST",
                 headers: {
@@ -300,18 +301,20 @@ export default {
 </template>
 
 <style>
-.submission-status{
-  border-radius: 100%;
-  height: 0.5rem;
-  width: 0.5rem;
+.done{
+  border-color: #0e3000;
+}
+
+.done:hover{
+  background-color: #174700;
 }
 
 .not-done{
-  background-color: #83000098;
+  border-color: #46004075;
 }
 
-.done{
-  background-color: #148800;
+.not-done:hover{
+  background-color: #a500a517;
 }
 
 #emoji {
@@ -477,7 +480,6 @@ export default {
     width: 15%;
     height: 80%;
     background-color: #0000004f;
-    border-color: #46004075;
     border-style: solid;
     border-radius: 25px;
     margin-right: 20px;
@@ -486,7 +488,6 @@ export default {
 }
 
 .assignment:hover {
-    background-color: #a500a517;
     color: #88888880;
     cursor: pointer;
 
