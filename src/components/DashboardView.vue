@@ -98,7 +98,7 @@ export default {
         async goToAssignment(code) {
             await this.$router.push('/dashboard/a/' + code);
         },
-        addAssignment(headline, body, id) {
+        addAssignment(headline, body, id, done) {
             const assignmentContainer = document.getElementById("assignment-container");
             const assignment = document.createElement("div");
             assignment.classList.add("assignment");
@@ -109,6 +109,7 @@ export default {
                 <div class="assignment_head">
                     <h2>${headline}</h2>
                 </div>
+                <div class="submission-status ${done?'done':'not-done'}"></div>
                 <div class="assignment_body">
                     <p>${body}</p>
                 </div>
@@ -168,7 +169,7 @@ export default {
                     }
                     else {
                         const date = new Date(data.assignments[i].deadline * 1000);
-                        this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
+                        this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id, data.assignments[i].done);
                     }
 
                 }
@@ -299,6 +300,20 @@ export default {
 </template>
 
 <style>
+.submission-status{
+  border-radius: 100%;
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.not-done{
+  background-color: #83000098;
+}
+
+.done{
+  background-color: #148800;
+}
+
 #emoji {
     font-size: 5vh;
 }
@@ -338,7 +353,7 @@ export default {
 
 .hidden-element {
     padding: 5px;
-    transition: all 0.25 ease-in-out;
+  transition: all 0.25s ease-in-out;
     background-color: #160052ef;
     cursor: pointer;
     user-select: none;
@@ -455,9 +470,12 @@ export default {
     padding: 20px;
     user-select: none;
     display: flex;
-    flex-direction: columns;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;  
     width: 15%;
+    height: 80%;
     background-color: #0000004f;
     border-color: #46004075;
     border-style: solid;
@@ -478,7 +496,7 @@ export default {
     scrollbar-color: #46004075 #6b6b6b25;
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: flex-start;
     width: 85%;
     background-color: #6b6b6b25;
     padding: 20px;
@@ -492,7 +510,7 @@ export default {
 .currentassignment-content {
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: flex-start;
     width: 85%;
     background-color: #6b6b6b25;
     padding: 20px;
