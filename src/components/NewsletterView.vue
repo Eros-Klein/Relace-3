@@ -35,7 +35,7 @@ export default {
             <button @click="subscribe" id="subscribe-button">Subscribe</button>
         </div>
         <div id="doccontainer">
-            <h1 id="doctitle">Documentation: <a href="https://relacexyz.duckdns.org/doc/" id="docbody">relacexyz/doc</a></h1>
+            <h2 id="doctitle">Documentation: <a href="https://relacexyz.duckdns.org/doc/" id="docbody">relacexyz/doc</a></h2>
         </div>
     </div>
 </template>
