@@ -34,10 +34,37 @@ export default {
             <input id="email-input" placeholder="Your Email...">
             <button @click="subscribe" id="subscribe-button">Subscribe</button>
         </div>
+        <div id="doccontainer">
+            <h1 id="doctitle">Documentation: <a href="https://relacexyz.duckdns.org/doc/" id="docbody">relacexyz/doc</a></h1>
+        </div>
     </div>
 </template>
 
 <style>
+#doccontainer {
+    position: fixed;
+    bottom: 5%;
+    width: auto;
+    text-align: center;
+    background-color: rgba(109, 10, 114, 0.281);
+    border-radius: 15px;
+    border-color: rgb(255, 0, 230);
+    color: rgb(208, 43, 226);
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+#doctitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+}
+
+#docbody {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: rgb(208, 43, 226);
+}
+
 #email-input {
     width: 90%;
     height: 30px;
