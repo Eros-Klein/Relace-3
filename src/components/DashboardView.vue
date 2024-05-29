@@ -106,6 +106,19 @@ export default {
                 this.goToAssignment(id);
             });
             assignment.innerHTML = `
+                <div id="q-${id}" class="quick-menu">
+                    <div class="trigger-dropdown-element quick-menu-trigger">
+                        <img src='assets/image/dots.png' alt="+">
+                    </div>
+                    <div class="hidden-element-container">
+                        <div class="hidden-element">
+                            <p>Delete</p>
+                        </div>
+                        <div class="hidden-element">
+                            <p>Edit</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="assignment_head">
                     <h2>${headline}</h2>
                 </div>
@@ -115,6 +128,15 @@ export default {
             `;
             assignment.classList.add(done?'done':'not-done')
             assignmentContainer.appendChild(assignment);
+
+          for (let child of document.getElementById(`q-${id}`).children) {
+              if (child.classList.contains('trigger-dropdown-element')){
+                child.addEventListener('click', () => {
+                  console.log('clicked');
+                  this.toggleDropdown(`q-${id}`, 500);
+                })
+              }
+          }
         },
         async loadAssignments() {
             HomeView.methods.startLoad();
@@ -214,7 +236,7 @@ export default {
                     }
                     const date = new Date(data.assignments[i].deadline * 1000);
 
-                    this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id);
+                    this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id, data.assignments[i].done);
                 }
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
@@ -301,16 +323,30 @@ export default {
 </template>
 
 <style>
+.quick-menu-trigger{
+  width: 2vh;
+  padding: 2px;
+}
+
+.quick-menu{
+  position: absolute;
+  width: 5vh;
+  height: 5vh;
+  right: 0;
+  bottom: 1vh;
+  border-radius: 100%;
+}
+
 .done{
-  border-color: #0e3000;
+  border-color: #710076a3;
 }
 
 .done:hover{
-  background-color: #174700;
+  background-color: rgba(161, 0, 174, 0.69);
 }
 
 .not-done{
-  border-color: #46004075;
+  border-color: #330b78d9;
 }
 
 .not-done:hover{
@@ -473,6 +509,7 @@ export default {
     padding: 20px;
     user-select: none;
     display: flex;
+  position: relative;
     flex-direction: column;
     justify-content: space-between;
     align-content: center;
@@ -528,6 +565,10 @@ export default {
     background-color: #6b6b6b25;
     border-radius: 25px;
     height: 15px;
+}
+
+.assignment-header{
+  max-width: 300px;
 }
 
 #container {

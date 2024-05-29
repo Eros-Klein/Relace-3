@@ -206,8 +206,6 @@ export default {
   user-select: none;
   transition: all 0.3s ease-in-out;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #assignment-change-done:hover{
