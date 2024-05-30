@@ -49,14 +49,14 @@ export default {
         async submitAssignment() {
             const title = document.getElementById('a-title').value;
             const description = document.getElementById('a-desc').value;
-            const dueDate = new Date(document.getElementById('a-date').value).getTime() / 1000;
-
+            const dueDate = new Date(document.getElementById('a-date').value).getTime() / 1000 + document.getElementById('a-time').valueAsNumber / 1000;
+            
             console.log(title);
             console.log(description);
             console.log(dueDate);
 
             const response = await fetch("https://relacexyz.duckdns.org/api/a/add", {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -191,6 +191,7 @@ export default {
             <span id="maximum">/ 2000</span>
         </div>
         <input id="a-date" type="date" placeholder="Deadline">
+        <input id="a-time" type="time" placeholder="Time">
         <button @click="submitAssignment()">Add</button>
         <p id="error-text"></p>
     </div>
