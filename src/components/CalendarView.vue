@@ -8,12 +8,12 @@
         <button class="nav-button" @click="nextMonth">{{ '>' }}</button>
         <p>{{ MonthAndYear }}</p>
     </div>
-    <div class="calendar-grid">
-      <!-- Wochentag header -->
+    <div class="day-header">
       <div class="weekday" v-for="weekday in weekdays" :key="weekday">
         {{ weekday }}
       </div>
-
+    </div>
+    <div class="calendar-grid">
       <!-- Tage des Monats -->
       <div class="day previous-month" v-for="day in previousMonthDays" :key="'previous-' + day">{{ day }}</div>
       <div class="day current-month" v-for="day in monthDays" :key="'current-' + day" :class="{ 'current-day': day === currentDate.date() && currentMonth.month() === currentDate.month() && currentMonth.year() === currentDate.year() }"> {{ weekdays[index] }}{{ day }}</div>
@@ -147,6 +147,18 @@ methods: {
   justify-content: left;
   align-items: top;
   cursor: pointer;
+}
+
+/* Weekday header */
+.day-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  color: white;
+  margin-left: 45px;
+  align-items: center;
+  text-align: center;
+  padding: 2px 0;
 }
 
 /*current Day in calender grid*/
