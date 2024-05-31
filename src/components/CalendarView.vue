@@ -20,6 +20,12 @@
       <div class="day next-month" v-for="day in nextMonthDays" :key="'next-' + day">{{ day }}</div>
     </div>
 
+    <!-- Assignments -->
+    <div class="assignment" 
+           v-for="assignment in assignmentsForDay(day)" 
+           :key="assignment.id">
+        {{ assignment.title }}
+      </div>
   </div>
 
   
@@ -35,6 +41,7 @@ export default {
     return {
       currentMonth: dayjs(),
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      assignments: [],
     };
   },
   computed: {
@@ -58,6 +65,17 @@ export default {
   currentDate() {
     return dayjs();
   },
+  assignmentsForDay() {
+      return (day) => {
+        return this.assignments.filter(assignment => {
+          const deadlineDate = new Date(assignment.deadline);
+          return day === deadlineDate.getDate() && this.currentMonth.month() === deadlineDate.getMonth() && this.currentMonth.year() === deadlineDate.getFullYear();
+        });
+      }
+    },
+},
+created() {
+  this.loadAssignments();
 },
 methods: {
     nextMonth() {
@@ -69,6 +87,37 @@ methods: {
     goToCurrentMonth() {
       this.currentMonth = dayjs();
     },
+    async loadAssignments() {
+    const response = await fetch('/a/get', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jwt: localStorage.getItem("token"),
+        count: 'all',
+        offset: 0,
+        compact: false,
+        searchParams: '',
+        course: '',
+        after: 0,
+        before: 'unlimited',
+        order: 'desc',
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      this.assignments = data.assignments.map(assignment => ({
+        id: assignment.id,
+        title: assignment.title,
+        deadline: new Date(assignment.deadline * 1000).toISOString().split('T')[0],
+      }));
+    } else {
+      console.error('Failed to load assignments:', data.message);
+    }
+  },
 },
 };
 </script>
