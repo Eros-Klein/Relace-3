@@ -9,8 +9,14 @@
         <p>{{ MonthAndYear }}</p>
     </div>
     <div class="calendar-grid">
+      <!-- Wochentag header -->
+      <div class="weekday" v-for="weekday in weekdays" :key="weekday">
+        {{ weekday }}
+      </div>
+
+      <!-- Tage des Monats -->
       <div class="day previous-month" v-for="day in previousMonthDays" :key="'previous-' + day">{{ day }}</div>
-      <div class="day current-month" v-for="day in monthDays" :key="'current-' + day">{{ day }}</div>
+      <div class="day current-month" v-for="day in monthDays" :key="'current-' + day" :class="{ 'current-day': day === currentDate.date() && currentMonth.month() === currentDate.month() && currentMonth.year() === currentDate.year() }"> {{ weekdays[index] }}{{ day }}</div>
       <div class="day next-month" v-for="day in nextMonthDays" :key="'next-' + day">{{ day }}</div>
     </div>
 
@@ -28,7 +34,7 @@ export default {
   data() {
     return {
       currentMonth: dayjs(),
-      days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     };
   },
   computed: {
@@ -48,7 +54,10 @@ export default {
     const totalDays = this.previousMonthDays.length + this.monthDays.length;
     const nextMonthDaysToShow = 35 - totalDays;
     return Array.from({ length: nextMonthDaysToShow }, (_, i) => i + 1);
-  }
+  },
+  currentDate() {
+    return dayjs();
+  },
 },
 methods: {
     nextMonth() {
@@ -114,9 +123,15 @@ methods: {
 
 /* Calendar grid */
 .calendar-grid {
+  margin-top: 10px;
+  margin-left: 45px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(100px, auto);
   gap: 10px;
+  height: calc(100vh - 200px);
 }
 
 .day-label {
@@ -126,8 +141,17 @@ methods: {
 .day {
   padding: 10px;
   border: 1px solid #e0e0e0;
+  color: white;
   border-radius: 5px;
+  display: flex;
+  justify-content: left;
+  align-items: top;
   cursor: pointer;
+}
+
+/*current Day in calender grid*/
+.current-day {
+  color: aqua; 
 }
 
 </style>
