@@ -1,13 +1,13 @@
 <template>
-  <div class="calender">
+<div class="calender">
 
-    <div class="calender-header">
+      <div class="calender-header">
         <p id="calender-text">Calender</p>
         <button id="today-button" @click="goToCurrentMonth">Today</button>
         <button class="nav-button" @click="previousMonth">{{ '<' }}</button>
         <button class="nav-button" @click="nextMonth">{{ '>' }}</button>
         <p>{{ MonthAndYear }}</p>
-    </div>
+      </div>
     <div class="day-header">
       <div class="weekday" v-for="weekday in weekdays" :key="weekday">
         {{ weekday }}
@@ -15,18 +15,21 @@
     </div>
     <div class="calendar-grid">
       <!-- Tage des Monats -->
-      <div class="day previous-month" v-for="day in previousMonthDays" :key="'previous-' + day">{{ day }}</div>
-      <div class="day current-month" v-for="day in monthDays" :key="'current-' + day" :class="{ 'current-day': day === currentDate.date() && currentMonth.month() === currentDate.month() && currentMonth.year() === currentDate.year() }"> {{ weekdays[index] }}{{ day }}</div>
-      <div class="day next-month" v-for="day in nextMonthDays" :key="'next-' + day">{{ day }}</div>
-    </div>
+      <div class="day" 
+         v-for="day in allDays" 
+         :key="day.key" 
+         :class="{ 'current-day': day.isCurrentDay, 'current-month': day.isCurrentMonth, 'other-month': !day.isCurrentMonth }">
+      {{ day.date }}
 
-    <!-- Assignments -->
-    <div class="assignment" 
-           v-for="assignment in assignmentsForDay(day)" 
+      <!-- Assignments -->
+      <div class="assignment" 
+           v-for="assignment in assignmentsForDay(day.date, day.month, day.year)" 
            :key="assignment.id">
         {{ assignment.title }}
       </div>
+    </div>
   </div>
+</div>
 
   
 </template>
@@ -48,20 +51,6 @@ export default {
   MonthAndYear() {
     return this.currentMonth.format('MMMM YYYY');
   },
-  monthDays() {
-    return Array.from({ length: this.currentMonth.daysInMonth() }, (_, i) => i + 1);
-  },
-  previousMonthDays() {
-    const currentMonthStartDay = this.currentMonth.startOf('month').day() === 0 ? 6 : this.currentMonth.startOf('month').day() - 1;
-    const totalDays = currentMonthStartDay + this.currentMonth.daysInMonth();
-    const previousMonthDaysToShow = totalDays <= 35 ? currentMonthStartDay : currentMonthStartDay - 7;
-    return Array.from({ length: previousMonthDaysToShow }, (_, i) => this.currentMonth.subtract(1, 'month').daysInMonth() - i).reverse();
-  },
-  nextMonthDays() {
-    const totalDays = this.previousMonthDays.length + this.monthDays.length;
-    const nextMonthDaysToShow = 35 - totalDays;
-    return Array.from({ length: nextMonthDaysToShow }, (_, i) => i + 1);
-  },
   currentDate() {
     return dayjs();
   },
@@ -72,6 +61,47 @@ export default {
           return day === deadlineDate.getDate() && this.currentMonth.month() === deadlineDate.getMonth() && this.currentMonth.year() === deadlineDate.getFullYear();
         });
       }
+    },
+    allDays() {
+      const previousMonth = this.currentMonth.clone().subtract(1, 'months');
+      const nextMonth = this.currentMonth.clone().add(1, 'months');
+
+      let startDay = this.currentMonth.startOf('month').day() - 1;
+      if (startDay === -1) startDay = 6;
+
+      let endDay = this.currentMonth.endOf('month').day() - 1;
+      if (endDay === -1) endDay = 6;
+
+      const previousMonthDays = Array.from({ length: startDay }, (_, i) => ({
+        date: previousMonth.daysInMonth() - startDay + i + 1,
+        month: previousMonth.month(),
+        year: previousMonth.year(),
+        isCurrentDay: false,
+        isCurrentMonth: false,
+        key: `previous-${i + 1}`,
+      }));
+
+      const monthDays = Array.from({ length: this.currentMonth.daysInMonth() }, (_, i) => ({
+        date: i + 1,
+        month: this.currentMonth.month(),
+        year: this.currentMonth.year(),
+        isCurrentDay: i + 1 === this.currentDate.date() && this.currentMonth.month() === this.currentDate.month() && this.currentMonth.year() === this.currentDate.year(),
+        isCurrentMonth: true,
+        key: `current-${i + 1}`,
+      }));
+
+      const nextMonthDays = Array.from({ length: 6 - endDay }, (_, i) => ({
+        date: i + 1,
+        month: nextMonth.month(),
+        year: nextMonth.year(),
+        isCurrentDay: false,
+        isCurrentMonth: false,
+        key: `next-${i + 1}`,
+      }));
+
+      const allDays = [...previousMonthDays, ...monthDays, ...nextMonthDays];
+
+      return allDays.slice(0, 35);
     },
 },
 created() {
@@ -130,7 +160,6 @@ methods: {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background-color: #f0f0f0;
   border-bottom: 1px solid #e0e0e0;
   margin-left: 44px;
 }
@@ -150,7 +179,7 @@ methods: {
 }
 
 .nav-button {
-  color: black; 
+  color: white; 
   background: none; 
   border: none; 
 }
@@ -161,11 +190,11 @@ methods: {
 }
 
 #today-button:hover {
-  background-color: black; 
+  background-color: pink; 
 }
 
 .nav-button:hover {
-  background-color: black;
+  background-color: pink;
   border: none;
   border-radius: 50%;
 }
@@ -180,7 +209,7 @@ methods: {
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: minmax(100px, auto);
   gap: 10px;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 50vh);
 }
 
 .day-label {
@@ -200,6 +229,7 @@ methods: {
 
 /* Weekday header */
 .day-header {
+  margin-top: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
