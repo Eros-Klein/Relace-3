@@ -153,7 +153,7 @@ methods: {
 </script>
 
 <style scoped>
-/* Calender header */
+/* calender header */
 .calender-header {
   display: flex;
   justify-content: flex-start;
@@ -199,15 +199,15 @@ methods: {
   border-radius: 50%;
 }
 
-/* Calendar grid */
+/* calendar grid */
 .calendar-grid {
   margin-top: 10px;
-  margin-left: 45px;
-  margin-right: 10px;
+  margin-left: 46px;
+  margin-right: 12px;
   margin-bottom: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(100px, auto);
+  grid-auto-rows: minmax(90px, auto);
   gap: 10px;
   height: calc(100vh - 50vh);
 }
@@ -227,7 +227,7 @@ methods: {
   cursor: pointer;
 }
 
-/* Weekday header */
+/* weekday header */
 .day-header {
   margin-top: 10px;
   display: grid;
@@ -240,7 +240,7 @@ methods: {
   padding: 2px 0;
 }
 
-/*current Day in calender grid*/
+/*current day in calender grid*/
 .current-day {
   color: aqua; 
 }
