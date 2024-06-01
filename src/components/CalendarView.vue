@@ -118,7 +118,7 @@ methods: {
       this.currentMonth = dayjs();
     },
     async loadAssignments() {
-    const response = await fetch('/a/get', {
+    const response = await fetch('/api/a/get', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
