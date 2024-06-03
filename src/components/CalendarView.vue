@@ -125,13 +125,13 @@ methods: {
       },
       body: JSON.stringify({
         jwt: localStorage.getItem("token"),
-        count: 'all',
+        count: 0,
         offset: 0,
         compact: false,
         searchParams: '',
         course: '',
         after: 0,
-        before: 'unlimited',
+        before: 0,
         order: 'desc',
       }),
     });
@@ -160,8 +160,7 @@ methods: {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
-  margin-left: 44px;
+  margin-left: 100px;
 }
 
 .calender-text {
@@ -170,16 +169,20 @@ methods: {
 }
 
 #today-button {
+  font-size: large;
   padding: 10px;
   border: none;
   border-radius: 5px;
   color: black;
-  background: #ccc;
+  background: white;  
+  border-color: none;
   appearance: none;
 }
 
 .nav-button {
-  color: white; 
+  border-radius: 50%;
+  font-size: large;
+  color: white;
   background: none; 
   border: none; 
 }
@@ -191,19 +194,21 @@ methods: {
 
 #today-button:hover {
   background-color: pink; 
+
+  color: black;
 }
 
 .nav-button:hover {
-  background-color: pink;
+  background-color: pink; 
+  color: black;
   border: none;
-  border-radius: 50%;
 }
 
 /* calendar grid */
 .calendar-grid {
   margin-top: 10px;
-  margin-left: 46px;
-  margin-right: 12px;
+  margin-left: 200px;
+  margin-right: 100px;
   margin-bottom: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -234,7 +239,8 @@ methods: {
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   color: white;
-  margin-left: 45px;
+  margin-left: 200px;
+  margin-right: 100px;
   align-items: center;
   text-align: center;
   padding: 2px 0;
@@ -242,7 +248,8 @@ methods: {
 
 /*current day in calender grid*/
 .current-day {
-  color: aqua; 
+  color: pink; 
+  border-color: pink;
 }
 
 </style>
