@@ -125,13 +125,13 @@ methods: {
       },
       body: JSON.stringify({
         jwt: localStorage.getItem("token"),
-        count: 'all',
+        count: 0,
         offset: 0,
         compact: false,
         searchParams: '',
         course: '',
         after: 0,
-        before: 'unlimited',
+        before: 0,
         order: 'desc',
       }),
     });
@@ -243,6 +243,7 @@ methods: {
 /*current day in calender grid*/
 .current-day {
   color: aqua; 
+  border-color: aqua;
 }
 
 </style>
