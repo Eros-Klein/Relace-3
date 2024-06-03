@@ -7,7 +7,6 @@ export default {
     name: 'DashboardAssignmentView',
     methods: {
         async insertAttachments() {
-
             console.log(this.attachments);
             let size = 0;
             const attachmentContainer = document.getElementById('hidden-link-container');
@@ -59,6 +58,15 @@ export default {
             console.log(data);
             if (data.success) {
                 this.attachments = data.assignment.attachments;
+                const doneButton = document.getElementById('assignment-change-done');
+                doneButton.addEventListener('click', () => {
+                    this.updateSubmissionStatus(code, data.assignment.done);
+                });
+                doneButton.innerText = data.assignment.done ? '❌' : '✔️';
+                
+                document.getElementById('assignment-delete').addEventListener('click', () => {
+                    this.deleteAssignment(code);
+                });
 
                 console.log(data.assignment.attachments);
 
@@ -115,13 +123,65 @@ export default {
 
                 console.log(this.timeTillDeadlineActualizer);
             } else {
-                if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+              console.log(data);
+              if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
                     NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignment: ' + data.message);
             }
             HeaderLine.methods.addLoadStatus(70);
+        },
+      async deleteAssignment(code){
+        HeaderLine.methods.loadStatus(30);
+        const response = await fetch("https://relacexyz.duckdns.org/api/a/delete", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jwt: localStorage.getItem("token"),
+            id: code
+          }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.success) {
+          window.location.href = "/dashboard";
+        } else {
+          console.log(data);
+          if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+            NavBar.beforeMount();
+          }
+          else alert('An error occurred while deleting the assignment: ' + data.message);
         }
+        HeaderLine.methods.addLoadStatus(70);
+      },
+      async updateSubmissionStatus(code, status){
+        HeaderLine.methods.loadStatus(30);
+        const response = await fetch("https://relacexyz.duckdns.org/api/a/update", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jwt: localStorage.getItem("token"),
+            id: code,
+            done: !status
+          }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.success) {
+          await this.reloadAssignment(code);
+        } else {
+          console.log(data);
+          if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+            NavBar.beforeMount();
+          }
+          else alert('An error occurred while updating the submission status: ' + data.message);
+        }
+        HeaderLine.methods.addLoadStatus(70);
+      }
     },
     data: function () {
         return {
@@ -206,6 +266,8 @@ export default {
   user-select: none;
   transition: all 0.3s ease-in-out;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #assignment-change-done:hover{

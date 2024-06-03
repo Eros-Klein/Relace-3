@@ -303,7 +303,7 @@ export default {
 
     z-index: 2;
     width: 40%;
-    height: 45%;
+    height: 65%;
     padding: 50px;
     border-radius: 25px;
     border-style: solid;

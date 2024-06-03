@@ -106,7 +106,16 @@ export default {
                 this.goToAssignment(id);
             });
             assignment.innerHTML = `
-                <div id="q-${id}" class="quick-menu">
+                <div class="assignment_head">
+                    <h2>${headline}</h2>
+                </div>
+                <div class="assignment_body">
+                    <p>${body}</p>
+                </div>
+            `;
+            /*
+            FUTURE QUICK EDIT FEATURE
+            <div id="q-${id}" class="quick-menu">
                     <div class="trigger-dropdown-element quick-menu-trigger">
                         <img src='assets/image/dots.png' alt="+">
                     </div>
@@ -119,17 +128,7 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="assignment_head">
-                    <h2>${headline}</h2>
-                </div>
-                <div class="assignment_body">
-                    <p>${body}</p>
-                </div>
-            `;
-            assignment.classList.add(done?'done':'not-done')
-            assignmentContainer.appendChild(assignment);
-
-          for (let child of document.getElementById(`q-${id}`).children) {
+                for (let child of document.getElementById(`q-${id}`).children) {
               if (child.classList.contains('trigger-dropdown-element')){
                 child.addEventListener('click', () => {
                   console.log('clicked');
@@ -137,6 +136,11 @@ export default {
                 })
               }
           }
+             */
+            assignment.classList.add(done?'done':'not-done')
+            assignmentContainer.appendChild(assignment);
+
+          
         },
         async loadAssignments() {
             HomeView.methods.startLoad();
