@@ -1,22 +1,28 @@
-<script>
+<script lang="ts">
 import HeaderLine from './HeaderLine.vue';
 
 
 export default {
     name: 'SettingView',
     methods: {
-        extendCategorie(id) {
-            const categorie = document.getElementById(id);
-            const childs = categorie.children;
+        extendCategorie(id : string) {
+          const categorie = document.getElementById(id);
+          if (categorie !== null) {
+            const childs: HTMLCollection = categorie.children;
             for (let i = 1; i < childs.length; i++) {
-                if (childs[i].classList.contains("setting-categorie-hidden") && (childs[i].style.display === "none" || childs[i].style.display === "")) {
-                    childs[i].style.display = "flex";
+              const child = childs[i];
+              if (child instanceof HTMLElement) {
+                if (child.classList.contains("setting-categorie-hidden") && (child.style.display === "none" || child.style.display === "")) {
+                  child.style.display = "flex";
                 } else {
-                    childs[i].style.display = "none";
+                  child.style.display = "none";
                 }
+              }
             }
+          }
         },
         selectConnectionSetting() {
+            //@ts-ignore
             this.$router.push('/setting/connections');
             window.history.pushState(null, '', '/setting/connections');
         },
@@ -34,6 +40,7 @@ export default {
             localStorage.removeItem('token');
             localStorage.removeItem('username');
             localStorage.removeItem('refresh');
+            //@ts-ignore
             this.$router.push('/welcome');
         },
         async refresh() {
@@ -59,13 +66,13 @@ export default {
         }
     },
     beforeMount: function () {
-        document.getElementById("headline-container").style.display = "none";
+        document.getElementById("headline-container")!.style.display = "none";
     },
     mounted: function () {
-        HeaderLine.methods.loadStatusSucceed();
+        HeaderLine.methods!.loadStatusSucceed();
     },
     beforeUnmount: function () {
-        document.getElementById("headline-container").style.display = "flex";
+        document.getElementById("headline-container")!.style.display = "flex";
     }
 }
 </script>

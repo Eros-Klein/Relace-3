@@ -1,23 +1,24 @@
-<script>
+<script lang="ts">
 import DashboardView from './DashboardView.vue';
 import HeaderLine from './HeaderLine.vue';
 import NavBar from './NavBar.vue';
+import {NavigationGuardNext, RouteLocationNormalized} from "vue-router";
 
 export default {
     name: 'DashboardAssignmentView',
     methods: {
         async insertAttachments() {
-            console.log(this.attachments);
             let size = 0;
-            const attachmentContainer = document.getElementById('hidden-link-container');
+            const attachmentContainer = document.getElementById('hidden-link-container')!;
             attachmentContainer.innerHTML = '';
+          //@ts-ignore
             for (let i = 0; i < this.attachments.length; i++) {
                 const attachment = document.createElement('div');
                 attachment.classList.add('hidden-element');
-                attachment.innerHTML = `
-                    <p>${this.attachments[i].name}</p>
-                `;
+                //@ts-ignore
+                attachment.innerHTML = `<p>${this.attachments[i].name}</p>`;
                 attachment.addEventListener('click', () => {
+                  //@ts-ignore
                     window.open(this.attachments[i].link, '_blank');
                 });
                 attachmentContainer.appendChild(attachment);
@@ -30,19 +31,19 @@ export default {
                 return size.toString() + "px";
             }
         },
-        async toggleDropdown(attachment, pixelHeight) {
+        async toggleDropdown(attachment : string, pixelHeight : string | Promise<string>) {
             pixelHeight = await pixelHeight;
-            const attachmentElement = document.getElementById(attachment);
+            const attachmentElement = document.getElementById(attachment)!;
             if (pixelHeight == '0px') {
                 attachmentElement.style.display = 'none';
             }
             else {
                 attachmentElement.style.display = 'flex';
             }
-            DashboardView.methods.toggleDropdown(attachment, pixelHeight);
+            DashboardView.methods!.toggleDropdown(attachment, parseInt(pixelHeight));
         },
-        async reloadAssignment(code) {
-            HeaderLine.methods.loadStatus(30);
+        async reloadAssignment(code : number) {
+            HeaderLine.methods!.loadStatus(30);
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
                 method: "POST",
                 headers: {
@@ -57,14 +58,15 @@ export default {
 
             console.log(data);
             if (data.success) {
+              //@ts-ignore
                 this.attachments = data.assignment.attachments;
-                const doneButton = document.getElementById('assignment-change-done');
+                const doneButton = document.getElementById('assignment-change-done')!;
                 doneButton.addEventListener('click', () => {
                     this.updateSubmissionStatus(code, data.assignment.done);
                 });
                 doneButton.innerText = data.assignment.done ? '❌' : '✔️';
                 
-                document.getElementById('assignment-delete').addEventListener('click', () => {
+                document.getElementById('assignment-delete')!.addEventListener('click', () => {
                     this.deleteAssignment(code);
                 });
 
@@ -73,25 +75,30 @@ export default {
                 await this.toggleDropdown('attachment-dropdown', this.insertAttachments());
                 await this.toggleDropdown('attachment-dropdown', this.insertAttachments());
 
-                document.getElementById('title').innerText = data.assignment.title;
+                document.getElementById('title')!.innerText = data.assignment.title;
 
-                document.getElementById('description').innerHTML = data.assignment.description;
+                document.getElementById('description')!.innerHTML = data.assignment.description;
 
-                let link = document.getElementById('assignment-link');
+                let link = document.getElementById('assignment-link')!;
                 const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
+                link.parentNode!.replaceChild(newLink, link);
 
                 newLink.addEventListener('click', () => {
                     window.open(data.assignment.linkToProvider, '_blank');
                 });
 
+              //@ts-ignore
                 this.deadline = new Date(data.assignment.deadline * 1000);
 
+              //@ts-ignore
                 this.timeTillDeadlineActualizer = setInterval(() => {
                     const now = new Date();
+                    //@ts-ignore
                     const diff = this.deadline - now;
                     if (diff < 0) {
+                      //@ts-ignore
                         this.timeTillDeadline = 'Deadline passed';
+                      //@ts-ignore
                         clearInterval(this.timeTillDeadlineActualizer);
                     }
                     else {
@@ -101,14 +108,18 @@ export default {
                         const seconds = Math.floor((diff % (1000 * 60)) / 1000)
                         const milliseconds = Math.floor(diff % 1000);
 
+                      //@ts-ignore
                         this.timeTillDeadline = days.toString().padStart(2, "0") + "d " + hours.toString().padStart(2, "0") + "h " + minutes.toString().padStart(2, "0") + "m " + seconds.toString().padStart(2, "0") + "s " + milliseconds.toString().padStart(3, "0") + "ms";
                     }
                 }, 1);
 
                 const now = new Date();
+                //@ts-ignore
                 const diff = this.deadline - now;
                 if (diff < 0) {
+                  //@ts-ignore
                     this.timeTillDeadline = 'Deadline passed';
+                  //@ts-ignore
                     clearInterval(this.timeTillDeadlineActualizer);
                 }
                 else {
@@ -117,22 +128,21 @@ export default {
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((diff % (1000 * 60)) / 1000)
                     const milliseconds = Math.floor(diff % 1000);
-
+                  //@ts-ignore
                     this.timeTillDeadline = days.toString().padStart(2, "0") + "d " + hours.toString().padStart(2, "0") + "h " + minutes.toString().padStart(2, "0") + "m " + seconds.toString().padStart(2, "0") + "s " + milliseconds.toString().padStart(3, "0") + "ms";
                 }
-
-                console.log(this.timeTillDeadlineActualizer);
             } else {
               console.log(data);
               if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
-                    NavBar.beforeMount();
+                //@ts-ignore    
+                NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignment: ' + data.message);
             }
-            HeaderLine.methods.addLoadStatus(70);
+            HeaderLine.methods!.addLoadStatus(70);
         },
-      async deleteAssignment(code){
-        HeaderLine.methods.loadStatus(30);
+      async deleteAssignment(code : number){
+        HeaderLine.methods!.loadStatus(30);
         const response = await fetch("https://relacexyz.duckdns.org/api/a/delete", {
           method: "DELETE",
           headers: {
@@ -150,14 +160,15 @@ export default {
         } else {
           console.log(data);
           if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+            //@ts-ignore
             NavBar.beforeMount();
           }
           else alert('An error occurred while deleting the assignment: ' + data.message);
         }
-        HeaderLine.methods.addLoadStatus(70);
+        HeaderLine.methods!.addLoadStatus(70);
       },
-      async updateSubmissionStatus(code, status){
-        HeaderLine.methods.loadStatus(30);
+      async updateSubmissionStatus(code : number, status : boolean){
+        HeaderLine.methods!.loadStatus(30);
         const response = await fetch("https://relacexyz.duckdns.org/api/a/update", {
           method: "PUT",
           headers: {
@@ -176,11 +187,12 @@ export default {
         } else {
           console.log(data);
           if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
+            //@ts-ignore
             NavBar.beforeMount();
           }
           else alert('An error occurred while updating the submission status: ' + data.message);
         }
-        HeaderLine.methods.addLoadStatus(70);
+        HeaderLine.methods!.addLoadStatus(70);
       }
     },
     data: function () {
@@ -193,29 +205,37 @@ export default {
         }
     },
     mounted: async function () {
-        HeaderLine.methods.loadStatus(0);
+        HeaderLine.methods!.loadStatus(0);
+        //@ts-ignore
         await this.reloadAssignment(this.$route.params.id);
 
-        window.addEventListener("click", (event) => {
+        window.addEventListener("click", () => {
             const dropdown = document.getElementsByClassName("dropdown-menu");
             for (let i = 0; i < dropdown.length; i++) {
-                if (dropdown[i].children[1].style.height !== "0px" && !dropdown[i].contains(event.target)) {
-                    console.log(dropdown[i].children[1]);
-                    dropdown[i].children[1].style.height = "0px";
+              const child = dropdown[i].children[1];
+              if(child instanceof HTMLElement) {
+                if (child.style.height !== "0px") {
+                  child.style.height = "0px";
                 }
+              }
             }
         });
     },
     beforeUpdate: async function () {
+      //@ts-ignore
         if (this.changed) {
+          //@ts-ignore
             this.changed = false;
-            let value = this.timeTillDeadlineActualizer;
+            //@ts-ignore
+            let value : string = this.timeTillDeadlineActualizer.toString();
             clearInterval(parseInt(value));
             console.log('cleared: ' + value);
+            //@ts-ignore
             await this.reloadAssignment(this.$route.params.id);
         }
     },
-    beforeRouteUpdate: async function (to, from, next) {
+    beforeRouteUpdate: async function (to :  RouteLocationNormalized, from :  RouteLocationNormalized, next: NavigationGuardNext) {
+      //@ts-ignore 
         this.changed = true;
         next();
     }

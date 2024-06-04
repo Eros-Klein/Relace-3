@@ -1,22 +1,24 @@
 <template>
   <div id="page-container">
     <HeaderLine />
-    <RouterView />
     <NavBar selected="Home" />
+    <router-view />
   </div>
 </template>
 
-<script>
-import NavBar from './components/NavBar.vue';
-import HeaderLine from './components/HeaderLine.vue';
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import NavBar from "@/components/NavBar.vue";
+import HeaderLine from "@/components/HeaderLine.vue";
 
-export default {
+@Options({
   name: 'App',
   components: {
-    NavBar,
     HeaderLine,
-  },
-}
+    NavBar
+  }
+})
+export default class App extends Vue {}
 </script>
 
 <style>
@@ -66,11 +68,11 @@ p {
 
 body {
   background: linear-gradient(90deg,
-      #030b28 0%,
-      #1d0a45 33%,
-      #290951 52%,
-      #1f0751 80%,
-      #390452 100%);
+  #030b28 0%,
+  #1d0a45 33%,
+  #290951 52%,
+  #1f0751 80%,
+  #390452 100%);
   font-family: "Arial";
 }
 
@@ -90,11 +92,11 @@ body {
 
 html {
   background: linear-gradient(90deg,
-      #030b28 0%,
-      #1d0a45 33%,
-      #290951 52%,
-      #1f0751 80%,
-      #390452 100%);
+  #030b28 0%,
+  #1d0a45 33%,
+  #290951 52%,
+  #1f0751 80%,
+  #390452 100%);
   background-color: #030b28;
 
 }

@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 export default {
     name: 'WelcomeView',
     mounted: async function () {
-        document.getElementById('side-bar').style.display = 'none';
-        document.getElementById('headline-container').style.display = 'none';
+        document.getElementById('side-bar')!.style.display = 'none';
+        document.getElementById('headline-container')!.style.display = 'none';
     }
 }
 
@@ -16,8 +16,8 @@ export default {
             <p>Relace is a platform that helps you to manage all of your assignments.</p>
             <p>It is easy to use and free.</p>
             <p>Just sign up and start using it.</p>
-            <button @click="this.$router.push('/auth/signup')">Sign Up</button>
-            <button @click="this.$router.push('/auth/login')">Log In</button>
+            <button @click="$router.push('/auth/signup')">Sign Up</button>
+            <button @click="$router.push('/auth/login')">Log In</button>
         </div>
     </div>
 </template>

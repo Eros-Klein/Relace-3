@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import HeaderLine from './HeaderLine.vue';
 import NavBar from './NavBar.vue';
 import DashboardAssignmentView from './DashboardAssignmentView.vue';
@@ -16,20 +16,20 @@ export default {
     methods: {
         async loadAndShowAssignments() {
             console.log('loadAndShowAssignments');
-            DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
+            DashboardAssignmentView.methods!.toggleDropdown('attachment-dropdown', this.insertAttachments());
         },
         async insertAttachments() {
-            console.log(this.attachments);
             let size = 0;
-            const attachmentContainer = document.getElementById('hidden-link-container');
+            const attachmentContainer = document.getElementById('hidden-link-container')!;
             attachmentContainer.innerHTML = '';
+          //@ts-ignore
             for (let i = 0; i < this.attachments.length; i++) {
                 const attachment = document.createElement('div');
                 attachment.classList.add('hidden-element');
-                attachment.innerHTML = `
-        <p>${this.attachments[i].name}</p>
-    `;
+                //@ts-ignore
+                attachment.innerHTML = `<p>${this.attachments[i].name}</p>`;
                 attachment.addEventListener('click', () => {
+                  //@ts-ignore
                     window.open(this.attachments[i].link, '_blank');
                 });
                 attachmentContainer.appendChild(attachment);
@@ -44,9 +44,12 @@ export default {
         },
         timeTillDeadlineCalc() {
             const now = new Date();
+            //@ts-ignore
             const diff = this.deadline - now;
             if (diff < 0) {
+              //@ts-ignore
                 this.timeTillDeadline = 'Deadline passed';
+              //@ts-ignore
                 clearInterval(this.intervallId);
                 return;
             }
@@ -54,11 +57,11 @@ export default {
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          //@ts-ignore
             this.timeTillDeadline = days.toString().padStart(2, '0') + "d " + hours.toString().padStart(2, '0') + "h " + minutes.toString().padStart(2, '0') + "m " + seconds.toString().padStart(2, '0') + "s ";
         },
         async loadAssignment() {
-            HeaderLine.methods.loadStatus(0);
-            console.log(this.$route.params.id);
+            HeaderLine.methods!.loadStatus(0);
             const response = await fetch("https://relacexyz.duckdns.org/api/a/getbyid/", {
                 method: "POST",
                 headers: {
@@ -66,51 +69,58 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("token"),
+                  //@ts-ignore
                     id: this.$route.params.id
                 }),
             });
-            HeaderLine.methods.loadStatus(30);
+            HeaderLine.methods!.loadStatus(30);
             const data = await response.json();
 
             console.log(data);
             if (data.success) {
-                let link = document.getElementById('assignment-link');
+                let link = document.getElementById('assignment-link')!;
                 const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
+                link.parentNode!.replaceChild(newLink, link);
 
                 newLink.addEventListener('click', () => {
                     window.open(data.assignment.linkToProvider, '_blank');
                 });
 
+              //@ts-ignore
                 this.attachments = data.assignment.attachments;
 
-                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
-                await DashboardAssignmentView.methods.toggleDropdown('attachment-dropdown', this.insertAttachments());
+                await DashboardAssignmentView.methods!.toggleDropdown('attachment-dropdown', this.insertAttachments());
+                await DashboardAssignmentView.methods!.toggleDropdown('attachment-dropdown', this.insertAttachments());
 
-                HeaderLine.methods.setHeadline(data.assignment.course);
+                HeaderLine.methods!.setHeadline(data.assignment.course);
 
-                document.getElementById('title').innerText = data.assignment.title;
+                document.getElementById('title')!.innerText = data.assignment.title;
 
-                document.getElementById('description').innerHTML = data.assignment.description;
+                document.getElementById('description')!.innerHTML = data.assignment.description;
 
                 const date = new Date(data.assignment.deadline * 1000);
+              //@ts-ignore
                 this.deadline = date;
 
+              //@ts-ignore
                 this.intervallId = setInterval(this.timeTillDeadlineCalc, 1000);
                 this.timeTillDeadlineCalc();
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('expired')) {
-                    NavBar.beforeMount();
+                  //@ts-ignore
+                  NavBar.beforeMount();
                 }
                 else alert('An error occurred while loading the assignment: ' + data.message);
             }
-            HeaderLine.methods.loadStatusSucceed();
+            HeaderLine.methods!.loadStatusSucceed();
         }
     },
     mounted: async function () {
+      //@ts-ignore
         this.loadAssignment();
     },
     beforeUnmount: function () {
+      //@ts-ignore
         clearInterval(this.intervallId);
     }
 }

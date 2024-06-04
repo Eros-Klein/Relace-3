@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import SettingView from './SettingView.vue';
 
 
@@ -6,50 +6,60 @@ export default {
     name: 'NavBar',
     methods: {
         goToHome() {
+            //@ts-ignore
             this.$router.push('/home');
             window.history.pushState(null, '', '/home');
         },
         goToSetting() {
+            //@ts-ignore
             this.$router.push('/setting');
             window.history.pushState(null, '', '/setting');
         },
         goToMessanger() {
+            //@ts-ignore
             this.$router.push('/m');
             window.history.pushState(null, '', '/m');
         },
         goToNewsletter() {
+            //@ts-ignore
             this.$router.push('/newsletter');
             window.history.pushState(null, '', '/newsletter');
         },
         goToDashboard() {
+            //@ts-ignore
             this.$router.push('/dashboard');
             window.history.pushState(null, '', '/dashboard');
         },
         goToCalendar() {
+            //@ts-ignore
             this.$router.push('/calendar');
             window.history.pushState(null, '', '/calendar');
         },
         toggleEditor() {
-            if (document.getElementById('editor').style.display === 'flex') {
-                this.closeEditor();
+          const editor = document.getElementById('editor');
+          if (editor !== null) {
+            if (editor.style.display === 'flex') {
+              this.closeEditor();
+            } else {
+              editor.style.display = 'flex';
             }
-            else {
-                document.getElementById('editor').style.display = 'flex';
-            }
-        },
-        closeEditor() {
-            const editor = document.getElementById('editor')
-            editor.style.display = 'none';
-          for (let child of editor.children) {
-             if (child instanceof HTMLInputElement){
-                child.value = '';
-             }
           }
         },
+        closeEditor() {
+            const editor = document.getElementById('editor');
+            if (editor !== null){
+                editor.style.display = 'none';
+                for (let child of editor.children) {
+                    if (child instanceof HTMLInputElement){
+                        child.value = '';
+                    }
+                }
+            }
+        },
         async submitAssignment() {
-            const title = document.getElementById('a-title').value;
-            const description = document.getElementById('a-desc').value;
-            const dueDate = new Date(document.getElementById('a-date').value).getTime() / 1000 + document.getElementById('a-time').valueAsNumber / 1000;
+            const title = (document.getElementById('a-title') as HTMLInputElement).value;
+            const description = (document.getElementById('a-desc') as HTMLInputElement).value;
+            const dueDate = new Date((document.getElementById('a-date') as HTMLInputElement).value).getTime() / 1000 + (document.getElementById('a-time') as HTMLInputElement).valueAsNumber / 1000;
             
             console.log(title);
             console.log(description);
@@ -76,7 +86,7 @@ export default {
                 window.location.reload();
             }
             else {
-                document.getElementById('error-text').innerText = data.message;
+                document.getElementById('error-text')!.innerText = data.message;
             }
             console.log(data);
         },
@@ -97,8 +107,9 @@ export default {
 
         console.log(data.success);
         if (!data.success) {
-            if (!await SettingView.methods.refresh()) {
+            if (!await SettingView.methods!.refresh()) {
                 console.log('refresh failed');
+                //@ts-ignore
                 this.$router.push('/welcome');
                 window.history.pushState(null, '', '/welcome');
             }
@@ -115,21 +126,25 @@ export default {
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'a')) {
                 console.log('add');
+                //@ts-ignore
                 this.toggleEditor();
             }
             if (e.key === 'Escape') {
+                //@ts-ignore
                 this.closeEditor();
             }
         });
-        document.getElementById('a-desc').addEventListener('input', function () {
-            const current = document.getElementById('a-desc').value.length;
-            document.getElementById('current').innerText = current;
-
-            if (current > 2000) {
-                document.getElementById('current').style.color = 'red';
-            }
-            else {
-                document.getElementById('current').style.color = 'white';
+        document.getElementById('a-desc')!.addEventListener('input', function () {
+            const currentContainer = document.getElementById('current');
+            const current = (document.getElementById('a-desc') as HTMLInputElement).value.length;
+            if (currentContainer !== null){
+              currentContainer.innerText = current.toString();
+              if (current > 2000) {
+                currentContainer.style.color = 'red';
+              }
+              else {
+                currentContainer.style.color = 'white';
+              }
             }
         });
     }

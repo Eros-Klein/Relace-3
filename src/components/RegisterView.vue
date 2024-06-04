@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 export default {
     name: 'RegisterView',
     methods: {
-      stringToHash(string1) {
+      stringToHash(string1 : string) {
 
           let hash = 0;
 
@@ -17,11 +17,11 @@ export default {
           return hash;
       },
       async register() {
-            const errorField = document.getElementById('error');
+            const errorField = document.getElementById('error')!;
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const email = document.getElementById('email').value;
+            const username = (document.getElementById('username') as HTMLInputElement).value;
+            const password = (document.getElementById('password') as HTMLInputElement).value;
+            const email = (document.getElementById('email') as HTMLInputElement).value;
 
             if (username === '' || password === '' || email === '') {
                 return errorField.innerText = 'Please fill out all fields';
@@ -57,13 +57,13 @@ export default {
                 if (data.success) {
                     this.login();
                 } else {
-                    document.getElementById('error').innerText = data.message;
+                    document.getElementById('error')!.innerText = data.message;
                 }
             }
         },
         async login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = (document.getElementById('username') as HTMLInputElement).value;
+            const password = (document.getElementById('password') as HTMLInputElement).value;
 
             const response = await fetch('https://relacexyz.duckdns.org/api/auth/login/', {
                 method: 'POST',
@@ -81,17 +81,18 @@ export default {
                 localStorage.setItem('token', data.jwt);
                 localStorage.setItem('username', username);
                 localStorage.setItem('refresh', data.refeshToken);
-                localStorage.setItem('key', this.stringToHash(password.substring(0, 4)));
+                localStorage.setItem('key', this.stringToHash(password.substring(0, 4)).toString());
                 
+                //@ts-ignore
                 this.$router.push('/home');
             } else {
-                document.getElementById('error').innerText = data.message;
+                document.getElementById('error')!.innerText = data.message;
             }
         }
     },
     beforeUnmount: async function () {
-        document.getElementById('side-bar').style.display = 'flex';
-        document.getElementById('headline-container').style.display = 'flex';
+        document.getElementById('side-bar')!.style.display = 'flex';
+        document.getElementById('headline-container')!.style.display = 'flex';
     }
 }
 </script>

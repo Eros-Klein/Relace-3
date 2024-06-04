@@ -1,36 +1,40 @@
-<script>
+<script lang="ts">
 export default {
     name: 'HeaderLine',
     methods:
     {
-        setHeadline(headline) {
-            document.getElementById('headline').innerText = headline;
+        setHeadline(headline : string) {
+            document.getElementById('headline')!.innerText = headline;
         },
-        loadStatus(percentage) {
-            document.getElementById('line').style.display = "block";
-            document.getElementById('line').style.width = percentage.toString() + "%";
+        loadStatus(percentage : number) {
+            document.getElementById('line')!.style.display = "block";
+            document.getElementById('line')!.style.width = percentage.toString() + "%";
         },
-        addLoadStatus(percentage) {
-            if (document.getElementById('line').style.width.split('%')[0] + percentage >= 100) {
+        addLoadStatus(percentage : number) {
+            if (parseInt(document.getElementById('line')!.style.width.split('%')[0]) + percentage >= 100) {
                 this.loadStatusSucceed();
             }
-            else document.getElementById('line').style.width = (parseInt(document.getElementById('line').style.width) + percentage).toString() + "%";
+            else document.getElementById('line')!.style.width = (parseInt(document.getElementById('line')!.style.width) + percentage).toString() + "%";
         },
         loadStatusSucceed() {
-            document.getElementById('line').style.width = "100%";
+          const loadLine = document.getElementById('line');
+          if (loadLine !== null) {
+            loadLine.style.width = "100%";
             setTimeout(() => {
-                document.getElementById('line').style.display = "none";
-                document.getElementById('line').style.width = "0%";
-                setTimeout(() => {
-                    document.getElementById('line').style.display = "block";
-                }, 500);
+              loadLine.style.display = "none";
+              loadLine.style.width = "0%";
+              setTimeout(() => {
+                loadLine.style.display = "block";
+              }, 500);
             }, 500);
+          }
         },
     },
     data() {
         return {
             timeActualicer: setInterval(() => {
                 const nowTime = new Date();
+                //@ts-ignore
                 this.time = nowTime.getHours().toString().padStart(2, "0") + ":" + nowTime.getMinutes().toString().padStart(2, "0");
             }, 1000),
             time: "",
@@ -39,9 +43,11 @@ export default {
     },
     beforeMount() {
         const nowTime = new Date();
+        //@ts-ignore
         this.time = nowTime.getHours().toString().padStart(2, "0") + ":" + nowTime.getMinutes().toString().padStart(2, "0");
     },
     beforeUnmount() {
+         //@ts-ignore
         clearInterval(this.timeActualicer);
     }
 }

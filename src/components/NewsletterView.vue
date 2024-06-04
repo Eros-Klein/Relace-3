@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
 import HeaderLine from './HeaderLine.vue';
 
 export default {
     name: 'NewsletterView',
     methods: {
         async subscribe() {
-            console.log(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${document.getElementById('email-input').value}`);
-            const response = await fetch(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${document.getElementById('email-input').value}`, {
+            console.log(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${(document.getElementById('email-input') as HTMLInputElement).value}`);
+            const response = await fetch(`https://relacexyz.duckdns.org/api/newsletter/subscribe/${(document.getElementById('email-input') as HTMLInputElement).value}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export default {
         }
     },
     mounted: function () {
-        HeaderLine.methods.setHeadline('Newsletter');
+        HeaderLine.methods!.setHeadline('Newsletter');
     }
 }
 </script>

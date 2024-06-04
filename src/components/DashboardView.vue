@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import HeaderLine from './HeaderLine.vue';
 import HomeView from './HomeView.vue';
 import NavBar from './NavBar.vue';
@@ -13,15 +13,18 @@ export default {
         }
     },
     methods: {
-        changeCourseFocus(course, dropdownId) {
+        changeCourseFocus(course : string, dropdownId : string) {
             console.log("i was called");
             const dropDownMenu = document.getElementById(dropdownId);
+            if(dropDownMenu === null) return;
             dropDownMenu.children[0].innerHTML = `<p>${course}</p>`;
+          //@ts-ignore
             this.focusedCourse = course;
+          //@ts-ignore
             this.offset = 0;
             this.insertAssignments();
 
-            this.toggleDropdown(dropdownId);
+            this.toggleDropdown(dropdownId, 0);
         },
         async insertCourses() {
             const response = await fetch("https://relacexyz.duckdns.org/api/c/get", {
@@ -35,11 +38,11 @@ export default {
             });
 
             const data = await response.json();
-            const dropDownMenu = document.getElementById("course-filter");
+            const dropDownMenu = document.getElementById("course-filter")!;
             const hiddenElementContainer = dropDownMenu.children[1];
 
             if (data.success) {
-                data.courses.forEach((course) => {
+                data.courses.forEach((course : {name: string}) => {
                     const divElement = document.createElement("div");
                     divElement.classList.add("hidden-element");
                     divElement.innerHTML = `<p>${course.name}</p>`;
@@ -50,8 +53,9 @@ export default {
                 })
             }
         },
-        toggleDropdown(dropdownId, pixelHeight) {
+        toggleDropdown(dropdownId : string, pixelHeight : number) {
             const dropdown = document.getElementById(dropdownId);
+            if (dropdown === null) return;
             let firstHiddenChild;
             for (let i = 0; i < dropdown.children.length; i++) {
                 if (dropdown.children[i].classList.contains("hidden-element-container")) {
@@ -59,35 +63,43 @@ export default {
                     break;
                 }
             }
-
-            if (firstHiddenChild.style.height == pixelHeight) {
+            
+            if (firstHiddenChild instanceof HTMLElement && firstHiddenChild.style.height === pixelHeight.toString()) {
                 for (let i = 0; i < dropdown.children.length; i++) {
-                    if (dropdown.children[i].classList.contains("hidden-element-container")) {
-                        dropdown.children[i].style.height = "0px";
+                    const child = dropdown.children[i];
+                    if (child instanceof HTMLElement && child.classList.contains("hidden-element-container")) {
+                        child.style.height = "0px";
                     }
                 }
             } else {
                 for (let i = 0; i < dropdown.children.length; i++) {
-                    if (dropdown.children[i].classList.contains("hidden-element-container")) {
-                        dropdown.children[i].style.height = pixelHeight;
-                    }
+                  const child = dropdown.children[i];
+                  if (child instanceof HTMLElement && child.classList.contains("hidden-element-container")) {
+                    child.style.height = pixelHeight + "px";
+                  }
                 }
             }
         },
         turnSearchBar() {
-            const searchBar = document.getElementById("assignment-search-bar");
-            const searchBarContainer = document.getElementById("search-bar-dashboard");
+            const searchBar = document.getElementById("assignment-search-bar") as HTMLInputElement;
+            const searchBarContainer = document.getElementById("search-bar-dashboard")!;
             const dropdownMenu = document.getElementsByClassName("dropdown-menu");
             console.log(dropdownMenu);
             if (searchBar.style.display !== "block") {
                 for (let i = 0; i < dropdownMenu.length; i++) {
-                    setTimeout(() => dropdownMenu[i].style.display = "block", 175);
+                    setTimeout(() => {
+                      const thisDropDown = dropdownMenu[i];
+                      if(thisDropDown instanceof HTMLElement) thisDropDown.style.display = "block";
+                    }, 175);
                 }
                 searchBar.style.display = "block";
                 searchBarContainer.style.width = "50%";
             } else {
                 for (let i = 0; i < dropdownMenu.length; i++) {
-                    setTimeout(() => dropdownMenu[i].style.display = "none", 150);
+                    setTimeout(() => {
+                      const thisDropDown = dropdownMenu[i];
+                      if(thisDropDown instanceof HTMLElement) thisDropDown.style.display = "none";
+                    }, 150);
                 }
                 searchBarContainer.style.width = "5vh";
                 setTimeout(() => {
@@ -95,11 +107,12 @@ export default {
                 }, 250);
             }
         },
-        async goToAssignment(code) {
+        async goToAssignment(code : number) {
+            //@ts-ignore
             await this.$router.push('/dashboard/a/' + code);
         },
-        addAssignment(headline, body, id, done) {
-            const assignmentContainer = document.getElementById("assignment-container");
+        addAssignment(headline : string, body : string, id : number, done : boolean) {
+            const assignmentContainer = document.getElementById("assignment-container")!;
             const assignment = document.createElement("div");
             assignment.classList.add("assignment");
             assignment.addEventListener("click", () => {
@@ -143,7 +156,7 @@ export default {
           
         },
         async loadAssignments() {
-            HomeView.methods.startLoad();
+            HomeView.methods!.startLoad();
             console.log(localStorage.getItem('key'));
             const response = await fetch("https://relacexyz.duckdns.org/api/a/loadmoodle", {
                 method: "POST",
@@ -158,14 +171,14 @@ export default {
             const data = await response.json();
 
             console.log(data.success);
-            HomeView.methods.endLoad();
+            HomeView.methods!.endLoad();
 
             this.insertAssignments();
         },
         async insertAssignments() {
-            const element = document.getElementById('assignment-container');
+            const element = document.getElementById('assignment-container')!;
 
-            const searchBar = document.getElementById("assignment-search-bar");
+            const searchBar = document.getElementById("assignment-search-bar") as HTMLInputElement;
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
                 method: "POST",
                 headers: {
@@ -173,9 +186,12 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("token"),
+                    //@ts-ignore
                     count: this.count,
+                    //@ts-ignore
                     offset: this.offset,
                     compact: true,
+                  //@ts-ignore
                     course: this.focusedCourse === "none" ? undefined : this.focusedCourse,
                     searchParams: searchBar.value
                 }),
@@ -192,7 +208,7 @@ export default {
                         title = title.slice(0, 35) + "...";
                     }
                     if (data.assignments[i].deadline == 0) {
-                        this.addAssignment(title, "No Deadline", data.assignments[i].id);
+                        this.addAssignment(title, "No Deadline", data.assignments[i].id, data.assignments[i].done);
                     }
                     else {
                         const date = new Date(data.assignments[i].deadline * 1000);
@@ -207,14 +223,15 @@ export default {
                         <p></p>
                     </div>`;
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
-                    NavBar.beforeMount();
+                  //@ts-ignore  
+                  NavBar.beforeMount();
                 }
                 else if (data.message.toLowerCase().includes('no assignments found')) {
                     console.log('No assignments found');
                 }
                 else alert('An error occurred while loading the assignments: ' + data.message);
             }
-            HeaderLine.methods.loadStatusSucceed();
+            HeaderLine.methods!.loadStatusSucceed();
         },
         async appendAssignments() {
             const response = await fetch("https://relacexyz.duckdns.org/api/a/get", {
@@ -224,9 +241,12 @@ export default {
                 },
                 body: JSON.stringify({
                     jwt: localStorage.getItem("token"),
+                  //@ts-ignore
                     count: this.count,
+                  //@ts-ignore
                     offset: this.offset,
                     compact: true,
+                  //@ts-ignore
                     course: this.focusedCourse === "none" ? undefined : this.focusedCourse
                 }),
             });
@@ -244,7 +264,8 @@ export default {
                 }
             } else {
                 if (data.message.toLowerCase().includes('jwt') || data.message.toLowerCase().includes('token') || data.message.toLowerCase().includes('expired')) {
-                    NavBar.beforeMount();
+                  //@ts-ignore   
+                  NavBar.beforeMount();
                 }
                 else if (data.message.toLowerCase().includes('no assignments found')) {
                     console.log('No assignments found');
@@ -254,47 +275,60 @@ export default {
         }
     },
     mounted: async function () {
-        HeaderLine.methods.loadStatus(0);
+        HeaderLine.methods!.loadStatus(0);
         const nowTime = new Date();
         if (nowTime.getHours() < 12) {
-            HeaderLine.methods.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
+            HeaderLine.methods!.setHeadline("Good Morning, " + localStorage.getItem('username') + "!");
         } else if (nowTime.getHours() < 18) {
-            HeaderLine.methods.setHeadline("Good Afternoon, " + localStorage.getItem('username') + "!");
+            HeaderLine.methods!.setHeadline("Good Afternoon, " + localStorage.getItem('username') + "!");
         } else {
-            HeaderLine.methods.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
+            HeaderLine.methods!.setHeadline("Good Evening, " + localStorage.getItem('username') + "!");
         }
 
-        HeaderLine.methods.addLoadStatus(5);
+        HeaderLine.methods!.addLoadStatus(5);
+        //@ts-ignore
         this.count = 30;
+        //@ts-ignore
         this.offset = 0;
-        this.insertAssignments();
+        //@ts-ignore
+        await this.insertAssignments();
 
+        //@ts-ignore
         this.focusedCourse = "none";
+        //@ts-ignore
         await this.insertCourses();
 
-        const element = document.getElementById('assignment-container');
+        const element = document.getElementById('assignment-container')!;
         element.addEventListener('scroll', () => {
             if (element.scrollLeft + element.clientWidth >= element.scrollWidth - 5) {
+                //@ts-ignore
                 this.offset += 30;
+                //@ts-ignore
                 this.appendAssignments();
             }
         });
 
-        const searchBar = document.getElementById("assignment-search-bar");
+        const searchBar = document.getElementById("assignment-search-bar")!;
 
         searchBar.addEventListener("keyup", () => {
+            //@ts-ignore
             this.offset = 0;
+            //@ts-ignore
             this.insertAssignments();
         });
 
-        window.addEventListener("click", (event) => {
+        window.addEventListener("click", () => {
             const dropdown = document.getElementsByClassName("dropdown-menu");
-            for (let i = 0; i < dropdown.length; i++) {
-                if (dropdown[i].children[1].style.height !== "0px" && !dropdown[i].contains(event.target)) {
-                    console.log(dropdown[i].children[1]);
-                    dropdown[i].children[1].style.height = "0px";
+          for (let dropdownElement of dropdown) {
+              if(dropdownElement instanceof HTMLElement){
+                const hiddenElementContainer = dropdownElement.children[1];
+                if (hiddenElementContainer instanceof HTMLElement) {
+                if(hiddenElementContainer.style.height !== "0px"){
+                    hiddenElementContainer.style.height = "0px";
+                  }
                 }
-            }
+              }
+          }
         });
     },
 }

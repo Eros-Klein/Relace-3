@@ -34,10 +34,14 @@ export default {
       }
       return this.codeChallenge;
     },
-    getCodeVerifier() {
+    
+    getCodeVerifier(){
+      //@ts-ignore
       if (!this.codeVerifier) {
+        //@ts-ignore
         this.codeVerifier = this.generateCodeChallenge().codeVerifier;
       }
+      //@ts-ignore
       return this.codeVerifier;
     },
     async getToken(code) {
@@ -78,6 +82,7 @@ export default {
 
     if (code) {
       console.log(code);
+      //@ts-ignore
       let token = await this.getToken(code);
       console.log(token);
       // Send the token to your API

@@ -1,4 +1,4 @@
-<script>
+<script lang="js">
 import HeaderLine from './HeaderLine.vue';
 import CryptoJS from "crypto-js";
 import MicrosoftView from './MicrosoftView.vue';
@@ -15,35 +15,43 @@ export default {
       loginGithubClose() {
         document.getElementById('github-info').style.display = 'none';
         const connections = document.getElementsByClassName('connection');
-        for (let i = 0; i < connections.length; i++) {
-          connections[i].style.pointerEvents = 'all';
+        for (let connection of connections) {
+          if (connection instanceof HTMLElement){
+            connection.style.pointerEvents = 'all';
+          }
         }
       },
       loginGithubTrigger() {
         document.getElementById('github-info').style.display = 'flex';
         const connections = document.getElementsByClassName('connection');
-        for (let i = 0; i < connections.length; i++) {
-          connections[i].style.pointerEvents = 'none';
+        for (let connection of connections) {
+          if (connection instanceof HTMLElement){
+            connection.style.pointerEvents = 'none';
+          }
         }
       },
       loginMoodleTrigger() {
         document.getElementById('info').style.display = 'flex';
         const connections = document.getElementsByClassName('connection');
-        for (let i = 0; i < connections.length; i++) {
-          connections[i].style.pointerEvents = 'none';
+        for (let connection of connections) {
+          if (connection instanceof HTMLElement){
+            connection.style.pointerEvents = 'none';
+          }
         }
       },
       loginMoodleClose() {
         document.getElementById('info').style.display = 'none';
         const connections = document.getElementsByClassName('connection');
-        for (let i = 0; i < connections.length; i++) {
-          connections[i].style.pointerEvents = 'all';
+        for (let connection of connections) {
+          if (connection instanceof HTMLElement){
+            connection.style.pointerEvents = 'all';
+          }
         }
       },
       async loginMoodle() {
-        let organization = document.getElementById('organization').value;
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        let organization = (document.getElementById('organization')).value;
+        const username = (document.getElementById('username')).value;
+        const password = (document.getElementById('password')).value;
         if (!organization.endsWith("/")) {
           organization += "/";
         }
@@ -93,10 +101,10 @@ export default {
           console.log(name);
           console.log(data);
 
-          if (data.success) {
+          if (data.success && connectedField instanceof HTMLElement) {
             connectedField.style.color = '#00ff00';
             connectedField.innerHTML = '✔️';
-          } else {
+          } else if(connectedField instanceof HTMLElement) {
             connectedField.style.color = '#ff0000';
             connectedField.innerHTML = '❌';
           }
@@ -117,17 +125,17 @@ export default {
         const codeVerifier = MicrosoftView.methods.getCodeVerifier();
         console.log('codeChallenge:', codeChallenge);
         console.log('codeVerifier:', codeVerifier);
-        localStorage.setItem('codeVerifier', codeVerifier);
+        //localStorage.setItem('codeVerifier', codeVerifier);
 
         window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
       },
       generateCodeChallenge() {
         const rand = new Uint8Array(32);
         crypto.getRandomValues(rand);
-        const codeVerifier = this.base64URL(new CryptoJS.lib.WordArray.init(rand));
-        const codeChallenge = this.base64URL(CryptoJS.SHA256(codeVerifier));
+        //const codeVerifier = this.base64URL(new CryptoJS.lib.WordArray.init(rand));
+        //const codeChallenge = this.base64URL(CryptoJS.SHA256(codeVerifier));
 
-        return {codeChallenge, codeVerifier};
+        //return {codeChallenge, codeVerifier};
       },
       base64URL(string) {
         return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
@@ -137,6 +145,7 @@ export default {
         function () {
             console.log("Hello")
             HeaderLine.methods.loadStatus(5);
+            //@ts-ignore
             this.checkForConnections();
             console.log("Hello");
         }

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 
 
 import RegisterView from "@/components/RegisterView.vue";
@@ -9,50 +9,49 @@ export default {
         async login() {
             const errorField = document.getElementById('error');
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = (document.getElementById('username') as HTMLInputElement).value;
+            const password = (document.getElementById('password') as HTMLInputElement).value;
 
-            if (username === '' || password === '') {
+            if (errorField !== null) {
+              if (username === '' || password === '') {
                 return errorField.innerText = 'Please fill out all fields';
-            }
-            else if (password.length < 8) {
+              } else if (password.length < 8) {
                 return errorField.innerText = 'Password must be at least 8 characters long';
-            }
-            else if (username.length < 2) {
+              } else if (username.length < 2) {
                 return errorField.innerText = 'Username must be at least 2 characters long';
-            }
-            else if (username.length > 30) {
+              } else if (username.length > 30) {
                 return errorField.innerText = 'Username must be at most 30 characters long';
-            }
-            else {
+              } else {
                 const response = await fetch('https://relacexyz.duckdns.org/api/auth/login/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "username": username,
-                        "password": password
-                    })
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    "username": username,
+                    "password": password
+                  })
                 });
                 const data = await response.json();
 
                 console.log(data);
                 if (data.success) {
-                    localStorage.setItem('token', data.jwt);
-                    localStorage.setItem('refresh', data.refreshToken);
-                    localStorage.setItem('username', username);
-                    localStorage.setItem('key', RegisterView.methods.stringToHash(password.substring(0, 4)));
-                    this.$router.push('/home');
+                  localStorage.setItem('token', data.jwt);
+                  localStorage.setItem('refresh', data.refreshToken);
+                  localStorage.setItem('username', username);
+                  localStorage.setItem('key', RegisterView.methods!.stringToHash(password.substring(0, 4)).toString());
+                  //@ts-ignore
+                  this.$router.push('/home');
                 } else {
-                    errorField.innerText = data.message;
+                  errorField.innerText = data.message;
                 }
+              }
             }
         }
     },
     beforeUnmount: async function () {
-        document.getElementById('side-bar').style.display = 'flex';
-        document.getElementById('headline-container').style.display = 'flex';
+        document.getElementById('side-bar')!.style.display = 'flex';
+        document.getElementById('headline-container')!.style.display = 'flex';
     }
 }
 </script>
