@@ -186,6 +186,7 @@ export default {
         const data = await response.json();
         console.log(data);
         if (data.success) {
+          await DashboardView.methods!.insertAssignments();
           await this.reloadAssignment(code);
         } else {
           console.log(data);
