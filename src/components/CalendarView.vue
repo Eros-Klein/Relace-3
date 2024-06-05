@@ -118,7 +118,7 @@ methods: {
       this.currentMonth = dayjs();
     },
     async loadAssignments() {
-    const response = await fetch('/api/a/get', {
+    const response = await fetch('https://relacexyz.duckdns.org/api/a/get', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
