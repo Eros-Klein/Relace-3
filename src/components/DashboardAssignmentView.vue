@@ -33,7 +33,7 @@ export default {
         },
         async toggleDropdown(attachment : string, pixelHeight : string | Promise<string>) {
             pixelHeight = await pixelHeight;
-            const attachmentElement = document.getElementById(attachment)!;
+            const attachmentElement  : HTMLElement = document.getElementById(attachment)!;
             if (pixelHeight == '0px') {
                 attachmentElement.style.display = 'none';
             }
@@ -61,7 +61,10 @@ export default {
               //@ts-ignore
                 this.attachments = data.assignment.attachments;
                 const doneButton = document.getElementById('assignment-change-done')!;
-                doneButton.addEventListener('click', () => {
+                const new_element = doneButton.cloneNode(true);
+                doneButton.parentNode!.replaceChild(new_element, doneButton);
+                
+                new_element.addEventListener('click', () => {
                     this.updateSubmissionStatus(code, data.assignment.done);
                 });
                 doneButton.innerText = data.assignment.done ? '❌' : '✔️';
@@ -208,18 +211,6 @@ export default {
         HeaderLine.methods!.loadStatus(0);
         //@ts-ignore
         await this.reloadAssignment(this.$route.params.id);
-
-        window.addEventListener("click", () => {
-            const dropdown = document.getElementsByClassName("dropdown-menu");
-            for (let i = 0; i < dropdown.length; i++) {
-              const child = dropdown[i].children[1];
-              if(child instanceof HTMLElement) {
-                if (child.style.height !== "0px") {
-                  child.style.height = "0px";
-                }
-              }
-            }
-        });
     },
     beforeUpdate: async function () {
       //@ts-ignore

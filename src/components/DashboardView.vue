@@ -54,31 +54,32 @@ export default {
             }
         },
         toggleDropdown(dropdownId : string, pixelHeight : number) {
-            const dropdown = document.getElementById(dropdownId);
-            if (dropdown === null) return;
-            let firstHiddenChild;
+          const dropdown = document.getElementById(dropdownId)!;
+          let firstHiddenChild;
+          for (let i = 0; i < dropdown.children.length; i++) {
+            if (dropdown.children[i].classList.contains("hidden-element-container")) {
+              firstHiddenChild = dropdown.children[i];
+              break;
+            }
+          }
+          
+          console.log((firstHiddenChild as HTMLElement).style.height)
+          
+          console.log(pixelHeight);
+          
+          if ((firstHiddenChild as HTMLElement).style.height === pixelHeight.toString() + "px") {
             for (let i = 0; i < dropdown.children.length; i++) {
-                if (dropdown.children[i].classList.contains("hidden-element-container")) {
-                    firstHiddenChild = dropdown.children[i];
-                    break;
-                }
+              if (dropdown.children[i].classList.contains("hidden-element-container")) {
+                (dropdown.children[i] as HTMLElement).style.height = "0px";
+              }
             }
-            
-            if (firstHiddenChild instanceof HTMLElement && firstHiddenChild.style.height === pixelHeight.toString()) {
-                for (let i = 0; i < dropdown.children.length; i++) {
-                    const child = dropdown.children[i];
-                    if (child instanceof HTMLElement && child.classList.contains("hidden-element-container")) {
-                        child.style.height = "0px";
-                    }
-                }
-            } else {
-                for (let i = 0; i < dropdown.children.length; i++) {
-                  const child = dropdown.children[i];
-                  if (child instanceof HTMLElement && child.classList.contains("hidden-element-container")) {
-                    child.style.height = pixelHeight + "px";
-                  }
-                }
+          } else {
+            for (let i = 0; i < dropdown.children.length; i++) {
+              if (dropdown.children[i].classList.contains("hidden-element-container")) {
+                (dropdown.children[i] as HTMLElement).style.height = pixelHeight + "px";
+              }
             }
+          }
         },
         turnSearchBar() {
             const searchBar = document.getElementById("assignment-search-bar") as HTMLInputElement;
@@ -317,13 +318,14 @@ export default {
             this.insertAssignments();
         });
 
-        window.addEventListener("click", () => {
-            const dropdown = document.getElementsByClassName("dropdown-menu");
-          for (let dropdownElement of dropdown) {
-              if(dropdownElement instanceof HTMLElement){
+        window.addEventListener("click", (e) => {
+            const dropdowns = document.getElementsByClassName("dropdown-menu");
+          for (let dropdownElement of dropdowns) {
+              if(dropdownElement instanceof HTMLElement && !dropdownElement.contains(e.target as Node)){
                 const hiddenElementContainer = dropdownElement.children[1];
                 if (hiddenElementContainer instanceof HTMLElement) {
                 if(hiddenElementContainer.style.height !== "0px"){
+                    console.log("I did that");
                     hiddenElementContainer.style.height = "0px";
                   }
                 }
@@ -346,7 +348,7 @@ export default {
             <img src="../assets/images/search.png" id="search-pic" @click="turnSearchBar">
             <input type="text" id="assignment-search-bar" placeholder="Search...">
             <div class="dropdown-menu" id="course-filter">
-                <div class="trigger-dropdown-element" @click="toggleDropdown('course-filter', '250px')">
+                <div class="trigger-dropdown-element" @click="toggleDropdown('course-filter', 250)">
                     <p>Select Course...</p>
                 </div>
                 <div class="hidden-element-container">
