@@ -59,8 +59,11 @@ export default {
         async submitAssignment() {
             const title = (document.getElementById('a-title') as HTMLInputElement).value;
             const description = (document.getElementById('a-desc') as HTMLInputElement).value;
-            const dueDate = new Date((document.getElementById('a-date') as HTMLInputElement).value).getTime() / 1000 + (document.getElementById('a-time') as HTMLInputElement).valueAsNumber / 1000;
-            
+            let dueDate = new Date((document.getElementById('a-date') as HTMLInputElement).value).getTime() / 1000;
+            if(document.getElementById('a-time') !== null && (document.getElementById('a-time') as HTMLInputElement).value !== ''){
+                dueDate += (document.getElementById('a-time') as HTMLInputElement).valueAsNumber / 1000;
+            }
+
             console.log(title);
             console.log(description);
             console.log(dueDate);
