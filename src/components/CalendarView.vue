@@ -22,11 +22,13 @@
       {{ day.date }}
 
       <!-- Assignments -->
-      <div class="assignment" 
-           v-for="assignment in assignmentsForDay(day.date, day.month, day.year)" 
-           :key="assignment.id">
-        {{ assignment.title }}
-      </div>
+        <div id="assignment-container-cal">
+          <div class="assignment-calendar"
+               v-for="assignment in assignmentsForDay(day.date, day.month, day.year)"
+               :key="assignment.id">
+            {{ assignment.title }}
+          </div>
+        </div>
     </div>
   </div>
 </div>
@@ -36,6 +38,7 @@
 
 <script lang="js">
 import dayjs from 'dayjs';
+import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "CalenderView",
@@ -48,6 +51,9 @@ export default {
     };
   },
   computed: {
+    NavBar() {
+      return NavBar
+    },
   MonthAndYear() {
     return this.currentMonth.format('MMMM YYYY');
   },
@@ -117,6 +123,20 @@ methods: {
     goToCurrentMonth() {
       this.currentMonth = dayjs();
     },
+    addEventListeners(){
+      console.log("started");
+      const elements = document.getElementsByClassName('assignment-calendar');
+      console.log(elements);
+      for (let element = 0; element < elements.length; element++){
+          const id = this.assignments.find((assignment) => assignment.title === elements[element].innerHTML);
+          console.log(id)
+          console.log(elements[element]);
+          elements[element].addEventListener('click', () => {
+              this.$router.push('/a/' + id.id);
+              window.history.pushState(null, '', '/a/' + id.id);
+          });
+      }
+    },
     async loadAssignments() {
     const response = await fetch('https://relacexyz.duckdns.org/api/a/get', {
       method: 'POST',
@@ -149,6 +169,9 @@ methods: {
     }
   },
 },
+  mounted: function() {
+    setTimeout(this.addEventListeners, 3000);
+  },
 };
 </script>
 
@@ -211,8 +234,7 @@ methods: {
   margin-right: 100px;
   margin-bottom: 10px;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(90px, auto);
+  grid-template-columns: repeat(7, 12vw);
   gap: 10px;
   height: calc(100vh - 50vh);
 }
@@ -236,7 +258,7 @@ methods: {
 .day-header {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, 12vw);
   gap: 10px;
   color: white;
   margin-left: 200px;
@@ -252,4 +274,34 @@ methods: {
   border-color: pink;
 }
 
+.assignment-calendar{
+  background-color: rgba(255, 192, 203, 0.38);
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  transition: all 0.25s ease-in-out;
+}
+
+#assignment-container-cal {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-evenly;
+  justify-content: space-evenly;
+  gap: 10px;
+  padding-right: 10px;
+}
+
+.assignment-calendar:hover {
+  background-color: rgba(250, 224, 228, 0.58);
+}
 </style>

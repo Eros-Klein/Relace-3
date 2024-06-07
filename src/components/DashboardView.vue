@@ -215,7 +215,6 @@ export default {
                         const date = new Date(data.assignments[i].deadline * 1000);
                         this.addAssignment(title, `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, data.assignments[i].id, data.assignments[i].done);
                     }
-
                 }
             } else {
                 element.innerHTML = `<div id="no_assignments_found">
