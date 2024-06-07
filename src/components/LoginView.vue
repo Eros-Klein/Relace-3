@@ -47,7 +47,16 @@ export default {
                 }
               }
             }
+        },
+        goToRegister() {
+            //@ts-ignore
+            this.$router.push('/auth/signup');
+            window.history.pushState(null, '', '/auth/signup');
         }
+    },
+    mounted: function (){
+      document.getElementById('side-bar')!.style.display = 'none';
+      document.getElementById('headline-container')!.style.display = 'none';
     },
     beforeUnmount: async function () {
         document.getElementById('side-bar')!.style.display = 'flex';
@@ -63,7 +72,10 @@ export default {
             <input @keydown.enter="login" id="username" type="text" placeholder="Username">
             <input @keydown.enter="login" id="password" type="password" placeholder="Password">
             <p id="error"></p>
+          <div id="button-container">
             <button @click="login">Login</button>
+            <button id="login-button" @click="goToRegister">Register instead</button>
+          </div>
         </div>
     </div>
 </template>

@@ -88,8 +88,17 @@ export default {
             } else {
                 document.getElementById('error')!.innerText = data.message;
             }
-        }
+        },
+      goToLogin(){
+        //@ts-ignore
+        this.$router.push('/auth/login');
+        window.history.pushState(null, '', '/auth/login');
+      }
     },
+  mounted: function (){
+    document.getElementById('side-bar')!.style.display = 'none';
+    document.getElementById('headline-container')!.style.display = 'none';
+  },
     beforeUnmount: async function () {
         document.getElementById('side-bar')!.style.display = 'flex';
         document.getElementById('headline-container')!.style.display = 'flex';
@@ -105,12 +114,22 @@ export default {
             <input @keydown.enter="register" id="password" type="password" placeholder="Password">
             <input @keydown.enter="register" id="email" type="email" placeholder="Email">
             <p id="error"></p>
+          <div id="button-container">
             <button @click="register">Register</button>
+            <button id="login-button" @click="goToLogin">Login instead</button>
+          </div>
         </div>
     </div>
 </template>
 
 <style>
+#button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 90%;
+    width: 90%;
+}
 #content input {
     width: 90%;
     height: 30px;

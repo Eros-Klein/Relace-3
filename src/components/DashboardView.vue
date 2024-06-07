@@ -324,7 +324,6 @@ export default {
                 const hiddenElementContainer = dropdownElement.children[1];
                 if (hiddenElementContainer instanceof HTMLElement) {
                 if(hiddenElementContainer.style.height !== "0px"){
-                    console.log("I did that");
                     hiddenElementContainer.style.height = "0px";
                   }
                 }
