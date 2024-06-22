@@ -1,14 +1,15 @@
 <template>
 <div class="calender">
-
       <div class="calender-header">
         <p id="calender-text">Calender</p>
         <button id="today-button" @click="nevigateWeekMonth('today')">Today</button>
         <button class="nav-button" @click="nevigateWeekMonth('previous')">{{ '<' }}</button>
         <button class="nav-button" @click="nevigateWeekMonth('next')">{{ '>' }}</button>
         <p>{{ MonthAndYear }}</p>
-        <button @click="setView('month')">Month</button>
-        <button @click="setView('week')">Week</button>
+        <div class="view-buttons">
+          <button @click="setView('month')">Month</button>
+          <button @click="setView('week')">Week</button>
+        </div>
       </div>
     <div class="day-header">
       <div class="weekday" v-for="weekday in weekdays" :key="weekday">
@@ -64,7 +65,7 @@ export default {
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       assignments: [],
       currentView: 'month',
-      currentWeek: dayjs(),
+      currentWeek: dayjs().startOf('week').add(1, 'day'),
     };
   },
   computed: {
@@ -72,6 +73,8 @@ export default {
       return NavBar
     },
   MonthAndYear() {
+    if (this.view === 'week') return this.currentWeek.format('MMMM YYYY');
+    
     return this.currentMonth.format('MMMM YYYY');
   },
   currentDate() {
@@ -127,7 +130,7 @@ export default {
       return allDays.slice(0, 35);
     },
     weekDays() {
-      const startOfWeek = dayjs().startOf('week').add(1, 'day');
+      const startOfWeek = this.currentWeek;
       return Array.from({ length: 7 }).map((_, index) => {
       const day = startOfWeek.add(index, 'day');
       return {
@@ -174,7 +177,7 @@ methods: {
     },
 
     goToCurrentMonth() {
-      this.currentMonth = dayjs();
+      this.currentMonth = dayjs().startOf('month');
       this.loadAssignments();
     },
 
@@ -243,7 +246,7 @@ methods: {
     },
 
     goToCurrentWeek() {
-    this.currentDate = dayjs().startOf('week');
+    this.currentWeek = dayjs().startOf('week').add(1, 'day');
     this.loadAssignments();
     },
   },
@@ -300,6 +303,28 @@ methods: {
   background-color: pink; 
   color: black;
   border: none;
+}
+
+/* view buttons */
+
+.calendar-header {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.view-buttons button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.view-buttons button:hover {
+  background-color: pink;
 }
 
 /* calendar grid */
