@@ -62,6 +62,7 @@ export default {
                 this.attachments = data.assignment.attachments;
                 const doneButton = document.getElementById('assignment-change-done')!;
                 const new_element = doneButton.cloneNode(true);
+                
                 doneButton.parentNode!.replaceChild(new_element, doneButton);
                 
                 new_element.addEventListener('click', () => {
@@ -73,7 +74,14 @@ export default {
                     this.deleteAssignment(code);
                 });
 
-                console.log(data.assignment.attachments);
+                const linkButton = document.getElementById('assignment-link')!;
+                
+                if (data.assignment.linkToProvider == '') {
+                    linkButton.style.display = 'none';
+                }
+                else {
+                    linkButton.style.display = 'block';
+                }
 
                 await this.toggleDropdown('attachment-dropdown', this.insertAttachments());
                 await this.toggleDropdown('attachment-dropdown', this.insertAttachments());

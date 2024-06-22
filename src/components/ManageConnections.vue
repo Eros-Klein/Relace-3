@@ -3,8 +3,6 @@ import HeaderLine from './HeaderLine.vue';
 import CryptoJS from "crypto-js";
 import MicrosoftView from './MicrosoftView.vue';
 
-
-
 export default {
     name: 'ManageConnections',
     methods: {
@@ -68,6 +66,7 @@ export default {
             body: JSON.stringify({
               api: 'moodle',
               token: data.token,
+              moodleUrl: organization,
               jwt: localStorage.getItem('token'),
               key: localStorage.getItem('key')
             })
