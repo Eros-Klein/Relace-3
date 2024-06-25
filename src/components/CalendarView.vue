@@ -123,11 +123,11 @@ export default {
     goToCurrentMonth() {
       this.currentMonth = dayjs();
     },
-    addEventListeners() {
+    addEventListeners(){
       console.log("started");
       const elements = document.getElementsByClassName('assignment-calendar');
       console.log(elements);
-      for (let element = 0; element < elements.length; element++) {
+      for (let element = 0; element < elements.length; element++){
         const id = this.assignments.find((assignment) => assignment.title === elements[element].innerHTML);
         console.log(id)
         console.log(elements[element]);
@@ -169,7 +169,7 @@ export default {
       }
     },
   },
-  mounted: function () {
+  mounted: function() {
     setTimeout(this.addEventListeners, 3000);
   },
 };
@@ -274,7 +274,7 @@ export default {
   border-color: pink;
 }
 
-.assignment-calendar {
+.assignment-calendar{
   background-color: rgba(255, 192, 203, 0.38);
   color: white;
   margin-left: 10px;
