@@ -1,55 +1,39 @@
 <template>
-<div class="calender">
-      <div class="calender-header">
-        <p id="calender-text">Calender</p>
-        <button id="today-button" @click="nevigateWeekMonth('today')">Today</button>
-        <button class="nav-button" @click="nevigateWeekMonth('previous')">{{ '<' }}</button>
-        <button class="nav-button" @click="nevigateWeekMonth('next')">{{ '>' }}</button>
-        <p>{{ MonthAndYear }}</p>
-        <div class="view-buttons">
-          <button @click="setView('month')">Month</button>
-          <button @click="setView('week')">Week</button>
-        </div>
-      </div>
+  <div class="calender">
+
+    <div class="calender-header">
+      <p id="calender-text">Calender</p>
+      <button id="today-button" @click="goToCurrentMonth">Today</button>
+      <button class="nav-button" @click="previousMonth">{{ '<' }}</button>
+      <button class="nav-button" @click="nextMonth">{{ '>' }}</button>
+      <p>{{ MonthAndYear }}</p>
+    </div>
     <div class="day-header">
       <div class="weekday" v-for="weekday in weekdays" :key="weekday">
         {{ weekday }}
       </div>
     </div>
-    <div v-if="currentView === 'month'">
-      <div class="calendar-grid">
+    <div class="calendar-grid">
       <!-- Tage des Monats -->
-      <div class="day" 
-         v-for="day in allDays" 
-         :key="day.key" 
-         :class="{ 'current-day': day.isCurrentDay, 'current-month': day.isCurrentMonth, 'other-month': !day.isCurrentMonth }">
+      <div class="day"
+           v-for="day in allDays"
+           :key="day.key"
+           :class="{ 'current-day': day.isCurrentDay, 'current-month': day.isCurrentMonth, 'other-month': !day.isCurrentMonth }">
         {{ day.date }}
 
-      <!-- Assignments -->
-      <div class="assignment" 
-           v-for="assignment in assignmentsForDay(day.date, day.month, day.year)" 
-           :key="assignment.id">
-        {{ assignment.title }}
-      </div>
-    </div>
-    </div>
-    </div>
-
-    <div v-if="currentView === 'week'">
-    <div class="calendar-grid">
-      <!-- Days of the week -->
-      <div class="day" 
-           v-for="day in weekDays" 
-           :key="day.key" 
-           :class="{ 'current-day': day.isCurrentDay }">
-           <!-- only show month day number -->
-        {{ day.date.split(' ')[1]}}
         <!-- Assignments -->
-
+        <div id="assignment-container-cal">
+          <div class="assignment-calendar"
+               v-for="assignment in assignmentsForDay(day.date, day.month, day.year)"
+               :key="assignment.id">
+            {{ assignment.title }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+
 </template>
 
 <script lang="js">
@@ -64,23 +48,19 @@ export default {
       currentMonth: dayjs(),
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       assignments: [],
-      currentView: 'month',
-      currentWeek: dayjs().startOf('week').add(1, 'day'),
     };
   },
   computed: {
     NavBar() {
       return NavBar
     },
-  MonthAndYear() {
-    if (this.view === 'week') return this.currentWeek.format('MMMM YYYY');
-    
-    return this.currentMonth.format('MMMM YYYY');
-  },
-  currentDate() {
-    return dayjs();
-  },
-  assignmentsForDay() {
+    MonthAndYear() {
+      return this.currentMonth.format('MMMM YYYY');
+    },
+    currentDate() {
+      return dayjs();
+    },
+    assignmentsForDay() {
       return (day) => {
         return this.assignments.filter(assignment => {
           const deadlineDate = new Date(assignment.deadline);
@@ -129,91 +109,49 @@ export default {
 
       return allDays.slice(0, 35);
     },
-    weekDays() {
-      const startOfWeek = this.currentWeek;
-      return Array.from({ length: 7 }).map((_, index) => {
-      const day = startOfWeek.add(index, 'day');
-      return {
-          key: day.format('YYYY-MM-DD'),
-          date: day.format('ddd DD'),
-          isCurrentDay: day.isSame(dayjs(), 'day'),
-        };  
-      });
-    },    
-},
-
-created() {
-  this.loadAssignments();
-},
-
-methods: {
-  nevigateWeekMonth(action) {
-    if (this.currentView === 'month') {
-      if (action === 'next') {
-        this.nextMonth();
-      } else if (action === 'previous') {
-        this.previousMonth();
-      } else if (action === 'today') {
-        this.goToCurrentMonth();
-      }
-    } else if (this.currentView === 'week') {
-      if (action === 'next') {
-        this.goToNextWeek();
-      } else if (action === 'previous') {
-        this.goToPreviousWeek();
-      } else if (action === 'today') {
-        this.goToCurrentWeek();
-      }
-    }
   },
+  created() {
+    this.loadAssignments();
+  },
+  methods: {
     nextMonth() {
       this.currentMonth = this.currentMonth.add(1, 'month');
-      this.loadAssignments();
     },
-
     previousMonth() {
       this.currentMonth = this.currentMonth.subtract(1, 'month');
-      this.loadAssignments();
     },
-
     goToCurrentMonth() {
-      this.currentMonth = dayjs().startOf('month');
-      this.loadAssignments();
+      this.currentMonth = dayjs();
     },
-
-    addEventListeners(){
+    addEventListeners() {
       console.log("started");
       const elements = document.getElementsByClassName('assignment-calendar');
       console.log(elements);
-      for (let element = 0; element < elements.length; element++){
-          const id = this.assignments.find((assignment) => assignment.title === elements[element].innerHTML);
-          console.log(id)
-          console.log(elements[element]);
-          elements[element].addEventListener('click', () => {
-              this.$router.push('/a/' + id.id);
-              window.history.pushState(null, '', '/a/' + id.id);
-          });
+      for (let element = 0; element < elements.length; element++) {
+        const id = this.assignments.find((assignment) => assignment.title === elements[element].innerHTML);
+        console.log(id)
+        console.log(elements[element]);
+        elements[element].addEventListener('click', () => {
+          this.$router.push('/a/' + id.id);
+          window.history.pushState(null, '', '/a/' + id.id);
+        });
       }
     },
-
-      async loadAssignments() {
-      const startOfMonth = this.currentMonth.startOf('month').subtract(1, 'month').unix();
-      const endOfMonth = this.currentMonth.endOf('month').add(1, 'month').unix();
-
+    async loadAssignments() {
       const response = await fetch('https://relacexyz.duckdns.org/api/a/get', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           jwt: localStorage.getItem("token"),
           count: 0,
           offset: 0,
           compact: false,
           searchParams: '',
           course: '',
-          after: startOfMonth,
-          before: endOfMonth,
+          after: 0,
+          before: 0,
           order: 'desc',
         }),
       });
@@ -230,25 +168,9 @@ methods: {
         console.error('Failed to load assignments:', data.message);
       }
     },
-
-    setView(view) {
-      this.currentView = view;
-    },
-
-    goToNextWeek() {
-      this.currentWeek = this.currentWeek.add(1, 'week');
-      this.loadAssignments();
-    },
-
-    goToPreviousWeek() {
-      this.currentWeek = this.currentWeek.subtract(1, 'week');
-      this.loadAssignments();
-    },
-
-    goToCurrentWeek() {
-    this.currentWeek = dayjs().startOf('week').add(1, 'day');
-    this.loadAssignments();
-    },
+  },
+  mounted: function () {
+    setTimeout(this.addEventListeners, 3000);
   },
 };
 </script>
@@ -275,7 +197,7 @@ methods: {
   border: none;
   border-radius: 5px;
   color: black;
-  background: white;  
+  background: white;
   border-color: none;
   appearance: none;
 }
@@ -284,47 +206,25 @@ methods: {
   border-radius: 50%;
   font-size: large;
   color: white;
-  background: none; 
-  border: none; 
+  background: none;
+  border: none;
 }
 
 #today-button,
 .nav-button {
-  transition: background-color 0.3s ease; 
+  transition: background-color 0.3s ease;
 }
 
 #today-button:hover {
-  background-color: pink; 
+  background-color: pink;
 
   color: black;
 }
 
 .nav-button:hover {
-  background-color: pink; 
-  color: black;
-  border: none;
-}
-
-/* view buttons */
-
-.calendar-header {
-  display: flex;
-  justify-content: right;
-  align-items: center;
-}
-
-.view-buttons button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border: none;
-  background-color: white;
-  color: black;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-.view-buttons button:hover {
   background-color: pink;
+  color: black;
+  border: none;
 }
 
 /* calendar grid */
@@ -335,7 +235,6 @@ methods: {
   margin-bottom: 10px;
   display: grid;
   grid-template-columns: repeat(7, 12vw);
-  grid-auto-rows: minmax(90px, auto);
   gap: 10px;
   height: calc(100vh - 50vh);
 }
@@ -371,11 +270,11 @@ methods: {
 
 /*current day in calender grid*/
 .current-day {
-  color: pink; 
+  color: pink;
   border-color: pink;
 }
 
-.assignment-calendar{
+.assignment-calendar {
   background-color: rgba(255, 192, 203, 0.38);
   color: white;
   margin-left: 10px;
