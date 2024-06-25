@@ -195,12 +195,12 @@ export default {
 
 .setting-categorie-trigger:hover {
     background-color: #a500a517;
-    color: #88888880;
+    color: #888888;
     cursor: pointer;
     transition: all 0.25s ease-in-out;
 
     p {
-        color: #88888880;
+        color: #888888;
     }
 }
 
