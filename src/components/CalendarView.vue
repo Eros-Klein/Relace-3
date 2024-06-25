@@ -45,7 +45,11 @@
            <!-- only show month day number -->
         {{ day.date.split(' ')[1]}}
         <!-- Assignments -->
-
+        <div class="assignment" 
+           v-for="assignment in assignmentsForDay(day.date, day.month, day.year)" 
+           :key="assignment.id">
+        {{ assignment.title }}
+        </div>
       </div>
     </div>
   </div>
