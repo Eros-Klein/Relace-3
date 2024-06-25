@@ -138,6 +138,9 @@ export default {
       }
     },
     async loadAssignments() {
+      const startOfMonth = this.currentMonth.startOf('month').subtract(1, 'month').unix();
+      const endOfMonth = this.currentMonth.endOf('month').add(1, 'month').unix();
+
       const response = await fetch('https://relacexyz.duckdns.org/api/a/get', {
         method: 'POST',
         headers: {
@@ -150,8 +153,8 @@ export default {
           compact: false,
           searchParams: '',
           course: '',
-          after: 0,
-          before: 0,
+          after: startOfMonth,
+          before: endOfMonth,
           order: 'desc',
         }),
       });
