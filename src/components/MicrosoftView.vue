@@ -51,7 +51,7 @@ export default {
       const scope = 'user.read mail.read';
       const grantType = 'authorization_code';
       const codeVerifier = this.getCodeVerifier();
-
+    
       const params = new URLSearchParams();
       params.append('client_id', clientId);
       params.append('scope', scope);
@@ -59,8 +59,8 @@ export default {
       params.append('redirect_uri', redirectUri);
       params.append('grant_type', grantType);
       params.append('code_verifier', codeVerifier);
-
-      fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
+    
+      return fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -94,7 +94,8 @@ export default {
         body: JSON.stringify({
           api: 'teams',
           token: token,
-          jwt: localStorage.getItem('token')
+          jwt: localStorage.getItem('token'),
+          key: 'microsoft'
         })
       })
       const data = await response.json();
