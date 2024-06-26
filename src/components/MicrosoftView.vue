@@ -92,7 +92,7 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          api: 'teams',
+          api: 'microsoft',
           token: token,
           jwt: localStorage.getItem('token'),
           key: 'microsoft'
