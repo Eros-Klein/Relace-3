@@ -29,20 +29,10 @@ export default {
       return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
     },
     getCodeChallenge() {
-      if (!this.codeChallenge) {
-        this.codeChallenge = this.generateCodeChallenge().codeChallenge;
-      }
-      return this.codeChallenge;
+      return this.generateCodeChallenge().codeChallenge;
     },
-    
     getCodeVerifier(){
-      //@ts-ignore
-      if (!this.codeVerifier) {
-        //@ts-ignore
-        this.codeVerifier = this.generateCodeChallenge().codeVerifier;
-      }
-      //@ts-ignore
-      return this.codeVerifier;
+      return this.generateCodeChallenge().codeVerifier;
     },
     async getToken(code) {
       const clientId = process.env.VUE_APP_CLIENT_ID;
@@ -50,7 +40,7 @@ export default {
       const tenantId = process.env.VUE_APP_TENANT_ID;
       const scope = 'user.read mail.read';
       const grantType = 'authorization_code';
-      const codeVerifier = this.getCodeVerifier();
+      const codeVerifier = sessionStorage.getItem('codeVerifier');
 
       const params = new URLSearchParams();
       params.append('client_id', clientId);
@@ -75,17 +65,7 @@ export default {
           return userToken;
         });
     },
-  },
-  mounted: async function () {
-    const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
-
-    if (code) {
-      console.log(code);
-      //@ts-ignore
-      let token = await this.getToken(code);
-      console.log(token);
-      // Send the token to your API
+    async setToken(token) {
       const response = await fetch('https://relacexyz.duckdns.org/api/auth/tpapi/settoken', {
         method: 'POST',
         headers: {
@@ -102,6 +82,21 @@ export default {
         alert('An error occurred while connecting to Microsoft: ' + data.message);
       }
       //window.location.href = 'https://www.relacexyz.duckdns.org/setting/connections';
+    }
+  },
+  mounted: async function () {
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+
+    if (code) {
+      console.log(code);
+      //@ts-ignore
+      const token = await this.getToken(code);
+      console.log(token);
+      // Send the token to your API
+      if (token) {
+        this.setToken(token);
+      }
     }
   },
 }

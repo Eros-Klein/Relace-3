@@ -124,7 +124,7 @@ export default {
         const codeVerifier = MicrosoftView.methods.getCodeVerifier();
         console.log('codeChallenge:', codeChallenge);
         console.log('codeVerifier:', codeVerifier);
-        //localStorage.setItem('codeVerifier', codeVerifier);
+        sessionStorage.setItem('codeVerifier', codeVerifier);
 
         window.location.href = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
       },
